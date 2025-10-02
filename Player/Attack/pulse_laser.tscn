@@ -1,0 +1,40 @@
+[gd_scene load_steps=5 format=3 uid="uid://wpliv06gy0pq"]
+
+[ext_resource type="Script" uid="uid://cd42ba46bwxkf" path="res://Player/Attack/pulse_laser.gd" id="1_tsewf"]
+[ext_resource type="Texture2D" uid="uid://dgfjrllxo27n7" path="res://Textures/Items/Weapons/pulse_laser.png" id="2_tsewf"]
+[ext_resource type="AudioStream" uid="uid://bdidpufv4d2pt" path="res://Audio/SoundEffect/laser-104024.mp3" id="3_tsewf"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p4tiy"]
+size = Vector2(8.017, 10.005)
+
+[node name="Pulse" type="Area2D" groups=["attack"]]
+top_level = true
+scale = Vector2(0.1, 0.1)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("1_tsewf")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(3.8146973e-06, 3.8146973e-06)
+rotation = -2.3561945
+scale = Vector2(0.2619048, 0.25206614)
+texture = ExtResource("2_tsewf")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-0.022, -0.102)
+rotation = -0.78539795
+scale = Vector2(0.99999976, 0.99999976)
+shape = SubResource("RectangleShape2D_p4tiy")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 10.0
+one_shot = true
+autostart = true
+
+[node name="snd_play" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_tsewf")
+volume_db = -20.733
+pitch_scale = 3.05
+autoplay = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

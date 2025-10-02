@@ -1,0 +1,56 @@
+[gd_scene load_steps=9 format=3 uid="uid://gvm5jcbbgwdv"]
+
+[ext_resource type="Script" uid="uid://dbaohik2hgpgx" path="res://Enemy/enemy.gd" id="1_1bh7b"]
+[ext_resource type="Texture2D" uid="uid://bn1sbw7m0jkgw" path="res://Textures/Enemy/space_drone.png" id="2_mm2yx"]
+[ext_resource type="PackedScene" uid="uid://xy3cvpwdy828" path="res://Utility/hurt_box.tscn" id="3_gamcv"]
+[ext_resource type="PackedScene" uid="uid://uhr6mtuisqm1" path="res://Utility/hit_box.tscn" id="4_vdnsx"]
+[ext_resource type="AudioStream" uid="uid://bi7t7cjthnhhc" path="res://Audio/SoundEffect/enemy_hit.ogg" id="5_03jve"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_nfe5w"]
+radius = 7.1065984
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rborl"]
+size = Vector2(16.5, 14.875)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ucec4"]
+size = Vector2(16, 14)
+
+[node name="enemy_drone" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 4
+motion_mode = 1
+script = ExtResource("1_1bh7b")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(4, 4)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_mm2yx")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(4, 4)
+scale = Vector2(0.985, 0.985)
+shape = SubResource("CircleShape2D_nfe5w")
+
+[node name="HurtBox" parent="." instance=ExtResource("3_gamcv")]
+collision_mask = 4
+HurtBoxType = 1
+
+[node name="CollisionShape2D" parent="HurtBox" index="0"]
+position = Vector2(4, 4)
+shape = SubResource("RectangleShape2D_rborl")
+
+[node name="HitBox" parent="." instance=ExtResource("4_vdnsx")]
+collision_layer = 2
+
+[node name="CollisionShape2D" parent="HitBox" index="0"]
+position = Vector2(4, 4)
+shape = SubResource("RectangleShape2D_ucec4")
+
+[node name="snd_hit" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_03jve")
+volume_db = -20.0
+
+[connection signal="hurt" from="HurtBox" to="." method="_on_hurt_box_hurt"]
+
+[editable path="HurtBox"]
+[editable path="HitBox"]

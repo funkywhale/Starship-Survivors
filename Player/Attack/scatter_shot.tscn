@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://bu3n8pkggextr"]
+
+[ext_resource type="Script" uid="uid://cx42a1n4bsoop" path="res://Player/Attack/scatter_shot.gd" id="1_moaj8"]
+[ext_resource type="Texture2D" uid="uid://bf14h2718wl4v" path="res://Textures/Items/Weapons/bullet.png" id="1_r3eco"]
+[ext_resource type="AudioStream" uid="uid://b0rdxq5mpoaux" path="res://Audio/SoundEffect/scatter_shot.wav" id="2_oyefn"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_moaj8"]
+size = Vector2(3.505, 14.11)
+
+[node name="ScatterShot" type="Area2D"]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("1_moaj8")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("1_r3eco")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0.005, 0)
+shape = SubResource("RectangleShape2D_moaj8")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 10.0
+one_shot = true
+autostart = true
+
+[node name="snd_play" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_oyefn")
+volume_db = -20.733
+pitch_scale = 1.71
+autoplay = true

@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3 uid="uid://cr4wh8k8gaysv"]
+
+[ext_resource type="Script" uid="uid://x7h3ikaaej7b" path="res://Player/Attack/plasma.gd" id="1_4u3ks"]
+[ext_resource type="Texture2D" uid="uid://dv8wmrt2un4nf" path="res://Textures/Items/Weapons/plasma.png" id="2_8igbe"]
+[ext_resource type="AudioStream" uid="uid://bdidpufv4d2pt" path="res://Audio/SoundEffect/laser-104024.mp3" id="3_bsr3t"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hit"]
+size = Vector2(13.391386, 4.5454545)
+
+[node name="PlasmaBlast" type="Area2D" groups=["attack"]]
+top_level = true
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("1_4u3ks")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.146, 0.236)
+texture = ExtResource("2_8igbe")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-0.81789786, 0)
+scale = Vector2(1.765, 1.765)
+shape = SubResource("RectangleShape2D_hit")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+autostart = true
+
+[node name="snd_play" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_bsr3t")
+volume_db = -18.0
+autoplay = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

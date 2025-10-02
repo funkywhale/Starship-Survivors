@@ -1,0 +1,65 @@
+[gd_scene load_steps=7 format=3 uid="uid://thi8xvmp6qg4"]
+
+[ext_resource type="Script" uid="uid://dt0o0osu6rw8f" path="res://Player/Attack/explosion_area.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://1ssvsta63i3h" path="res://Textures/Enemy/explosion_pixelfied.png" id="2_waqps"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1"]
+radius = 23.0
+
+[sub_resource type="Animation" id="Animation_qnthj"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_waqps"]
+resource_name = "explode"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.033333335, 0.06666667, 0.10000001, 0.13333334, 0.16666667, 0.20000002, 0.23333335, 0.26666668, 0.33333334, 0.43333334, 0.53333336, 0.6333333, 0.73333335, 0.8333333, 0.93333334),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_qnthj"]
+_data = {
+&"RESET": SubResource("Animation_qnthj"),
+&"explode": SubResource("Animation_waqps")
+}
+
+[node name="ExplosionArea" type="Area2D" groups=["attack"]]
+top_level = true
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("1")
+damage = 10
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(1.33, 1.33)
+texture = ExtResource("2_waqps")
+hframes = 4
+vframes = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_1")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+root_node = NodePath("../Sprite2D")
+libraries = {
+&"": SubResource("AnimationLibrary_qnthj")
+}
