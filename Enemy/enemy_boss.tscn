@@ -51,7 +51,7 @@ _data = {
 size = Vector2(108, 108)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ucec4"]
-size = Vector2(107, 106)
+size = Vector2(96.3, 95.4)
 
 [node name="enemy_super" type="CharacterBody2D"]
 collision_layer = 4

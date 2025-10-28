@@ -1,0 +1,55 @@
+[gd_scene load_steps=3 format=3 uid="uid://jy152dm53h1u"]
+
+[ext_resource type="Script" uid="uid://ocikl6hxgcu5" path="res://LoginScreen.gd" id="1_abcde"]
+[ext_resource type="PackedScene" uid="uid://b7c7gsdx2rkjm" path="res://Utility/basic_button.tscn" id="2_fghij"]
+
+[node name="LoginScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_abcde")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Starship Survivors"
+horizontal_alignment = 1
+
+[node name="EmailInput" type="LineEdit" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Email"
+
+[node name="PasswordInput" type="LineEdit" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Password"
+secret = true
+
+[node name="StatusLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="LoginButton" parent="CenterContainer/VBoxContainer" instance=ExtResource("2_fghij")]
+layout_mode = 2
+text = "Login"
+
+[node name="RegisterButton" parent="CenterContainer/VBoxContainer" instance=ExtResource("2_fghij")]
+layout_mode = 2
+text = "Register"
+
+[connection signal="click_end" from="CenterContainer/VBoxContainer/LoginButton" to="." method="_on_LoginButton_click_end"]
+[connection signal="click_end" from="CenterContainer/VBoxContainer/RegisterButton" to="." method="_on_RegisterButton_click_end"]

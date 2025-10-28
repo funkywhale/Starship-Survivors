@@ -15,6 +15,10 @@ var knockback = Vector2.ZERO
 @onready var snd_hit = $snd_hit
 @onready var hitBox = $HitBox
 
+var difficulty_manager: Node = null
+var base_movement_speed = 0.0
+var current_speed_multiplier = 1.0
+
 var death_anim = preload("res://Enemy/explosion.tscn")
 var exp_gem = preload("res://Objects/experience_orb.tscn")
 
@@ -32,6 +36,20 @@ func _ready():
 		_set_sprite_frame_safe(0)
 	hitBox.damage = enemy_damage
 
+	# Connect to difficulty manager and store base speed
+	difficulty_manager = get_tree().get_first_node_in_group("difficulty_manager")
+	base_movement_speed = movement_speed
+
+	# HitBox will deal damage through the hurt_box.gd system
+	# Enemy will die after dealing damage through the HurtBoxType = 2 system
+
+func on_damage_dealt():
+	# Called when enemy HitBox deals damage to player
+	# Make enemy disappear instantly
+	if sprite:
+		sprite.visible = false
+	set_physics_process(false)
+	call_deferred("death")
 
 func _set_sprite_frame_safe(frame_index: int) -> void:
 	if not sprite:
@@ -50,12 +68,32 @@ func _set_sprite_frame_safe(frame_index: int) -> void:
 		sprite.set_frame(safe)
 
 func _physics_process(_delta):
+	# Skip processing if already dead
+	if not sprite or not sprite.visible:
+		return
+
 	knockback = knockback.move_toward(Vector2.ZERO, knockback_recovery)
+
+	# Apply difficulty speed multiplier
+	if not difficulty_manager:
+		difficulty_manager = get_tree().get_first_node_in_group("difficulty_manager")
+
+	if difficulty_manager:
+		var difficulty = difficulty_manager.get_difficulty_level()
+		# Direct proportional scaling - no hard limits
+		# At 1.0 difficulty = 1.0x speed (normal)
+		# At 0.5 difficulty = 0.5x speed (half speed)
+		# At 2.0 difficulty = 2.0x speed (double speed)
+		# Can scale infinitely based on difficulty
+		current_speed_multiplier = difficulty
+		movement_speed = base_movement_speed * current_speed_multiplier
+
 	var direction = global_position.direction_to(player.global_position)
 	velocity = direction * movement_speed
 	velocity += knockback
+
 	move_and_slide()
-	
+
 	if direction.x > 0.1:
 		sprite.flip_h = true
 	elif direction.x < -0.1:
@@ -63,6 +101,11 @@ func _physics_process(_delta):
 
 func death():
 	emit_signal("remove_from_array", self)
+
+	# Track kill for difficulty adjustment
+	if difficulty_manager:
+		difficulty_manager.record_kill()
+
 	var enemy_death = death_anim.instantiate()
 	enemy_death.scale = sprite.scale
 	enemy_death.global_position = global_position
@@ -72,6 +115,7 @@ func death():
 	new_gem.experience = experience
 	loot_base.call_deferred("add_child", new_gem)
 	queue_free()
+
 
 func _on_hurt_box_hurt(damage, angle, knockback_amount):
 	hp -= damage

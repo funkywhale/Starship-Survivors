@@ -51,7 +51,7 @@ _data = {
 size = Vector2(30, 24)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ucec4"]
-size = Vector2(30, 24)
+size = Vector2(27, 21.6)
 
 [node name="enemy_juggernaut" type="CharacterBody2D"]
 collision_layer = 4

@@ -67,6 +67,7 @@ var plasma_attackspeed = 4.0
 
 #Enemy Related
 var enemy_close = []
+var targeted_enemies = []  # Track enemies targeted in current attack salvo
 
 
 @onready var sprite = $Sprite2D
@@ -81,6 +82,7 @@ var enemy_close = []
 @onready var sndLevelUp = get_node("%snd_levelup")
 @onready var healthBar = get_node("%HealthBar")
 @onready var lblTimer = get_node("%lblTimer")
+@onready var lblDifficulty = get_node_or_null("%lblDifficulty")
 @onready var collectedWeapons = get_node("%CollectedWeapons")
 @onready var collectedUpgrades = get_node("%CollectedUpgrades")
 @onready var itemContainer = preload("res://Player/GUI/item_container.tscn")
@@ -89,6 +91,9 @@ var enemy_close = []
 @onready var lblResult = get_node("%lbl_Result")
 @onready var sndVictory = get_node("%snd_victory")
 @onready var sndLose = get_node("%snd_lose")
+
+#Difficulty Manager
+var difficulty_manager: Node = null
 
 #Signal
 signal playerdeath
@@ -99,6 +104,9 @@ func _ready():
 	attack()
 	set_expbar(experience, calculate_experiencecap())
 	_on_hurt_box_hurt(0, 0, 0)
+
+	# Connect to difficulty manager
+	difficulty_manager = get_tree().get_first_node_in_group("difficulty_manager")
 
 func _physics_process(_delta):
 	movement(_delta)
@@ -163,14 +171,29 @@ func attack():
 			plasmaAttackTimer.start()
 
 func _on_hurt_box_hurt(damage, _angle, _knockback):
-	hp -= clamp(damage - armor, 1.0, 999.0)
+	var actual_damage = clamp(damage - armor, 1.0, 999.0)
+
+	# Track damage for difficulty adjustment (UNCHANGED - uses base damage value)
+	if not difficulty_manager:
+		difficulty_manager = get_tree().get_first_node_in_group("difficulty_manager")
+
+	if difficulty_manager and damage > 0:
+		difficulty_manager.record_damage(actual_damage)
+
+	# Difficulty scaling still sees normal damage values, but player loses more HP
+	var health_loss = actual_damage * 3.5
+	hp -= health_loss
 	healthBar.max_value = maxhp
 	healthBar.value = hp
+
 	if hp <= 0:
 		death()
 
 func _on_pulse_laser_timer_timeout():
 	pulselaser_ammo += pulselaser_baseammo + additional_attacks
+	# Reset targeted enemies for new salvo (only if weapon bay upgrade active)
+	if additional_attacks > 0:
+		targeted_enemies.clear()
 	pulseLaserAttackTimer.start()
 
 
@@ -178,7 +201,11 @@ func _on_pulse_laser_attack_timer_timeout():
 	if pulselaser_ammo > 0:
 		var pulselaser_attack = pulseLaser.instantiate()
 		pulselaser_attack.position = position
-		pulselaser_attack.target = get_closest_target()
+		# Use different targeting ONLY if weapon bay upgrade is active
+		if additional_attacks > 0:
+			pulselaser_attack.target = get_different_target()
+		else:
+			pulselaser_attack.target = get_closest_target()
 		pulselaser_attack.level = pulselaser_level
 		add_child(pulselaser_attack)
 		pulselaser_ammo -= 1
@@ -186,6 +213,9 @@ func _on_pulse_laser_attack_timer_timeout():
 			pulseLaserAttackTimer.start()
 		else:
 			pulseLaserAttackTimer.stop()
+			# Clear targeted enemies after salvo completes (only if weapon bay upgrade active)
+			if additional_attacks > 0:
+				targeted_enemies.clear()
 
 func _on_rocket_timer_timeout():
 	rocket_ammo += rocket_baseammo + additional_attacks
@@ -206,6 +236,9 @@ func _on_rocket_attack_timer_timeout():
 
 func _on_plasma_timer_timeout():
 	plasma_ammo += plasma_baseammo + additional_attacks
+	# Reset targeted enemies for new salvo (only if weapon bay upgrade active)
+	if additional_attacks > 0:
+		targeted_enemies.clear()
 	plasmaAttackTimer.start()
 
 func _on_plasma_attack_timer_timeout():
@@ -213,12 +246,19 @@ func _on_plasma_attack_timer_timeout():
 		var plasma_attack = plasma.instantiate()
 		plasma_attack.position = position
 		plasma_attack.level = plasma_level
+		# Use different targeting ONLY if weapon bay upgrade is active
+		if additional_attacks > 0:
+			plasma_attack.target = get_different_target()
+		# Otherwise plasma will use get_closest_target() in its own _ready()
 		plasmaBase.add_child(plasma_attack)
 		plasma_ammo -= 1
 		if plasma_ammo > 0:
 			plasmaAttackTimer.start()
 		else:
 			plasmaAttackTimer.stop()
+			# Clear targeted enemies after salvo completes (only if weapon bay upgrade active)
+			if additional_attacks > 0:
+				targeted_enemies.clear()
 
 func spawn_plasma():
 	var get_plasma_total = plasmaBase.get_child_count()
@@ -239,6 +279,43 @@ func get_random_target():
 	else:
 		return Vector2.UP
 
+func get_different_target():
+	# Get a target that hasn't been targeted in this salvo yet
+	# Clean up invalid enemies
+	for i in enemy_close.duplicate():
+		if not is_instance_valid(i):
+			enemy_close.erase(i)
+
+	if enemy_close.size() == 0:
+		return Vector2.UP
+
+	# Find untargeted enemies sorted by distance
+	var untargeted = []
+	for e in enemy_close:
+		if not is_instance_valid(e):
+			continue
+		if not targeted_enemies.has(e):
+			var d = global_position.distance_to(e.global_position)
+			untargeted.append({"enemy": e, "distance": d})
+
+	# If all enemies are targeted, reset and start over
+	if untargeted.size() == 0:
+		targeted_enemies.clear()
+		for e in enemy_close:
+			if not is_instance_valid(e):
+				continue
+			var d = global_position.distance_to(e.global_position)
+			untargeted.append({"enemy": e, "distance": d})
+
+	if untargeted.size() == 0:
+		return Vector2.UP
+
+	# Sort by distance and pick closest untargeted enemy
+	untargeted.sort_custom(func(a, b): return a.distance < b.distance)
+	var target = untargeted[0].enemy
+	targeted_enemies.append(target)
+
+	return target.global_position
 
 func get_closest_target():
 	for i in enemy_close.duplicate():
@@ -460,6 +537,11 @@ func change_time(argtime = 0):
 		get_s = str(0, get_s)
 	lblTimer.text = str(get_m, ":", get_s)
 
+	# Update difficulty indicator
+	if lblDifficulty and difficulty_manager:
+		var diff_text = difficulty_manager.get_difficulty_description()
+		lblDifficulty.text = "Difficulty: " + diff_text
+
 func adjust_gui_collection(upgrade):
 	var get_upgraded_displayname = UpgradeDb.UPGRADES[upgrade]["displayname"]
 	var get_type = UpgradeDb.UPGRADES[upgrade]["type"]
@@ -476,6 +558,25 @@ func adjust_gui_collection(upgrade):
 				"upgrade":
 					collectedUpgrades.add_child(new_item)
 
+func _submit_score_to_leaderboard():
+	# Only submit if player is logged in
+	if not Talo.current_alias:
+		print("Player not logged in, skipping leaderboard submission")
+		return
+
+	# Submit survival time as score, with level as metadata
+	var score = time  # Survival time in seconds
+
+	var res = await Talo.leaderboards.add_entry("survival_time", score, { level = experience_level })
+
+	if is_instance_valid(res):
+		if res.updated:
+			print("New high score! Time: %d seconds, Level: %d" % [score, experience_level])
+		else:
+			print("Score submitted: Time: %d seconds, Level: %d" % [score, experience_level])
+	else:
+		print("Failed to submit score to leaderboard")
+
 func death():
 	deathPanel.visible = true
 	emit_signal("playerdeath")
@@ -490,6 +591,13 @@ func death():
 		lblResult.text = "You Lose"
 		sndLose.play()
 
+	# Submit score to leaderboard
+	_submit_score_to_leaderboard()
+
+
+func _on_btn_leaderboard_click_end():
+	get_tree().paused = false
+	var _level = get_tree().change_scene_to_file("res://Leaderboard/Leaderboard.tscn")
 
 func _on_btn_menu_click_end():
 	get_tree().paused = false

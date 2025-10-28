@@ -51,7 +51,7 @@ _data = {
 radius = 15.008331
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_c3om3"]
-radius = 15.0
+radius = 13.5
 
 [node name="enemy_kobold_strong" type="CharacterBody2D"]
 collision_layer = 4

@@ -13,7 +13,7 @@ radius = 7.1065984
 size = Vector2(16.5, 14.875)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ucec4"]
-size = Vector2(16, 14)
+size = Vector2(14.4, 12.6)
 
 [node name="enemy_drone" type="CharacterBody2D"]
 collision_layer = 4

@@ -106,6 +106,15 @@ offset_bottom = 339.0
 theme_override_fonts/font = ExtResource("4_cxswi")
 text = "Start"
 
+[node name="btn_leaderboard" parent="." instance=ExtResource("3_kwsdd")]
+layout_mode = 0
+offset_left = 217.0
+offset_top = 265.0
+offset_right = 420.0
+offset_bottom = 299.0
+theme_override_fonts/font = ExtResource("4_cxswi")
+text = "Leaderboard"
+
 [node name="btn_exit" parent="." instance=ExtResource("3_kwsdd")]
 layout_mode = 0
 offset_left = 340.0
@@ -134,4 +143,5 @@ libraries = {
 }
 
 [connection signal="click_end" from="btn_play" to="." method="_on_btn_play_click_end"]
+[connection signal="click_end" from="btn_leaderboard" to="." method="_on_btn_leaderboard_click_end"]
 [connection signal="click_end" from="btn_exit" to="." method="_on_btn_exit_click_end"]
