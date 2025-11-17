@@ -1,2 +1,4 @@
 res://World/world.tscn
 res://addons/talo/samples/authentication/assets/theme.tres
+res://Utility/difficulty_manager.gd
+res://Utility/enemy_spawner.gd
