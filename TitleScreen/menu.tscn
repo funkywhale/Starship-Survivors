@@ -1,9 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://dcyka5e06knff"]
+[gd_scene load_steps=8 format=3 uid="uid://dcyka5e06knff"]
 
 [ext_resource type="Script" uid="uid://ublpf26ovrar" path="res://TitleScreen/menu.gd" id="1_oi0p3"]
 [ext_resource type="Texture2D" uid="uid://bcj6p83xed2sp" path="res://Textures/titlecard.png" id="2_yf0qj"]
 [ext_resource type="PackedScene" uid="uid://b7c7gsdx2rkjm" path="res://Utility/basic_button.tscn" id="3_kwsdd"]
-[ext_resource type="FontFile" uid="uid://dlth4bsmavf24" path="res://Font/globet_bold.ttf" id="4_cxswi"]
 [ext_resource type="AudioStream" uid="uid://djx6vbschomi5" path="res://Audio/Music/titleMusic.mp3" id="5_yf0qj"]
 
 [sub_resource type="Animation" id="Animation_0eg15"]
@@ -97,13 +96,20 @@ offset_bottom = 361.0
 texture = ExtResource("2_yf0qj")
 expand_mode = 3
 
+[node name="btn_skins" parent="." instance=ExtResource("3_kwsdd")]
+layout_mode = 0
+offset_left = 470.0
+offset_top = 20.0
+offset_right = 620.0
+offset_bottom = 56.0
+text = "Ships"
+
 [node name="btn_play" parent="." instance=ExtResource("3_kwsdd")]
 layout_mode = 0
 offset_left = 217.0
 offset_top = 305.0
 offset_right = 297.0
 offset_bottom = 339.0
-theme_override_fonts/font = ExtResource("4_cxswi")
 text = "Start"
 
 [node name="btn_leaderboard" parent="." instance=ExtResource("3_kwsdd")]
@@ -112,7 +118,6 @@ offset_left = 217.0
 offset_top = 265.0
 offset_right = 420.0
 offset_bottom = 299.0
-theme_override_fonts/font = ExtResource("4_cxswi")
 text = "Leaderboard"
 
 [node name="btn_exit" parent="." instance=ExtResource("3_kwsdd")]
@@ -121,7 +126,6 @@ offset_left = 340.0
 offset_top = 305.0
 offset_right = 420.0
 offset_bottom = 339.0
-theme_override_fonts/font = ExtResource("4_cxswi")
 text = "Exit"
 
 [node name="titleMusic" type="AudioStreamPlayer" parent="."]
@@ -142,6 +146,7 @@ libraries = {
 &"": SubResource("AnimationLibrary_dsl36")
 }
 
+[connection signal="click_end" from="btn_skins" to="." method="_on_btn_skins_click_end"]
 [connection signal="click_end" from="btn_play" to="." method="_on_btn_play_click_end"]
 [connection signal="click_end" from="btn_leaderboard" to="." method="_on_btn_leaderboard_click_end"]
 [connection signal="click_end" from="btn_exit" to="." method="_on_btn_exit_click_end"]
