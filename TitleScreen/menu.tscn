@@ -98,9 +98,9 @@ expand_mode = 3
 
 [node name="btn_skins" parent="." instance=ExtResource("3_kwsdd")]
 layout_mode = 0
-offset_left = 470.0
-offset_top = 20.0
-offset_right = 620.0
+offset_left = 480.0
+offset_top = 22.0
+offset_right = 612.0
 offset_bottom = 56.0
 text = "Ships"
 
