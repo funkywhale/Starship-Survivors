@@ -56,7 +56,7 @@ size = Vector2(21.6, 24.3)
 
 [node name="enemy_cyclops" type="CharacterBody2D"]
 collision_layer = 4
-collision_mask = 4
+collision_mask = 5
 motion_mode = 1
 script = ExtResource("1_7ayo0")
 movement_speed = 26.0

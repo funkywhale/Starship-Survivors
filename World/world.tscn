@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://btf7clk4jja87" path="res://Enemy/enemy_boss.tscn" id="9_xs42h"]
 [ext_resource type="AudioStream" uid="uid://d1w53vpr4y07b" path="res://Audio/Music/battleThemeA.mp3" id="10_rk3we"]
 [ext_resource type="Script" uid="uid://buvlo8c3trfoy" path="res://Audio/Music/snd_Music.gd" id="11_ovtx6"]
+[ext_resource type="Script" path="res://Utility/rock_manager.gd" id="12_rockmgr"]
 
 [sub_resource type="Resource" id="Resource_03m25"]
 script = ExtResource("5_jj7s8")
@@ -113,6 +114,9 @@ centered = false
 region_enabled = true
 region_rect = Rect2(0, 0, 4096, 4096)
 
+[node name="RockManager" type="Node2D" parent="."]
+script = ExtResource("12_rockmgr")
+
 [node name="Player" parent="." instance=ExtResource("2_40uwv")]
 
 [node name="EnemySpawner" parent="." instance=ExtResource("3_p01g4")]
@@ -161,5 +165,6 @@ text = "Main Menu"
 layout_mode = 2
 text = "Quit"
 
+[connection signal="playerdeath" from="Player" to="RockManager" method="regenerate_rocks"]
 [connection signal="playerdeath" from="Player" to="snd_Music" method="_on_player_playerdeath"]
 [connection signal="finished" from="snd_Music" to="snd_Music" method="_on_finished"]

@@ -23,6 +23,9 @@ func _ready() -> void:
 		target = player.get_closest_target()
 	angle = global_position.direction_to(target)
 	rotation = angle.angle()
+
+	# Connect to body_entered to detect rock collisions
+	body_entered.connect(_on_body_entered)
 	var t = create_tween()
 	t.tween_property(self, "scale", Vector2(1, 1) * attack_size, 0.15).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
 	t.play()
@@ -75,3 +78,9 @@ func enemy_hit(charge: int = 1) -> void:
 func _on_timer_timeout() -> void:
 	emit_signal("remove_from_array", self)
 	queue_free()
+
+func _on_body_entered(body: Node2D) -> void:
+	# Destroy projectile when it hits a rock (StaticBody2D on layer 1)
+	if body is StaticBody2D:
+		emit_signal("remove_from_array", self)
+		queue_free()

@@ -10,7 +10,7 @@ size = Vector2(13.391386, 4.5454545)
 [node name="PlasmaBlast" type="Area2D" groups=["attack"]]
 top_level = true
 collision_layer = 4
-collision_mask = 0
+collision_mask = 1
 script = ExtResource("1_4u3ks")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]

@@ -61,24 +61,49 @@ func get_random_position() -> Vector2:
 	var top_right = Vector2(player.global_position.x + vpr.x / 2, player.global_position.y - vpr.y / 2)
 	var bottom_left = Vector2(player.global_position.x - vpr.x / 2, player.global_position.y + vpr.y / 2)
 	var bottom_right = Vector2(player.global_position.x + vpr.x / 2, player.global_position.y + vpr.y / 2)
-	var pos_side = ["up", "down", "right", "left"].pick_random()
+
+	# Try up to 10 times to find a valid spawn position
+	var max_attempts = 10
 	var spawn_pos1 = Vector2.ZERO
 	var spawn_pos2 = Vector2.ZERO
-	
-	match pos_side:
-		"up":
-			spawn_pos1 = top_left
-			spawn_pos2 = top_right
-		"down":
-			spawn_pos1 = bottom_left
-			spawn_pos2 = bottom_right
-		"right":
-			spawn_pos1 = top_right
-			spawn_pos2 = bottom_right
-		"left":
-			spawn_pos1 = top_left
-			spawn_pos2 = bottom_left
-	
+
+	for attempt in range(max_attempts):
+		var pos_side = ["up", "down", "right", "left"].pick_random()
+
+		match pos_side:
+			"up":
+				spawn_pos1 = top_left
+				spawn_pos2 = top_right
+			"down":
+				spawn_pos1 = bottom_left
+				spawn_pos2 = bottom_right
+			"right":
+				spawn_pos1 = top_right
+				spawn_pos2 = bottom_right
+			"left":
+				spawn_pos1 = top_left
+				spawn_pos2 = bottom_left
+
+		var x_spawn = randf_range(spawn_pos1.x, spawn_pos2.x)
+		var y_spawn = randf_range(spawn_pos1.y, spawn_pos2.y)
+		var spawn_position = Vector2(x_spawn, y_spawn)
+
+		# Check if spawn position overlaps with a rock
+		if not is_position_blocked_by_rock(spawn_position):
+			return spawn_position
+
+	# If all attempts failed, return the last position anyway
+	# (Better to spawn on a rowwdwdawdck rarely than to break the game)
 	var x_spawn = randf_range(spawn_pos1.x, spawn_pos2.x)
 	var y_spawn = randf_range(spawn_pos1.y, spawn_pos2.y)
 	return Vector2(x_spawn, y_spawn)
+
+func is_position_blocked_by_rock(pos: Vector2) -> bool:
+	# Use physics query to check for rocks at spawn position
+	var space_state = get_world_2d().direct_space_state
+	var query = PhysicsPointQueryParameters2D.new()
+	query.position = pos
+	query.collision_mask = 1  # World layer (rocks)
+	var result = space_state.intersect_point(query, 1)
+
+	return not result.is_empty()

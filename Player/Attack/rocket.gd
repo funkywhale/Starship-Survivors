@@ -158,3 +158,12 @@ func _spawn_explosion() -> void:
 		get_parent().call_deferred("add_child", explosion)
 	emit_signal("remove_from_array", self)
 	queue_free()
+
+func _on_body_entered(body: Node2D) -> void:
+	# Explode when hitting a rock (StaticBody2D on layer 1)
+	if body is StaticBody2D:
+		_spawn_explosion()
+
+func _on_area_entered(area: Area2D) -> void:
+	# This might be used for other interactions in the future
+	pass

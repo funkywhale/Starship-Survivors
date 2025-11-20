@@ -81,6 +81,7 @@ var targeted_enemies: Array = [] # Track enemies targeted in current attack salv
 @onready var sprite = $Sprite2D
 @onready var skin_manager = get_node("/root/SkinManager")
 @onready var walkTimer = get_node("%walkTimer")
+@onready var camera = $Camera2D
 
 #GUI
 @onready var expBar = get_node("%ExperienceBar")
@@ -104,17 +105,20 @@ var targeted_enemies: Array = [] # Track enemies targeted in current attack salv
 #Difficulty Manager
 var difficulty_manager: Node = null
 
+#Camera Intro
+var intro_playing: bool = true
+
 #Signal
 signal playerdeath
 
 func _ready() -> void:
 	_apply_skin()
 	upgrade_character("pulselaser1")
-	attack()
 	set_expbar(experience, calculate_experiencecap())
 	_on_hurt_box_hurt(0.0, Vector2.ZERO, 0.0)
 
 	difficulty_manager = get_tree().get_first_node_in_group("difficulty_manager")
+  start_camera_intro()
 
 func _apply_skin() -> void:
 	if skin_manager == null:
@@ -127,16 +131,22 @@ func _apply_skin() -> void:
 		sprite.vframes = 1
 	print("Player: applied skin = ", skin_manager.equipped)
 
+
 func _physics_process(_delta: float) -> void:
 	movement(_delta)
-	
-	if scattershot_level > 0:
+
+	# Don't fire weapons during intro
+	if not intro_playing and scattershot_level > 0:
 		scattershot_timer -= _delta
 		if scattershot_timer <= 0:
 			fire_scatter_shot()
 			scattershot_timer = scattershot_attackspeed * (1 - spell_cooldown)
 
 func movement(delta: float) -> void:
+	# Disable movement during camera intro
+	if intro_playing:
+		return
+
 	if dash_cooldown_left > 0.0:
 		dash_cooldown_left = max(dash_cooldown_left - delta, 0.0)
 	if is_dashing:
@@ -653,3 +663,27 @@ func _on_btn_leaderboard_click_end():
 func _on_btn_menu_click_end():
 	get_tree().paused = false
 	var _level = get_tree().change_scene_to_file("res://TitleScreen/menu.tscn")
+
+func start_camera_intro():
+	# Set camera to show entire map initially (2000x2000 world)
+	# Viewport is 640x360, so zoom out to fit 2000px
+	camera.zoom = Vector2(0.25, 0.25)
+
+	# Pause the game during intro
+	get_tree().paused = true
+
+	# Wait a moment to show the full map, then zoom in
+	await get_tree().create_timer(1.5, true, false, true).timeout
+
+	# Tween camera zoom to normal (1.0)
+	var tween = create_tween()
+	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)  # Continue during pause
+	tween.tween_property(camera, "zoom", Vector2(1.0, 1.0), 2.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
+
+	# When tween finishes, unpause and enable gameplay
+	await tween.finished
+	intro_playing = false
+	get_tree().paused = false
+
+	# Start attacks after intro completes
+	attack()
