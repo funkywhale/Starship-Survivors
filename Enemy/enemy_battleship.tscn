@@ -55,7 +55,7 @@ size = Vector2(27, 21.6)
 
 [node name="enemy_juggernaut" type="CharacterBody2D"]
 collision_layer = 4
-collision_mask = 4
+collision_mask = 5
 motion_mode = 1
 script = ExtResource("1_wmgsu")
 movement_speed = 30.0

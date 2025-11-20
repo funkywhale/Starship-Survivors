@@ -15,6 +15,9 @@ func _ready() -> void:
 	# Add to attack group so hurt_box can detect it
 	add_to_group("attack")
 
+	# Connect to body_entered to detect rock collisions
+	body_entered.connect(_on_body_entered)
+
 func setup(direction: Vector2, pellet_speed: float, pellet_damage: int, pellet_hp: int) -> void:
 	angle = direction.normalized()
 	speed = pellet_speed
@@ -29,5 +32,11 @@ func _physics_process(delta: float) -> void:
 func enemy_hit(charge: int = 1) -> void:
 	hp -= charge
 	if hp <= 0:
+		emit_signal("remove_from_array", self)
+		queue_free()
+
+func _on_body_entered(body: Node2D) -> void:
+	# Destroy projectile when it hits a rock (StaticBody2D on layer 1)
+	if body is StaticBody2D:
 		emit_signal("remove_from_array", self)
 		queue_free()

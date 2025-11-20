@@ -11,7 +11,7 @@ size = Vector2(8.017, 10.005)
 top_level = true
 scale = Vector2(0.1, 0.1)
 collision_layer = 4
-collision_mask = 0
+collision_mask = 1
 script = ExtResource("1_tsewf")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]

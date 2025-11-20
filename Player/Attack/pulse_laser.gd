@@ -16,6 +16,9 @@ signal remove_from_array(object)
 func _ready():
 	angle = global_position.direction_to(target)
 	rotation = angle.angle() + deg_to_rad(135)
+
+	# Connect to body_entered to detect rock collisions
+	body_entered.connect(_on_body_entered)
 	match level:
 		1:
 			hp = 1
@@ -60,3 +63,9 @@ func enemy_hit(charge: int = 1) -> void:
 func _on_timer_timeout():
 	emit_signal("remove_from_array", self)
 	queue_free()
+
+func _on_body_entered(body: Node2D) -> void:
+	# Destroy projectile when it hits a rock (StaticBody2D on layer 1)
+	if body is StaticBody2D:
+		emit_signal("remove_from_array", self)
+		queue_free()
