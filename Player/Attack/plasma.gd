@@ -11,7 +11,7 @@ var attack_speed: float = 3.0
 var target: Vector2 = Vector2.ZERO
 var angle: Vector2 = Vector2.ZERO
 
-@onready var player := get_tree().get_first_node_in_group("player")
+@onready var player: CharacterBody2D = get_tree().get_first_node_in_group("player")
 @onready var sprite: Sprite2D = $Sprite2D
 
 signal remove_from_array(object)
@@ -72,6 +72,6 @@ func enemy_hit(charge: int = 1) -> void:
 		emit_signal("remove_from_array", self)
 		queue_free()
 
-func _on_Timer_timeout() -> void:
+func _on_timer_timeout() -> void:
 	emit_signal("remove_from_array", self)
 	queue_free()

@@ -1,14 +1,14 @@
 extends CharacterBody2D
 
 
-@export var movement_speed = 20.0
-@export var hp = 10
-@export var knockback_recovery = 3.5
-@export var experience = 1
-@export var enemy_damage = 1
-var knockback = Vector2.ZERO
+@export var movement_speed: float = 20.0
+@export var hp: int = 10
+@export var knockback_recovery: float = 3.5
+@export var experience: int = 1
+@export var enemy_damage: int = 1
+var knockback: Vector2 = Vector2.ZERO
 
-@onready var player = get_tree().get_first_node_in_group("player")
+@onready var player: CharacterBody2D = get_tree().get_first_node_in_group("player")
 @onready var loot_base = get_tree().get_first_node_in_group("loot")
 @onready var sprite = $Sprite2D
 @onready var anim = get_node_or_null("AnimationPlayer")
@@ -16,11 +16,11 @@ var knockback = Vector2.ZERO
 @onready var hitBox = $HitBox
 
 var difficulty_manager: Node = null
-var base_movement_speed = 0.0
-var current_speed_multiplier = 1.0
+var base_movement_speed: float = 0.0
+var current_speed_multiplier: float = 1.0
 
-var death_anim = preload("res://Enemy/explosion.tscn")
-var exp_gem = preload("res://Objects/experience_orb.tscn")
+var death_anim: PackedScene = preload("res://Enemy/explosion.tscn")
+var exp_gem: PackedScene = preload("res://Objects/experience_orb.tscn")
 
 signal remove_from_array(object)
 
@@ -67,17 +67,14 @@ func _set_sprite_frame_safe(frame_index: int) -> void:
 	elif sprite.has_method("set_frame"):
 		sprite.set_frame(safe)
 
-func _physics_process(_delta):
+func _physics_process(_delta: float) -> void:
 	# Skip processing if already dead
 	if not sprite or not sprite.visible:
 		return
 
 	knockback = knockback.move_toward(Vector2.ZERO, knockback_recovery)
 
-	# Apply difficulty speed multiplier
-	if not difficulty_manager:
-		difficulty_manager = get_tree().get_first_node_in_group("difficulty_manager")
-
+	# Apply difficulty speed multiplier (cached in _ready)
 	if difficulty_manager:
 		var difficulty = difficulty_manager.get_difficulty_level()
 		# Direct proportional scaling - no hard limits
@@ -99,7 +96,7 @@ func _physics_process(_delta):
 	elif direction.x < -0.1:
 		sprite.flip_h = false
 
-func death():
+func death() -> void:
 	emit_signal("remove_from_array", self)
 
 	# Track kill for difficulty adjustment

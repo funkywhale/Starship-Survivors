@@ -1,7 +1,7 @@
 [gd_scene load_steps=12 format=3 uid="uid://dsm1mjwhr5mq5"]
 
 [ext_resource type="Script" uid="uid://dbaohik2hgpgx" path="res://Enemy/enemy.gd" id="1_ww036"]
-[ext_resource type="Texture2D" uid="uid://csqkor0vn3tkv" path="res://Textures/Enemy/space_drone_strong.png" id="2_mydk5"]
+[ext_resource type="Texture2D" uid="uid://cua67y66utc2r" path="res://Textures/Enemy/space_drone_strong.png" id="2_mydk5"]
 [ext_resource type="PackedScene" uid="uid://xy3cvpwdy828" path="res://Utility/hurt_box.tscn" id="3_c3om3"]
 [ext_resource type="PackedScene" uid="uid://uhr6mtuisqm1" path="res://Utility/hit_box.tscn" id="4_vyjdl"]
 [ext_resource type="AudioStream" uid="uid://bi7t7cjthnhhc" path="res://Audio/SoundEffect/enemy_hit.ogg" id="5_tcgvx"]
@@ -58,9 +58,9 @@ collision_layer = 4
 collision_mask = 4
 motion_mode = 1
 script = ExtResource("1_ww036")
-movement_speed = 28.0
+movement_speed = 24.0
 hp = 20
-enemy_damage = 2
+enemy_damage = 3
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.835, 0.835)

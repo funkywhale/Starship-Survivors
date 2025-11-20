@@ -3,11 +3,12 @@ extends Area2D
 @export var experience = 1
 
 var spr_green = preload("res://Textures/Items/Gems/Gem_green.png")
-var spr_blue= preload("res://Textures/Items/Gems/Gem_blue.png")
+var spr_blue = preload("res://Textures/Items/Gems/Gem_blue.png")
 var spr_red = preload("res://Textures/Items/Gems/Gem_red.png")
 
 var target = null
-var speed = -1
+var speed: float = -1.0
+const ACCELERATION: float = 100.0
 
 @onready var sprite = $Sprite2D
 @onready var collision = $CollisionShape2D
@@ -21,14 +22,14 @@ func _ready():
 	else:
 		sprite.texture = spr_red
 
-func _physics_process(delta):
+func _physics_process(delta: float) -> void:
 	if target != null:
 		global_position = global_position.move_toward(target.global_position, speed)
-		speed += 2*delta
+		speed += ACCELERATION * delta
 
-func collect():
+func collect() -> int:
 	sound.play()
-	collision.call_deferred("set","disabled",true)
+	collision.call_deferred("set", "disabled", true)
 	sprite.visible = false
 	return experience
 

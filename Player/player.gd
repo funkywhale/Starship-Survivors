@@ -1,32 +1,33 @@
 extends CharacterBody2D
 
 
-var hp = 80
-var maxhp = 80
-var last_movement = Vector2.UP
-var time = 0
+var hp: float = 80.0
+var maxhp: float = 80.0
+var last_movement: Vector2 = Vector2.UP
+var time: int = 0
 
-var max_speed = 40.0
-var accel = 220.0
-var decel = 320.0
-var damping = 180.0
-var rotation_speed_base = 3.2
+var max_speed: float = 40.0
+var accel: float = 220.0
+var decel: float = 320.0
+var damping: float = 180.0
+var rotation_speed_base: float = 3.2
 
 # Dash (forward boost) parameters
-var is_dashing = false
-var dash_boost = 140.0
-var dash_duration = 0.30
-var dash_cooldown = 3.0
-var dash_time_left = 0.0
-var dash_cooldown_left = 0.0
+var is_dashing: bool = false
+var dash_boost: float = 140.0
+var dash_duration: float = 0.30
+var dash_cooldown: float = 3.0
+var dash_time_left: float = 0.0
+var dash_cooldown_left: float = 0.0
 
-var experience = 0
-var experience_level = 1
-var collected_experience = 0
+var experience: int = 0
+var experience_level: int = 1
+var collected_experience: int = 0
 
-var pulseLaser = preload("res://Player/Attack/pulse_laser.tscn")
-var rocket = preload("res://Player/Attack/rocket.tscn")
-var plasma = preload("res://Player/Attack/plasma.tscn")
+var pulseLaser: PackedScene = preload("res://Player/Attack/pulse_laser.tscn")
+var rocket: PackedScene = preload("res://Player/Attack/rocket.tscn")
+var plasma: PackedScene = preload("res://Player/Attack/plasma.tscn")
+var scatterShot: PackedScene = preload("res://Player/Attack/scatter_shot.tscn")
 
 @onready var pulseLaserTimer = get_node("%PulseLaserTimer")
 @onready var pulseLaserAttackTimer = get_node("%PulseLaserAttackTimer")
@@ -37,37 +38,44 @@ var plasma = preload("res://Player/Attack/plasma.tscn")
 @onready var plasmaAttackTimer = get_node("%PlasmaAttackTimer")
 
 #UPGRADES
-var collected_upgrades = []
-var upgrade_options = []
-var armor = 0
-var speed = 0
-var spell_cooldown = 0
-var spell_size = 0
-var additional_attacks = 0
-var damage_bonus = 0
+var collected_upgrades: Array = []
+var upgrade_options: Array = []
+var armor: int = 0
+var speed: int = 0
+var spell_cooldown: float = 0.0
+var spell_size: float = 0.0
+var additional_attacks: int = 0
+var damage_bonus: int = 0
 
 #PulseLaser
-var pulselaser_ammo = 0
-var pulselaser_baseammo = 0
-var pulselaser_attackspeed = 1.5
-var pulselaser_level = 0
+var pulselaser_ammo: int = 0
+var pulselaser_baseammo: int = 0
+var pulselaser_attackspeed: float = 1.5
+var pulselaser_level: int = 0
 
 #Rocket
-var rocket_ammo = 0
-var rocket_baseammo = 0
-var rocket_attackspeed = 3
-var rocket_level = 0
+var rocket_ammo: int = 0
+var rocket_baseammo: int = 0
+var rocket_attackspeed: float = 3.0
+var rocket_level: int = 0
 
 # Plasma weapon state
-var plasma_ammo = 0
-var plasma_baseammo = 0
-var plasma_level = 0
-var plasma_attackspeed = 4.0
+var plasma_ammo: int = 0
+var plasma_baseammo: int = 0
+var plasma_level: int = 0
+var plasma_attackspeed: float = 4.0
 
+# Scatter Shot weapon state
+var scattershot_level: int = 0
+var scattershot_attackspeed: float = 2.0
+var scattershot_damage: int = 5
+var scattershot_penetration: int = 1
+var scattershot_pellets: int = 3
+var scattershot_timer: float = 0.0
 
 #Enemy Related
-var enemy_close = []
-var targeted_enemies = []  # Track enemies targeted in current attack salvo
+var enemy_close: Array = []
+var targeted_enemies: Array = [] # Track enemies targeted in current attack salvo
 
 
 @onready var sprite = $Sprite2D
@@ -98,20 +106,24 @@ var difficulty_manager: Node = null
 #Signal
 signal playerdeath
 
-func _ready():
+func _ready() -> void:
 	upgrade_character("pulselaser1")
-	# upgrade_character("scattershot1")
 	attack()
 	set_expbar(experience, calculate_experiencecap())
-	_on_hurt_box_hurt(0, 0, 0)
+	_on_hurt_box_hurt(0.0, Vector2.ZERO, 0.0)
 
-	# Connect to difficulty manager
 	difficulty_manager = get_tree().get_first_node_in_group("difficulty_manager")
 
-func _physics_process(_delta):
+func _physics_process(_delta: float) -> void:
 	movement(_delta)
+	
+	if scattershot_level > 0:
+		scattershot_timer -= _delta
+		if scattershot_timer <= 0:
+			fire_scatter_shot()
+			scattershot_timer = scattershot_attackspeed * (1 - spell_cooldown)
 
-func movement(delta: float):
+func movement(delta: float) -> void:
 	if dash_cooldown_left > 0.0:
 		dash_cooldown_left = max(dash_cooldown_left - delta, 0.0)
 	if is_dashing:
@@ -124,7 +136,7 @@ func movement(delta: float):
 	var speed_ratio = 0.0
 	if max_speed > 0:
 		speed_ratio = clamp(velocity.length() / max_speed, 0.0, 1.0)
-	var rotation_multiplier = 1.0 - (0.4 * speed_ratio)
+	var rotation_multiplier = 1.0 - (0.25 * speed_ratio)
 	var effective_rotation_speed = rotation_speed_base * rotation_multiplier
 	sprite.rotation += turn * effective_rotation_speed * delta
 	var thrust = Input.get_action_strength("up") - Input.get_action_strength("down")
@@ -154,7 +166,7 @@ func movement(delta: float):
 	else:
 		_set_player_frame(0)
 
-func attack():
+func attack() -> void:
 	if pulselaser_level > 0:
 		pulseLaserTimer.wait_time = pulselaser_attackspeed * (1 - spell_cooldown)
 		if pulseLaserTimer.is_stopped():
@@ -170,18 +182,16 @@ func attack():
 		if plasma_ammo > 0 and plasmaAttackTimer.is_stopped():
 			plasmaAttackTimer.start()
 
-func _on_hurt_box_hurt(damage, _angle, _knockback):
+func _on_hurt_box_hurt(damage: float, _angle: Vector2, _knockback: float) -> void:
 	var actual_damage = clamp(damage - armor, 1.0, 999.0)
 
-	# Track damage for difficulty adjustment (UNCHANGED - uses base damage value)
 	if not difficulty_manager:
 		difficulty_manager = get_tree().get_first_node_in_group("difficulty_manager")
 
 	if difficulty_manager and damage > 0:
 		difficulty_manager.record_damage(actual_damage)
 
-	# Difficulty scaling still sees normal damage values, but player loses more HP
-	var health_loss = actual_damage * 3.5
+	var health_loss = actual_damage * 2.0
 	hp -= health_loss
 	healthBar.max_value = maxhp
 	healthBar.value = hp
@@ -191,7 +201,6 @@ func _on_hurt_box_hurt(damage, _angle, _knockback):
 
 func _on_pulse_laser_timer_timeout():
 	pulselaser_ammo += pulselaser_baseammo + additional_attacks
-	# Reset targeted enemies for new salvo (only if weapon bay upgrade active)
 	if additional_attacks > 0:
 		targeted_enemies.clear()
 	pulseLaserAttackTimer.start()
@@ -201,7 +210,6 @@ func _on_pulse_laser_attack_timer_timeout():
 	if pulselaser_ammo > 0:
 		var pulselaser_attack = pulseLaser.instantiate()
 		pulselaser_attack.position = position
-		# Use different targeting ONLY if weapon bay upgrade is active
 		if additional_attacks > 0:
 			pulselaser_attack.target = get_different_target()
 		else:
@@ -213,7 +221,6 @@ func _on_pulse_laser_attack_timer_timeout():
 			pulseLaserAttackTimer.start()
 		else:
 			pulseLaserAttackTimer.stop()
-			# Clear targeted enemies after salvo completes (only if weapon bay upgrade active)
 			if additional_attacks > 0:
 				targeted_enemies.clear()
 
@@ -236,7 +243,6 @@ func _on_rocket_attack_timer_timeout():
 
 func _on_plasma_timer_timeout():
 	plasma_ammo += plasma_baseammo + additional_attacks
-	# Reset targeted enemies for new salvo (only if weapon bay upgrade active)
 	if additional_attacks > 0:
 		targeted_enemies.clear()
 	plasmaAttackTimer.start()
@@ -246,17 +252,14 @@ func _on_plasma_attack_timer_timeout():
 		var plasma_attack = plasma.instantiate()
 		plasma_attack.position = position
 		plasma_attack.level = plasma_level
-		# Use different targeting ONLY if weapon bay upgrade is active
 		if additional_attacks > 0:
 			plasma_attack.target = get_different_target()
-		# Otherwise plasma will use get_closest_target() in its own _ready()
 		plasmaBase.add_child(plasma_attack)
 		plasma_ammo -= 1
 		if plasma_ammo > 0:
 			plasmaAttackTimer.start()
 		else:
 			plasmaAttackTimer.stop()
-			# Clear targeted enemies after salvo completes (only if weapon bay upgrade active)
 			if additional_attacks > 0:
 				targeted_enemies.clear()
 
@@ -280,8 +283,6 @@ func get_random_target():
 		return Vector2.UP
 
 func get_different_target():
-	# Get a target that hasn't been targeted in this salvo yet
-	# Clean up invalid enemies
 	for i in enemy_close.duplicate():
 		if not is_instance_valid(i):
 			enemy_close.erase(i)
@@ -289,7 +290,6 @@ func get_different_target():
 	if enemy_close.size() == 0:
 		return Vector2.UP
 
-	# Find untargeted enemies sorted by distance
 	var untargeted = []
 	for e in enemy_close:
 		if not is_instance_valid(e):
@@ -298,7 +298,6 @@ func get_different_target():
 			var d = global_position.distance_to(e.global_position)
 			untargeted.append({"enemy": e, "distance": d})
 
-	# If all enemies are targeted, reset and start over
 	if untargeted.size() == 0:
 		targeted_enemies.clear()
 		for e in enemy_close:
@@ -310,7 +309,6 @@ func get_different_target():
 	if untargeted.size() == 0:
 		return Vector2.UP
 
-	# Sort by distance and pick closest untargeted enemy
 	untargeted.sort_custom(func(a, b): return a.distance < b.distance)
 	var target = untargeted[0].enemy
 	targeted_enemies.append(target)
@@ -339,6 +337,26 @@ func get_closest_target():
 		return closest.global_position
 	else:
 		return Vector2.UP
+
+func fire_scatter_shot() -> void:
+	var base_angle = sprite.rotation
+	var cone_angle = deg_to_rad(30.0)
+	var pellet_count = scattershot_pellets
+	var pellet_damage = scattershot_damage + damage_bonus
+	var pellet_hp = scattershot_penetration
+	var pellet_speed = 200.0
+	
+	for i in range(pellet_count):
+		var angle_offset = 0.0
+		if pellet_count > 1:
+			angle_offset = cone_angle * ((float(i) / float(pellet_count - 1)) - 0.5)
+		
+		var pellet = scatterShot.instantiate()
+		var direction = Vector2.UP.rotated(base_angle + angle_offset)
+		pellet.position = Vector2.UP.rotated(base_angle) * 8
+		pellet.level = scattershot_level
+		pellet.setup(direction, pellet_speed, pellet_damage, pellet_hp)
+		add_child(pellet)
 
 
 func _set_player_frame(frame_index: int) -> void:
@@ -377,12 +395,12 @@ func _on_grab_area_area_entered(area):
 	if area.is_in_group("loot"):
 		area.target = self
 
-func _on_collect_area_area_entered(area):
+func _on_collect_area_area_entered(area: Area2D) -> void:
 	if area.is_in_group("loot"):
 		var gem_exp = area.collect()
 		calculate_experience(gem_exp)
 
-func calculate_experience(gem_exp):
+func calculate_experience(gem_exp: int) -> void:
 	var exp_required = calculate_experiencecap()
 	collected_experience += gem_exp
 	if experience + collected_experience >= exp_required: # level up
@@ -397,7 +415,7 @@ func calculate_experience(gem_exp):
 	
 	set_expbar(experience, exp_required)
 
-func calculate_experiencecap():
+func calculate_experiencecap() -> int:
 	var exp_cap = experience_level
 	if experience_level < 20:
 		exp_cap = experience_level * 5
@@ -408,11 +426,11 @@ func calculate_experiencecap():
 		
 	return exp_cap
 		
-func set_expbar(set_value = 1, set_max_value = 100):
+func set_expbar(set_value: int = 1, set_max_value: int = 100) -> void:
 	expBar.value = set_value
 	expBar.max_value = set_max_value
 
-func levelup():
+func levelup() -> void:
 	sndLevelUp.play()
 	lblLevel.text = str("Level: ", experience_level)
 	var tween = levelPanel.create_tween()
@@ -428,7 +446,7 @@ func levelup():
 		options += 1
 	get_tree().paused = true
 
-func upgrade_character(upgrade):
+func upgrade_character(upgrade: String) -> void:
 	match upgrade:
 		"pulselaser1":
 			pulselaser_level = 1
@@ -466,6 +484,30 @@ func upgrade_character(upgrade):
 		"plasma4":
 			plasma_level = 4
 			plasma_baseammo += 1
+		"scattershot1":
+			scattershot_level = 1
+			scattershot_pellets = 3
+			scattershot_damage = 5
+			scattershot_penetration = 1
+			scattershot_attackspeed = 2.0
+		"scattershot2":
+			scattershot_level = 2
+			scattershot_pellets = 5
+			scattershot_damage = 7
+			scattershot_penetration = 2
+			scattershot_attackspeed = 1.8
+		"scattershot3":
+			scattershot_level = 3
+			scattershot_pellets = 7
+			scattershot_damage = 9
+			scattershot_penetration = 3
+			scattershot_attackspeed = 1.5
+		"scattershot4":
+			scattershot_level = 4
+			scattershot_pellets = 9
+			scattershot_damage = 12
+			scattershot_penetration = 4
+			scattershot_attackspeed = 1.2
 		"damage1":
 			damage_bonus += 3
 		"damage2":
@@ -502,8 +544,8 @@ func upgrade_character(upgrade):
 	get_tree().paused = false
 	calculate_experience(0)
 	
-func get_random_item():
-	var dblist = []
+func get_random_item() -> String:
+	var dblist: Array = []
 	for i in UpgradeDb.UPGRADES:
 		if i in collected_upgrades:
 			pass
@@ -525,9 +567,9 @@ func get_random_item():
 		upgrade_options.append(randomitem)
 		return randomitem
 	else:
-		return null
+		return ""
 
-func change_time(argtime = 0):
+func change_time(argtime: int = 0) -> void:
 	time = argtime
 	var get_m = int(time / 60.0)
 	var get_s = time % 60
@@ -537,12 +579,11 @@ func change_time(argtime = 0):
 		get_s = str(0, get_s)
 	lblTimer.text = str(get_m, ":", get_s)
 
-	# Update difficulty indicator
 	if lblDifficulty and difficulty_manager:
 		var diff_text = difficulty_manager.get_difficulty_description()
 		lblDifficulty.text = "Difficulty: " + diff_text
 
-func adjust_gui_collection(upgrade):
+func adjust_gui_collection(upgrade: String) -> void:
 	var get_upgraded_displayname = UpgradeDb.UPGRADES[upgrade]["displayname"]
 	var get_type = UpgradeDb.UPGRADES[upgrade]["type"]
 	if get_type != "item":
@@ -558,16 +599,14 @@ func adjust_gui_collection(upgrade):
 				"upgrade":
 					collectedUpgrades.add_child(new_item)
 
-func _submit_score_to_leaderboard():
-	# Only submit if player is logged in
+func _submit_score_to_leaderboard() -> void:
 	if not Talo.current_alias:
 		print("Player not logged in, skipping leaderboard submission")
 		return
 
-	# Submit survival time as score, with level as metadata
-	var score = time  # Survival time in seconds
+	var score = time
 
-	var res = await Talo.leaderboards.add_entry("survival_time", score, { level = experience_level })
+	var res = await Talo.leaderboards.add_entry("survival_time", score, {level = experience_level})
 
 	if is_instance_valid(res):
 		if res.updated:
@@ -577,7 +616,7 @@ func _submit_score_to_leaderboard():
 	else:
 		print("Failed to submit score to leaderboard")
 
-func death():
+func death() -> void:
 	deathPanel.visible = true
 	emit_signal("playerdeath")
 	get_tree().paused = true
@@ -591,7 +630,6 @@ func death():
 		lblResult.text = "You Lose"
 		sndLose.play()
 
-	# Submit score to leaderboard
 	_submit_score_to_leaderboard()
 
 

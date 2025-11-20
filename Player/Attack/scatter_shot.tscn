@@ -5,7 +5,7 @@
 [ext_resource type="AudioStream" uid="uid://b0rdxq5mpoaux" path="res://Audio/SoundEffect/scatter_shot.wav" id="2_oyefn"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_moaj8"]
-size = Vector2(3.505, 14.11)
+size = Vector2(6, 18)
 
 [node name="ScatterShot" type="Area2D"]
 collision_layer = 4
@@ -17,7 +17,7 @@ scale = Vector2(0.25, 0.25)
 texture = ExtResource("1_r3eco")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0.005, 0)
+position = Vector2(-5.9604645e-08, 2.3841858e-07)
 shape = SubResource("RectangleShape2D_moaj8")
 
 [node name="Timer" type="Timer" parent="."]

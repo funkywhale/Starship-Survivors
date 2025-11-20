@@ -4,7 +4,7 @@ extends Control
 @onready var loading_label = $MarginContainer/VBoxContainer/LoadingLabel
 @onready var back_button = $MarginContainer/VBoxContainer/BackButton
 
-const LEADERBOARD_NAME = "survival_time"  # Change this to match your Talo leaderboard internal name
+const LEADERBOARD_NAME = "survival_time" # Change this to match your Talo leaderboard internal name
 
 func _ready():
 	back_button.pressed.connect(_on_back_button_pressed)
@@ -14,11 +14,13 @@ func _load_leaderboard():
 	loading_label.text = "Loading leaderboard..."
 	loading_label.visible = true
 
-	# Clear existing entries
 	for child in entries_container.get_children():
 		child.queue_free()
 
-	# Fetch leaderboard entries
+	if not Talo.current_alias:
+		loading_label.text = "Please log in to view leaderboard"
+		return
+
 	var options = Talo.leaderboards.GetEntriesOptions.new()
 	options.page = 0
 

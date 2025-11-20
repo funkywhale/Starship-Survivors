@@ -1,9 +1,8 @@
-[gd_scene load_steps=19 format=3 uid="uid://dncgepmkc4jf4"]
+[gd_scene load_steps=18 format=3 uid="uid://dncgepmkc4jf4"]
 
 [ext_resource type="Script" uid="uid://cpndvo858r5uf" path="res://Player/player.gd" id="1_37q80"]
 [ext_resource type="Texture2D" uid="uid://p0up1j2hnvko" path="res://Textures/Player/player_sprite2.png" id="2_p5o4e"]
 [ext_resource type="PackedScene" uid="uid://xy3cvpwdy828" path="res://Utility/hurt_box.tscn" id="3_gs51i"]
-[ext_resource type="Texture2D" uid="uid://dx7xx6vfahxlq" path="res://Textures/GUI/exp_background.png" id="4_pbpj5"]
 [ext_resource type="Texture2D" uid="uid://dlx33roiu0vlj" path="res://Textures/GUI/exp_progress.png" id="5_5ive2"]
 [ext_resource type="AudioStream" uid="uid://rlhdbyjq2q3r" path="res://Audio/SoundEffect/levelup.ogg" id="7_wl7d2"]
 [ext_resource type="FontFile" uid="uid://dlth4bsmavf24" path="res://Font/globet_bold.ttf" id="8_apopc"]
@@ -146,7 +145,6 @@ layout_mode = 0
 offset_top = 342.0
 offset_right = 640.0
 offset_bottom = 362.0
-texture_under = ExtResource("4_pbpj5")
 texture_progress = ExtResource("5_5ive2")
 
 [node name="lbl_level" type="Label" parent="GUILayer/GUI/ExperienceBar"]

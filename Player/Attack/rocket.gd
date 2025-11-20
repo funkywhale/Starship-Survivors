@@ -1,16 +1,16 @@
 extends Area2D
 
-var level = 1
-var hp = 9999
-var speed = 100.0
-var damage = 5
-var knockback_amount = 100
-var attack_size = 1.0
+var level: int = 1
+var hp: int = 9999
+var speed: float = 100.0
+var damage: int = 5
+var knockback_amount: int = 100
+var attack_size: float = 1.0
 
-var last_movement = Vector2.ZERO
-var angle = Vector2.ZERO
-var angle_less = Vector2.ZERO
-var angle_more = Vector2.ZERO
+var last_movement: Vector2 = Vector2.ZERO
+var angle: Vector2 = Vector2.ZERO
+var angle_less: Vector2 = Vector2.ZERO
+var angle_more: Vector2 = Vector2.ZERO
 var exploded: bool = false
 
 signal remove_from_array(object)
@@ -115,21 +115,21 @@ func _ready():
 	if not is_connected("body_entered", Callable(self, "_on_body_entered")):
 		connect("body_entered", Callable(self, "_on_body_entered"))
 
-func _physics_process(delta):
+func _physics_process(delta: float) -> void:
 	if angle != Vector2.ZERO:
 		rotation = angle.angle() + PI / 2
 	position += angle * speed * delta
 
-func enemy_hit(charge = 1):
+func enemy_hit(charge: int = 1) -> void:
 	hp -= charge
 	if hp <= 0:
 		_spawn_explosion()
 
-func _on_timer_timeout():
+func _on_timer_timeout() -> void:
 	emit_signal("remove_from_array", self)
 	queue_free()
 
-func _spawn_explosion():
+func _spawn_explosion() -> void:
 	if exploded:
 		return
 	exploded = true

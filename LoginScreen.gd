@@ -5,11 +5,12 @@ extends Control
 @onready var status_label = $CenterContainer/VBoxContainer/StatusLabel
 @onready var login_button = $CenterContainer/VBoxContainer/LoginButton
 @onready var register_button = $CenterContainer/VBoxContainer/RegisterButton
+@onready var skip_button = $SkipButton
 
 func _ready():
-	# Connect the button's pressed signal to the correct handler functions
 	login_button.pressed.connect(_on_LoginButton_pressed)
 	register_button.pressed.connect(_on_RegisterButton_pressed)
+	skip_button.pressed.connect(_on_SkipButton_pressed)
 
 
 # This is the handler for the login button
@@ -19,6 +20,9 @@ func _on_LoginButton_pressed():
 # This is the handler for the register button
 func _on_RegisterButton_pressed():
 	_perform_registration()
+
+func _on_SkipButton_pressed():
+	get_tree().change_scene_to_file("res://TitleScreen/menu.tscn")
 
 
 # --- ASYNC LOGIC (The official, documented method) ---

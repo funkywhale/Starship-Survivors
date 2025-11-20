@@ -47,7 +47,7 @@ const UPGRADES = {
 	"plasma2": {
 		"icon": WEAPON_PATH + "plasma_icon.png",
 		"displayname": "Plasma Blast",
-		"details": "+1 aditional plasma blast is fired",
+		"details": "+1 additional plasma blast is fired",
 		"level": "Level: 2",
 		"prerequisite": ["plasma1"],
 		"type": "weapon"
@@ -55,7 +55,7 @@ const UPGRADES = {
 	"plasma3": {
 		"icon": WEAPON_PATH + "plasma_icon.png",
 		"displayname": "Plasma Blast",
-		"details": "+1 aditional plasma blast is fired",
+		"details": "+1 additional plasma blast is fired",
 		"level": "Level: 3",
 		"prerequisite": ["plasma2"],
 		"type": "weapon"
@@ -63,7 +63,7 @@ const UPGRADES = {
 	"plasma4": {
 		"icon": WEAPON_PATH + "plasma_icon.png",
 		"displayname": "Plasma Blast",
-		"details": "+1 aditional plasma blast is fired",
+		"details": "+1 additional plasma blast is fired",
 		"level": "Level: 4",
 		"prerequisite": ["plasma3"],
 		"type": "weapon"
@@ -276,6 +276,38 @@ const UPGRADES = {
 		"prerequisite": ["weapon1"],
 		"type": "upgrade"
 	},
+	"scattershot1": {
+		"icon": WEAPON_PATH + "scattershot_icon.png",
+		"displayname": "Scatter Shot",
+		"details": "Fires 3 pellets in a cone. Shotgun-style weapon.",
+		"level": "Level: 1",
+		"prerequisite": [],
+		"type": "weapon"
+	},
+	"scattershot2": {
+		"icon": WEAPON_PATH + "scattershot_icon.png",
+		"displayname": "Scatter Shot",
+		"details": "Fires 5 pellets with increased damage and penetration.",
+		"level": "Level: 2",
+		"prerequisite": ["scattershot1"],
+		"type": "weapon"
+	},
+	"scattershot3": {
+		"icon": WEAPON_PATH + "scattershot_icon.png",
+		"displayname": "Scatter Shot",
+		"details": "Fires 7 pellets with further increased damage and penetration.",
+		"level": "Level: 3",
+		"prerequisite": ["scattershot2"],
+		"type": "weapon"
+	},
+	"scattershot4": {
+		"icon": WEAPON_PATH + "scattershot_icon.png",
+		"displayname": "Scatter Shot",
+		"details": "Fires 9 pellets with maximum damage and penetration.",
+		"level": "Level: 4",
+		"prerequisite": ["scattershot3"],
+		"type": "weapon"
+	},
 	"heal": {
 		"icon": ICON_PATH + "chunk.png",
 		"displayname": "Heal",
@@ -283,5 +315,5 @@ const UPGRADES = {
 		"level": "N/A",
 		"prerequisite": [],
 		"type": "item"
-	}
+	},
 }

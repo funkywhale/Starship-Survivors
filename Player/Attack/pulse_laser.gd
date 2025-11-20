@@ -1,16 +1,16 @@
 extends Area2D
 
-var level = 1
-var hp = 1
-var speed = 100
-var damage = 5
-var knockback_amount = 100
-var attack_size = 1.0
+var level: int = 1
+var hp: int = 1
+var speed: float = 100.0
+var damage: int = 5
+var knockback_amount: int = 100
+var attack_size: float = 1.0
 
-var target = Vector2.ZERO
-var angle = Vector2.ZERO
+var target: Vector2 = Vector2.ZERO
+var angle: Vector2 = Vector2.ZERO
 
-@onready var player = get_tree().get_first_node_in_group("player")
+@onready var player: CharacterBody2D = get_tree().get_first_node_in_group("player")
 signal remove_from_array(object)
 
 func _ready():
@@ -47,10 +47,10 @@ func _ready():
 	tween.tween_property(self, "scale", Vector2(1, 1) * attack_size, 1).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
 	tween.play()
 
-func _physics_process(delta):
+func _physics_process(delta: float) -> void:
 	position += angle * speed * delta
 
-func enemy_hit(charge = 1):
+func enemy_hit(charge: int = 1) -> void:
 	hp -= charge
 	if hp <= 0:
 		emit_signal("remove_from_array", self)

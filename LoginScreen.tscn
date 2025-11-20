@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://jy152dm53h1u"]
+[gd_scene load_steps=3 format=3 uid="uid://boeuffoebk7k2"]
 
 [ext_resource type="Script" uid="uid://ocikl6hxgcu5" path="res://LoginScreen.gd" id="1_abcde"]
 [ext_resource type="PackedScene" uid="uid://b7c7gsdx2rkjm" path="res://Utility/basic_button.tscn" id="2_fghij"]
@@ -50,6 +50,14 @@ text = "Login"
 [node name="RegisterButton" parent="CenterContainer/VBoxContainer" instance=ExtResource("2_fghij")]
 layout_mode = 2
 text = "Register"
+
+[node name="SkipButton" parent="." instance=ExtResource("2_fghij")]
+layout_mode = 0
+offset_left = 555.0
+offset_top = 323.0
+offset_right = 635.0
+offset_bottom = 357.0
+text = "Skip"
 
 [connection signal="click_end" from="CenterContainer/VBoxContainer/LoginButton" to="." method="_on_LoginButton_click_end"]
 [connection signal="click_end" from="CenterContainer/VBoxContainer/RegisterButton" to="." method="_on_RegisterButton_click_end"]
