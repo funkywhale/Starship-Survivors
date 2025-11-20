@@ -79,6 +79,7 @@ var targeted_enemies: Array = [] # Track enemies targeted in current attack salv
 
 
 @onready var sprite = $Sprite2D
+@onready var skin_manager = get_node("/root/SkinManager")
 @onready var walkTimer = get_node("%walkTimer")
 @onready var camera = $Camera2D
 
@@ -111,14 +112,25 @@ var intro_playing: bool = true
 signal playerdeath
 
 func _ready() -> void:
+	_apply_skin()
 	upgrade_character("pulselaser1")
 	set_expbar(experience, calculate_experiencecap())
 	_on_hurt_box_hurt(0.0, Vector2.ZERO, 0.0)
 
 	difficulty_manager = get_tree().get_first_node_in_group("difficulty_manager")
+  start_camera_intro()
 
-	# Start camera intro (attack will be called after intro)
-	start_camera_intro()
+func _apply_skin() -> void:
+	if skin_manager == null:
+		return
+
+	var tex: Texture2D = skin_manager.get_equipped_texture()
+	if tex:
+		sprite.texture = tex
+		sprite.hframes = 2   
+		sprite.vframes = 1
+	print("Player: applied skin = ", skin_manager.equipped)
+
 
 func _physics_process(_delta: float) -> void:
 	movement(_delta)

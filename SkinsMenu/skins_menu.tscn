@@ -1,0 +1,87 @@
+[gd_scene load_steps=2 format=3 uid="uid://blrgo8psh5oh5"]
+
+[ext_resource type="Script" uid="uid://ceda6bjvseefv" path="res://SkinsMenu/skins_menu.gd" id="1_gmy47"]
+
+[node name="SkinsMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_gmy47")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.1, 0.1, 0.15, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Preview" type="TextureRect" parent="MarginContainer/VBoxContainer/CenterContainer"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+stretch_mode = 5
+
+[node name="SkinName" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 1
+
+[node name="Selector" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="leftArrow" type="Button" parent="MarginContainer/VBoxContainer/Selector"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "←"
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Selector"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Select Your Ship"
+horizontal_alignment = 1
+
+[node name="rightArrow" type="Button" parent="MarginContainer/VBoxContainer/Selector"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "→"
+
+[node name="actionButtons" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Select" type="Button" parent="MarginContainer/VBoxContainer/actionButtons"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Equip
+"
+
+[node name="BackButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Back"
