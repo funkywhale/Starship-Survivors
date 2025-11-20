@@ -118,7 +118,7 @@ func _ready() -> void:
 	_on_hurt_box_hurt(0.0, Vector2.ZERO, 0.0)
 
 	difficulty_manager = get_tree().get_first_node_in_group("difficulty_manager")
-  start_camera_intro()
+	start_camera_intro()
 
 func _apply_skin() -> void:
 	if skin_manager == null:
