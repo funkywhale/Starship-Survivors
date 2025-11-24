@@ -10,13 +10,14 @@ var cache_update_counter: int = 0
 
 # Enemy count management
 var active_enemy_count: int = 0
-const MAX_ENEMIES: int = 250 # Hard cap for web performance
+const MAX_ENEMIES: int = 150 # Lower cap keeps HTML5 build within budget
 const CLEANUP_CHECK_INTERVAL: int = 30 # Check every 30 seconds
 var cleanup_timer: int = 0
 
 # Enemy repositioning to prevent running away
 const TELEPORT_DISTANCE: float = 800.0 # Distance behind player to check for far enemies
 const REPOSITION_DISTANCE: float = 400.0 # Distance ahead of player to reposition
+const MAX_REPOSITION_CANDIDATES: int = 40 # Limit expensive sorting work
 var enemy_list: Array = [] # Cache of all active enemies
 
 @export var time: int = 0
@@ -100,7 +101,6 @@ func _on_timer_timeout() -> void:
 	emit_signal("changetime", time)
 
 func get_random_position() -> Vector2:
-	# Cache viewport size for performance (update every 60 spawns)
 	cache_update_counter += 1
 	if cache_update_counter > 60 or cached_viewport_size == Vector2.ZERO:
 		cached_viewport_size = get_viewport_rect().size
@@ -112,8 +112,8 @@ func get_random_position() -> Vector2:
 	var bottom_left = Vector2(player.global_position.x - vpr.x / 2, player.global_position.y + vpr.y / 2)
 	var bottom_right = Vector2(player.global_position.x + vpr.x / 2, player.global_position.y + vpr.y / 2)
 
-	# Reduce rock check attempts for performance
-	var max_attempts = 3 # Reduced from 10
+
+	var max_attempts = 3 
 	var spawn_pos1 = Vector2.ZERO
 	var spawn_pos2 = Vector2.ZERO
 
@@ -156,13 +156,11 @@ func is_position_blocked_by_rock(pos: Vector2) -> bool:
 	return not result.is_empty()
 
 func _on_enemy_removed(enemy) -> void:
-	# Track when enemies are removed
 	active_enemy_count = max(0, active_enemy_count - 1)
 	if enemy_list.has(enemy):
 		enemy_list.erase(enemy)
 
 func _cleanup_dead_enemies() -> void:
-	# Recount actual enemies and rebuild list
 	var actual_count = 0
 	enemy_list.clear()
 	
@@ -179,11 +177,11 @@ func _cleanup_dead_enemies() -> void:
 		print("Enemy count corrected: ", active_enemy_count, " -> ", actual_count)
 
 func _reposition_far_enemies(count_to_reposition: int) -> void:
-	# Find enemies that are far behind the player and teleport them ahead
+
 	if not player or enemy_list.is_empty():
 		return
 	
-	# Get player's movement direction
+
 	var player_velocity = Vector2.ZERO
 	if player.has_method("get_velocity"):
 		player_velocity = player.get_velocity()
@@ -202,26 +200,41 @@ func _reposition_far_enemies(count_to_reposition: int) -> void:
 			player_direction = Vector2.UP.rotated(player.sprite.rotation)
 		else:
 			player_direction = Vector2.UP
+
+	if player_direction.length_squared() < 0.001:
+		return
+
+	player_direction = player_direction.normalized()
 	
 	# Find enemies behind the player
-	var enemies_to_reposition = []
+	var enemies_to_reposition: Array = []
 	var behind_direction = - player_direction
 	
+	var teleport_distance_sq = TELEPORT_DISTANCE * TELEPORT_DISTANCE
+
 	for enemy in enemy_list:
 		if not is_instance_valid(enemy):
 			continue
 		
 		var to_enemy = enemy.global_position - player.global_position
-		var distance = to_enemy.length()
+		var distance_sq = to_enemy.length_squared()
 		
 		# Check if enemy is behind player and far away
-		if distance > TELEPORT_DISTANCE:
+		if distance_sq > teleport_distance_sq:
 			var dot = to_enemy.normalized().dot(behind_direction)
 			if dot > 0.5: # Enemy is in the "behind" cone
-				enemies_to_reposition.append({"enemy": enemy, "distance": distance})
-	
-	# Sort by distance (farthest first)
-	enemies_to_reposition.sort_custom(func(a, b): return a.distance > b.distance)
+				var entry = {"enemy": enemy, "distance_sq": distance_sq}
+				var inserted = false
+				for idx in range(enemies_to_reposition.size()):
+					if distance_sq > enemies_to_reposition[idx]["distance_sq"]:
+						enemies_to_reposition.insert(idx, entry)
+						inserted = true
+						break
+				if not inserted:
+					enemies_to_reposition.append(entry)
+
+				if enemies_to_reposition.size() > MAX_REPOSITION_CANDIDATES:
+					enemies_to_reposition.pop_back()
 	
 	# Reposition the farthest enemies
 	var repositioned = 0
@@ -229,7 +242,7 @@ func _reposition_far_enemies(count_to_reposition: int) -> void:
 		if repositioned >= count_to_reposition:
 			break
 		
-		var enemy = enemy_data.enemy
+		var enemy = enemy_data["enemy"]
 		if not is_instance_valid(enemy):
 			continue
 		
