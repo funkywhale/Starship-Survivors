@@ -1,6 +1,6 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1763957148
-export_presets.cfg::TextFile::-1::1763957148::0::1::::<><><>0<>0<><>::
+::res://::1763958034
+export_presets.cfg::TextFile::-1::1763957431::0::1::::<><><>0<>0<><>::
 icon.svg::CompressedTexture2D::1730451811002220422::1717904380::1763624736::1::::<><><>0<>0<>22e3922c0bcc0ed614477686af31f91a<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
 LoginScreen.gd::GDScript::987276786316564622::1763945689::0::1::::<>Control<><>0<>0<><>::
 LoginScreen.tscn::PackedScene::3378545558894168271::1763954031::0::1::::<><><>0<>0<><>::uid://ocikl6hxgcu5::::res://LoginScreen.gd<>uid://b7c7gsdx2rkjm::::res://Utility/basic_button.tscn<>uid://bcj6p83xed2sp::::res://Textures/titlecard.png
@@ -178,10 +178,11 @@ missile.mp3::AudioStreamMP3::6129136670856542820::1759008388::1759008409::1::::<
 scatter_shot.wav::AudioStreamWAV::4176460307984594719::1759289231::1759289247::1::::<><><>0<>0<>bf584657874f67d0e62e9ba0cfd2cc1c<>res://.godot/imported/scatter_shot.wav-ea2b76a3f0c9a7a96ac4807f862cf927.sample::
 Victory.ogg::AudioStreamOggVorbis::4808945781366155227::1759031304::1759031310::1::::<><><>0<>0<>7c099beb14f42500edb26231cb214a99<>res://.godot/imported/Victory.ogg-d51c8a423b16c859fcb835f857d9d7bf.oggvorbisstr::
 woosh.wav::AudioStreamWAV::5510730769330180881::1717904380::1717904380::1::::<><><>0<>0<>c4e1224f579a6fb2db2f534cb5f8755a<>res://.godot/imported/woosh.wav-ab061df73379afad44a9e04e929634d6.sample::
-::res://build/::1763957430
-index.apple-touch-icon.png::CompressedTexture2D::6545857741281641705::1763957430::1763957430::1::::<><><>0<>0<>582bf9f8f037d02d4fff1dcf89a49253<>res://.godot/imported/index.apple-touch-icon.png-dcd2c094bfa3f769157f6f2ba930cc56.ctex::
-index.icon.png::CompressedTexture2D::1648797221951875242::1763957430::1763957430::1::::<><><>0<>0<>9f274850a5964f79dd137ccf60bf2364<>res://.godot/imported/index.icon.png-96098a584bb713a61c1e8aa1df56a1bb.ctex::
-index.png::CompressedTexture2D::2686817889017991548::1763957430::1763957430::1::::<><><>0<>0<>4257ddd352eea3ab5e8d0f1c7bab86d0<>res://.godot/imported/index.png-659c11691fe5279cf81f33eb936290a4.ctex::
+::res://build/::1763958068
+::res://docs/::1763958068
+index.apple-touch-icon.png::CompressedTexture2D::6545857741281641705::1763957430::1763958069::1::::<><><>0<>0<>8e3dc8feab98d4b7f43e25635e138263<>res://.godot/imported/index.apple-touch-icon.png-b21a756d869f84af832970a74d8371bc.ctex::
+index.icon.png::CompressedTexture2D::1648797221951875242::1763957430::1763958069::1::::<><><>0<>0<>eb6c73fe5754d148e7af115e45740647<>res://.godot/imported/index.icon.png-b92c9a802ad4b78e247784454a6b506f.ctex::
+index.png::CompressedTexture2D::2686817889017991548::1763957430::1763958069::1::::<><><>0<>0<>4bd0361405700add0acae2c2fd5eee40<>res://.godot/imported/index.png-0c78d14d192abe5f22f8c25928ca1ab8.ctex::
 ::res://Enemy/::1763937284
 enemy.gd::GDScript::7230313870044609823::1763954387::0::1::::<>CharacterBody2D<><>0<>0<><>::
 enemy_battleship.tscn::PackedScene::496021227581763643::1763936781::0::1::::<><><>0<>0<><>::uid://dbaohik2hgpgx::::res://Enemy/enemy.gd<>uid://cdplp8iinsoer::::res://Textures/Enemy/space_battleship.png<>uid://xy3cvpwdy828::::res://Utility/hurt_box.tscn<>uid://uhr6mtuisqm1::::res://Utility/hit_box.tscn<>uid://bi7t7cjthnhhc::::res://Audio/SoundEffect/enemy_hit.ogg
@@ -301,6 +302,6 @@ skin_manager.gd::GDScript::4542051528836206541::1763952108::0::1::::<>Node<><>0<
 spawn_info.gd::GDScript::8036323839998492956::1717904380::0::1::::Spawn_info<>Resource<><>0<>0<><>::
 upgrade_db.gd::GDScript::2764913904846729982::1763947051::0::1::::<>Node<><>0<>0<><>::
 upgrade_db.tscn::PackedScene::8898193193893975824::1759057561::0::1::::<><><>0<>0<><>::uid://bfnly0votknri::::res://Utility/upgrade_db.gd
-::res://World/::1763956958
+::res://World/::1763957497
 world.gd::GDScript::7080373497948031919::1763953103::0::1::::<>Node2D<><>0<>0<><>::
-world.tscn::PackedScene::8628008232662343889::1763956958::0::1::::<><><>0<>0<><>::uid://c741ym6flkffr::::res://World/world.gd<>uid://cy8avdpgoxae8::::res://Textures/space_background3.png<>uid://dncgepmkc4jf4::::res://Player/player.tscn<>uid://ba2claihwes2y::::res://Utility/enemy_spawner.tscn<>uid://gvm5jcbbgwdv::::res://Enemy/enemy_drone.tscn<>uid://dmq4cx6tw4emm::::res://Utility/spawn_info.gd<>uid://dsm1mjwhr5mq5::::res://Enemy/enemy_drone_strong.tscn<>uid://bok7kd2psi5gl::::res://Enemy/enemy_drone_stronger.tscn<>uid://hcjnrdsb563h::::res://Enemy/enemy_battleship.tscn<>uid://btf7clk4jja87::::res://Enemy/enemy_boss.tscn<>uid://d1w53vpr4y07b::::res://Audio/Music/battleThemeA.mp3<>uid://buvlo8c3trfoy::::res://Audio/Music/snd_Music.gd<>uid://cnyhv7p560kkj::::res://Utility/rock_manager.gd<>res://Utility/experience_orb_manager.tscn
+world.tscn::PackedScene::8628008232662343889::1763957497::0::1::::<><><>0<>0<><>::uid://c741ym6flkffr::::res://World/world.gd<>uid://cy8avdpgoxae8::::res://Textures/space_background3.png<>uid://dncgepmkc4jf4::::res://Player/player.tscn<>uid://ba2claihwes2y::::res://Utility/enemy_spawner.tscn<>uid://gvm5jcbbgwdv::::res://Enemy/enemy_drone.tscn<>uid://dmq4cx6tw4emm::::res://Utility/spawn_info.gd<>uid://dsm1mjwhr5mq5::::res://Enemy/enemy_drone_strong.tscn<>uid://bok7kd2psi5gl::::res://Enemy/enemy_drone_stronger.tscn<>uid://hcjnrdsb563h::::res://Enemy/enemy_battleship.tscn<>uid://btf7clk4jja87::::res://Enemy/enemy_boss.tscn<>uid://d1w53vpr4y07b::::res://Audio/Music/battleThemeA.mp3<>uid://buvlo8c3trfoy::::res://Audio/Music/snd_Music.gd<>uid://cnyhv7p560kkj::::res://Utility/rock_manager.gd<>res://Utility/experience_orb_manager.tscn
