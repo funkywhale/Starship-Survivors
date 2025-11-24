@@ -1,4 +1,4 @@
-res://addons/talo/samples/authentication/assets/theme.tres::765a9754bcfcd2bcfc460e7455b3c5e2::1763970146::res://.godot/exported/133200997/export-d353f539ca82d56096549c0f19429425-theme.res
+res://addons/talo/samples/authentication/assets/theme.tres::765a9754bcfcd2bcfc460e7455b3c5e2::1764016297::res://.godot/exported/133200997/export-d353f539ca82d56096549c0f19429425-theme.res
 res://addons/talo/samples/authentication/states/change_email.tscn::6bb93f0d78480322ff9a7faaefa654a4::1763624734::res://.godot/exported/133200997/export-123c38d625a9de0deaedf09ef2ddbabe-change_email.scn
 res://addons/talo/samples/authentication/states/change_password.tscn::3df0deba98449928a2570ff968ec33a7::1763624734::res://.godot/exported/133200997/export-e66d79f2d6a2b0fa464004cdf3f55ca6-change_password.scn
 res://addons/talo/samples/authentication/states/delete_account.tscn::d71bbe44671f7bb16e090c0ebd4bbaeb::1763624734::res://.godot/exported/133200997/export-5cbbf856a822c26ecdbd22c5b0d9e590-delete_account.scn
@@ -22,7 +22,7 @@ res://addons/talo/samples/multiscene_saves/starting_zone.tscn::ffb03560e3197f579
 res://addons/talo/samples/persistent_buttons/persistent_buttons.tscn::d799a73a802648ba1111e1c41f09866b::1763624734::res://.godot/exported/133200997/export-36d25e9b20484e3baf8ada6a8aa1a400-persistent_buttons.scn
 res://addons/talo/samples/playground/playground.tscn::6d09deb4d715183a788ef2ef31c59229::1763624734::res://.godot/exported/133200997/export-32ce8f1453229e929029aef409eb7067-playground.scn
 res://Audio/Music/title_music_player.tscn::5076479091772ee3a8c07749b07afe35::1763953103::res://.godot/exported/133200997/export-85b8bc6e7293c878d040fd7a1a74e0ee-title_music_player.scn
-res://Enemy/enemy_battleship.tscn::fd699dc4c33f2cc2eb396c9af8c151e5::1763936781::res://.godot/exported/133200997/export-cd0d56276b0a3a8fc3df7413898949d6-enemy_battleship.scn
+res://Enemy/enemy_battleship.tscn::a7129655eb7cd8aaab7168dca0cfeb58::1764016459::res://.godot/exported/133200997/export-cd0d56276b0a3a8fc3df7413898949d6-enemy_battleship.scn
 res://Enemy/enemy_boss.tscn::0d108f1d4b2a6ad5bd53dbf73bdcc813::1763955643::res://.godot/exported/133200997/export-d382ff4a14d60756fc8696e8a18d3f61-enemy_boss.scn
 res://Enemy/enemy_drone.tscn::70cb450e608760cb340653145961825d::1763937284::res://.godot/exported/133200997/export-e927f24e0b2d18b4db00ffed350ae37c-enemy_drone.scn
 res://Enemy/enemy_drone_strong.tscn::d6b449aa19dafaafef751a48e51f7553::1763936781::res://.godot/exported/133200997/export-b57d51b94ff6533ef3b398163ca924b2-enemy_drone_strong.scn
@@ -50,5 +50,5 @@ res://Utility/hit_box.tscn::d3ceedfbe905cc39d8141f7dd1140929::1717904380::res://
 res://Utility/hurt_box.tscn::d2cfe249dc2ada2529560ab038ea880d::1758955372::res://.godot/exported/133200997/export-a60fe6600d20ea02ad9949a92024b18d-hurt_box.scn
 res://Utility/item_option.tscn::15365e627df792a018cfe5e23fe66073::1759052563::res://.godot/exported/133200997/export-4cd66e9d2ef6bda90c064d5e204f02d5-item_option.scn
 res://Utility/upgrade_db.tscn::8b3d42047cac59a9fd9f926416959154::1759057561::res://.godot/exported/133200997/export-9b6981a41d3fab107a2d9e7cf0c27c8d-upgrade_db.scn
-res://World/world.tscn::faf256f6e8d9a0198051752b98592758::1763971965::res://.godot/exported/133200997/export-89647171d5d7bdb8a088d65cc9aa3a3a-world.scn
+res://World/world.tscn::96cef204f93e4b79b0161eafb407084b::1764016953::res://.godot/exported/133200997/export-89647171d5d7bdb8a088d65cc9aa3a3a-world.scn
 res://LoginScreen.tscn::f714d1fdaa332303bc646f1835d09250::1763954031::res://.godot/exported/133200997/export-aef34a00c7d74a6c6c98ecd0040d3a2a-LoginScreen.scn
