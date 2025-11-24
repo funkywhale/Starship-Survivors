@@ -4,3 +4,7 @@ res://Utility/difficulty_manager.gd
 res://Utility/enemy_spawner.gd
 res://addons/talo/samples/authentication/assets/theme.tres
 res://Enemy/enemy_battleship.tscn
+res://Utility/upgrade_db.tscn
+res://Enemy/enemy_boss.tscn
+res://Objects/rock.gd
+res://Enemy/enemy.gd

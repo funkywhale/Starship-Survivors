@@ -50,6 +50,11 @@ func _ready():
 	# Connect player collision signal
 	if player_collision_area:
 		player_collision_area.body_entered.connect(_on_player_collision)
+
+	# Allow non-boss enemies to collide with rocks while letting the boss ignore them
+	var boss_unit := is_in_group("boss")
+	set_collision_mask_value(2, not boss_unit)
+	set_collision_layer_value(2, not boss_unit)
 	
 	# Setup obstacle detection raycast
 	obstacle_raycast = RayCast2D.new()

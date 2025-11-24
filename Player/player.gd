@@ -626,13 +626,22 @@ func levelup() -> void:
 	tween.tween_property(levelPanel, "position", Vector2(220, 50), 0.2).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
 	tween.play()
 	levelPanel.visible = true
-	var options = 0
+	for child in upgradeOptions.get_children():
+		child.queue_free()
+	upgrade_options.clear()
 	var optionsmax = 3
-	while options < optionsmax:
+	var available_options: Array = []
+	while available_options.size() < optionsmax:
+		var next_option: String = get_random_item()
+		if next_option == "":
+			break
+		available_options.append(next_option)
+	if available_options.is_empty():
+		available_options.append("heal")
+	for option_name in available_options:
 		var option_choice = itemOptions.instantiate()
-		option_choice.item = get_random_item()
+		option_choice.item = option_name
 		upgradeOptions.add_child(option_choice)
-		options += 1
 	get_tree().paused = true
 
 func upgrade_character(upgrade: String) -> void:
@@ -836,11 +845,9 @@ func _on_btn_menu_click_end():
 	var _level = get_tree().change_scene_to_file("res://TitleScreen/menu.tscn")
 
 func start_camera_intro():
-	# Intro zoom: show a moderately zoomed-out view (was 0.25, now 0.5)
 	camera.zoom = Vector2(0.5, 0.5)
 	get_tree().paused = true
 	await get_tree().create_timer(1.0, true, false, true).timeout
-	# Tween to gameplay zoom (1.0) faster due to smaller distance
 	var tween = create_tween()
 	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	tween.tween_property(camera, "zoom", Vector2(1.0, 1.0), 1.8).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)

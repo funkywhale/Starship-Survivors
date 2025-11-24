@@ -43,8 +43,8 @@ func _ready():
 	# Set a gentle random angular velocity
 	angular_velocity = randf_range(min_angular, max_angular) * (1 if randf() > 0.5 else -1)
 
-	# Collide with player (layer 1) and other rocks (layer 2)
-	collision_layer = 1 + 2 # On layers 1 and 2
+	# Collide only with other rocks (layer 2)
+	collision_layer = 2
 	collision_mask = 2 # Only collide with other rocks (layer 2)
 
 	# Randomize initial rotation

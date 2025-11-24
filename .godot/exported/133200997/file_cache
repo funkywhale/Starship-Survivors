@@ -23,7 +23,7 @@ res://addons/talo/samples/persistent_buttons/persistent_buttons.tscn::d799a73a80
 res://addons/talo/samples/playground/playground.tscn::6d09deb4d715183a788ef2ef31c59229::1763624734::res://.godot/exported/133200997/export-32ce8f1453229e929029aef409eb7067-playground.scn
 res://Audio/Music/title_music_player.tscn::5076479091772ee3a8c07749b07afe35::1763953103::res://.godot/exported/133200997/export-85b8bc6e7293c878d040fd7a1a74e0ee-title_music_player.scn
 res://Enemy/enemy_battleship.tscn::a7129655eb7cd8aaab7168dca0cfeb58::1764016459::res://.godot/exported/133200997/export-cd0d56276b0a3a8fc3df7413898949d6-enemy_battleship.scn
-res://Enemy/enemy_boss.tscn::0d108f1d4b2a6ad5bd53dbf73bdcc813::1763955643::res://.godot/exported/133200997/export-d382ff4a14d60756fc8696e8a18d3f61-enemy_boss.scn
+res://Enemy/enemy_boss.tscn::126c3615aee5704e6985c9b5fc3936f1::1764018690::res://.godot/exported/133200997/export-d382ff4a14d60756fc8696e8a18d3f61-enemy_boss.scn
 res://Enemy/enemy_drone.tscn::70cb450e608760cb340653145961825d::1763937284::res://.godot/exported/133200997/export-e927f24e0b2d18b4db00ffed350ae37c-enemy_drone.scn
 res://Enemy/enemy_drone_strong.tscn::d6b449aa19dafaafef751a48e51f7553::1763936781::res://.godot/exported/133200997/export-b57d51b94ff6533ef3b398163ca924b2-enemy_drone_strong.scn
 res://Enemy/enemy_drone_stronger.tscn::3205bda99b8f034618c876693a8523ac::1763936781::res://.godot/exported/133200997/export-9e0a8521bd24369858f622e2be5b0011-enemy_drone_stronger.scn
@@ -49,6 +49,6 @@ res://Utility/experience_orb_manager.tscn::e6615d5daa3f7124e76bfd055d5954d9::176
 res://Utility/hit_box.tscn::d3ceedfbe905cc39d8141f7dd1140929::1717904380::res://.godot/exported/133200997/export-c0b8329470e3a8a3346cddcfda3f2815-hit_box.scn
 res://Utility/hurt_box.tscn::d2cfe249dc2ada2529560ab038ea880d::1758955372::res://.godot/exported/133200997/export-a60fe6600d20ea02ad9949a92024b18d-hurt_box.scn
 res://Utility/item_option.tscn::15365e627df792a018cfe5e23fe66073::1759052563::res://.godot/exported/133200997/export-4cd66e9d2ef6bda90c064d5e204f02d5-item_option.scn
-res://Utility/upgrade_db.tscn::8b3d42047cac59a9fd9f926416959154::1759057561::res://.godot/exported/133200997/export-9b6981a41d3fab107a2d9e7cf0c27c8d-upgrade_db.scn
-res://World/world.tscn::96cef204f93e4b79b0161eafb407084b::1764016997::res://.godot/exported/133200997/export-89647171d5d7bdb8a088d65cc9aa3a3a-world.scn
+res://Utility/upgrade_db.tscn::8b3d42047cac59a9fd9f926416959154::1764018575::res://.godot/exported/133200997/export-9b6981a41d3fab107a2d9e7cf0c27c8d-upgrade_db.scn
+res://World/world.tscn::96cef204f93e4b79b0161eafb407084b::1764018086::res://.godot/exported/133200997/export-89647171d5d7bdb8a088d65cc9aa3a3a-world.scn
 res://LoginScreen.tscn::f714d1fdaa332303bc646f1835d09250::1763954031::res://.godot/exported/133200997/export-aef34a00c7d74a6c6c98ecd0040d3a2a-LoginScreen.scn

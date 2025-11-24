@@ -59,7 +59,7 @@ collision_mask = 5
 motion_mode = 1
 script = ExtResource("1_544l3")
 movement_speed = 40.0
-hp = 5000
+hp = 8000
 knockback_recovery = 40.0
 experience = 2000
 enemy_damage = 40
@@ -84,7 +84,7 @@ HurtBoxType = 1
 position = Vector2(-1, 1)
 shape = SubResource("RectangleShape2D_rborl")
 
-[node name="HitBox" parent="." groups=["attack"] instance=ExtResource("4_uo1gu")]
+[node name="HitBox" parent="." instance=ExtResource("4_uo1gu")]
 collision_layer = 2
 
 [node name="CollisionShape2D" parent="HitBox" index="0"]
@@ -93,7 +93,6 @@ shape = SubResource("RectangleShape2D_ucec4")
 
 [node name="PlayerCollisionArea" type="Area2D" parent="."]
 collision_layer = 0
-collision_mask = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerCollisionArea"]
 position = Vector2(-1.5, 1)
