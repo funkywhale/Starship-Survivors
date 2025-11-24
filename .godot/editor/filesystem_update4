@@ -8,3 +8,4 @@ res://Player/Attack/scatter_shot.gd
 res://Utility/enemy_spawner.gd
 res://Utility/rock_manager.gd
 res://addons/talo/samples/authentication/assets/theme.tres
+res://Enemy/enemy.gd

@@ -8,6 +8,17 @@ var difficulty_manager: Node = null
 var cached_viewport_size: Vector2 = Vector2.ZERO
 var cache_update_counter: int = 0
 
+# Enemy count management
+var active_enemy_count: int = 0
+const MAX_ENEMIES: int = 150 # Hard cap for web performance
+const CLEANUP_CHECK_INTERVAL: int = 30 # Check every 30 seconds
+var cleanup_timer: int = 0
+
+# Enemy repositioning to prevent running away
+const TELEPORT_DISTANCE: float = 800.0 # Distance behind player to check for far enemies
+const REPOSITION_DISTANCE: float = 400.0 # Distance ahead of player to reposition
+var enemy_list: Array = [] # Cache of all active enemies
+
 @export var time: int = 0
 
 signal changetime(time)
@@ -23,6 +34,13 @@ func _ready() -> void:
 
 func _on_timer_timeout() -> void:
 	time += 1
+	cleanup_timer += 1
+	
+	# Periodic cleanup of dead enemies
+	if cleanup_timer >= CLEANUP_CHECK_INTERVAL:
+		cleanup_timer = 0
+		_cleanup_dead_enemies()
+	
 	var enemy_spawns = spawns
 	var spawn_rate_mult = 1.0
 	var enemy_count_mult = 1.0
@@ -58,9 +76,21 @@ func _on_timer_timeout() -> void:
 
 				var counter = 0
 				while counter < adjusted_enemy_num:
+					# Instead of preventing spawns at cap, reposition far enemies
+					if active_enemy_count >= MAX_ENEMIES:
+						_reposition_far_enemies(adjusted_enemy_num - counter)
+						break
+					
 					var enemy_spawn = new_enemy.instantiate()
 					enemy_spawn.global_position = get_random_position()
+					
+					# Connect to enemy death signal to track count
+					if enemy_spawn.has_signal("remove_from_array"):
+						enemy_spawn.remove_from_array.connect(_on_enemy_removed)
+					
 					add_child(enemy_spawn)
+					enemy_list.append(enemy_spawn)
+					active_enemy_count += 1
 					counter += 1
 	emit_signal("changetime", time)
 
@@ -119,3 +149,98 @@ func is_position_blocked_by_rock(pos: Vector2) -> bool:
 	var result = space_state.intersect_point(query, 1)
 
 	return not result.is_empty()
+
+func _on_enemy_removed(enemy) -> void:
+	# Track when enemies are removed
+	active_enemy_count = max(0, active_enemy_count - 1)
+	if enemy_list.has(enemy):
+		enemy_list.erase(enemy)
+
+func _cleanup_dead_enemies() -> void:
+	# Recount actual enemies and rebuild list
+	var actual_count = 0
+	enemy_list.clear()
+	
+	for child in get_children():
+		if child.is_in_group("enemy") or child.has_method("death"):
+			if is_instance_valid(child):
+				actual_count += 1
+				enemy_list.append(child)
+			else:
+				child.queue_free()
+	
+	active_enemy_count = actual_count
+	if active_enemy_count != actual_count:
+		print("Enemy count corrected: ", active_enemy_count, " -> ", actual_count)
+
+func _reposition_far_enemies(count_to_reposition: int) -> void:
+	# Find enemies that are far behind the player and teleport them ahead
+	if not player or enemy_list.is_empty():
+		return
+	
+	# Get player's movement direction
+	var player_velocity = Vector2.ZERO
+	if player.has_method("get_velocity"):
+		player_velocity = player.get_velocity()
+	elif "velocity" in player:
+		player_velocity = player.velocity
+	
+	# If player isn't moving, use last_movement or default to forward
+	var player_direction = Vector2.ZERO
+	if player_velocity.length() > 1.0:
+		player_direction = player_velocity.normalized()
+	elif "last_movement" in player and player.last_movement.length() > 0.1:
+		player_direction = player.last_movement.normalized()
+	else:
+		# Default to sprite rotation if available
+		if "sprite" in player and player.sprite:
+			player_direction = Vector2.UP.rotated(player.sprite.rotation)
+		else:
+			player_direction = Vector2.UP
+	
+	# Find enemies behind the player
+	var enemies_to_reposition = []
+	var behind_direction = - player_direction
+	
+	for enemy in enemy_list:
+		if not is_instance_valid(enemy):
+			continue
+		
+		var to_enemy = enemy.global_position - player.global_position
+		var distance = to_enemy.length()
+		
+		# Check if enemy is behind player and far away
+		if distance > TELEPORT_DISTANCE:
+			var dot = to_enemy.normalized().dot(behind_direction)
+			if dot > 0.5: # Enemy is in the "behind" cone
+				enemies_to_reposition.append({"enemy": enemy, "distance": distance})
+	
+	# Sort by distance (farthest first)
+	enemies_to_reposition.sort_custom(func(a, b): return a.distance > b.distance)
+	
+	# Reposition the farthest enemies
+	var repositioned = 0
+	for enemy_data in enemies_to_reposition:
+		if repositioned >= count_to_reposition:
+			break
+		
+		var enemy = enemy_data.enemy
+		if not is_instance_valid(enemy):
+			continue
+		
+		# Teleport enemy ahead of player in their movement direction
+		var forward_offset = player_direction * REPOSITION_DISTANCE
+		var side_offset = Vector2(-player_direction.y, player_direction.x) * randf_range(-200, 200)
+		var new_position = player.global_position + forward_offset + side_offset
+		
+		# Check if position is valid (not in rock)
+		if not is_position_blocked_by_rock(new_position):
+			enemy.global_position = new_position
+			repositioned += 1
+		else:
+			# Try alternative position on opposite side
+			side_offset = Vector2(player_direction.y, -player_direction.x) * randf_range(100, 300)
+			new_position = player.global_position + forward_offset + side_offset
+			if not is_position_blocked_by_rock(new_position):
+				enemy.global_position = new_position
+				repositioned += 1

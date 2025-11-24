@@ -31,6 +31,9 @@ signal remove_from_array(object)
 
 
 func _ready():
+	# Add to enemy group for tracking
+	add_to_group("enemy")
+	
 	var total_frames = 1
 	if sprite and sprite.has_method("get_hframes"):
 		total_frames = max(1, sprite.hframes * sprite.vframes)
@@ -103,8 +106,8 @@ func _physics_process(_delta: float) -> void:
 
 	var direction = global_position.direction_to(player.global_position)
 	
-	# Simple obstacle avoidance: check ahead for rocks
-	if obstacle_raycast:
+	# Only do expensive raycast checks every 3rd frame to reduce overhead
+	if obstacle_raycast and Engine.get_frames_drawn() % 3 == 0:
 		obstacle_raycast.target_position = direction * obstacle_check_distance
 		obstacle_raycast.force_raycast_update()
 		
@@ -119,10 +122,12 @@ func _physics_process(_delta: float) -> void:
 
 	move_and_slide()
 
-	if direction.x > 0.1:
-		sprite.flip_h = true
-	elif direction.x < -0.1:
-		sprite.flip_h = false
+	# Only update sprite flip occasionally to reduce overhead
+	if Engine.get_frames_drawn() % 5 == 0:
+		if direction.x > 0.1:
+			sprite.flip_h = true
+		elif direction.x < -0.1:
+			sprite.flip_h = false
 
 func death() -> void:
 	emit_signal("remove_from_array", self)

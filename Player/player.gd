@@ -85,6 +85,9 @@ var scattershot_timer: float = 0.0
 var enemy_close: Array = []
 var targeted_enemies: Array = []
 
+# Attack/Projectile tracking for cleanup
+var active_projectile_count: int = 0
+const MAX_PROJECTILES: int = 200 # Hard cap for web performance
 
 @onready var sprite = $Sprite2D
 @onready var skin_manager = get_node("/root/SkinManager")
@@ -152,6 +155,7 @@ func _physics_process(_delta: float) -> void:
 	# Cleanup invalid enemies from arrays to prevent memory leaks
 	if Engine.get_frames_drawn() % 60 == 0: # Every 60 frames (~1 second)
 		_cleanup_enemy_arrays()
+		_cleanup_projectiles()
 	
 	if not intro_playing and scattershot_level > 0:
 		scattershot_timer -= _delta
@@ -269,7 +273,7 @@ func _on_pulse_laser_timer_timeout():
 
 
 func _on_pulse_laser_attack_timer_timeout():
-	if pulselaser_ammo > 0:
+	if pulselaser_ammo > 0 and active_projectile_count < MAX_PROJECTILES:
 		var pulselaser_attack = pulseLaser.instantiate()
 		var target_pos: Vector2
 		if additional_attacks > 0:
@@ -288,7 +292,9 @@ func _on_pulse_laser_attack_timer_timeout():
 		pulselaser_attack.position = position + offset
 		
 		pulselaser_attack.level = pulselaser_level
+		pulselaser_attack.add_to_group("attack")
 		add_child(pulselaser_attack)
+		active_projectile_count += 1
 		pulselaser_ammo -= 1
 		if pulselaser_ammo > 0:
 			pulseLaserAttackTimer.start()
@@ -302,7 +308,7 @@ func _on_rocket_timer_timeout():
 	rocketAttackTimer.start()
 
 func _on_rocket_attack_timer_timeout():
-	if rocket_ammo > 0:
+	if rocket_ammo > 0 and active_projectile_count < MAX_PROJECTILES:
 		var rocket_attack = rocket.instantiate()
 		
 		# Calculate direction and apply offset
@@ -316,7 +322,9 @@ func _on_rocket_attack_timer_timeout():
 		
 		rocket_attack.last_movement = last_movement
 		rocket_attack.level = rocket_level
+		rocket_attack.add_to_group("attack")
 		add_child(rocket_attack)
+		active_projectile_count += 1
 		rocket_ammo -= 1
 		if rocket_ammo > 0:
 			rocketAttackTimer.start()
@@ -330,7 +338,7 @@ func _on_plasma_timer_timeout():
 	plasmaAttackTimer.start()
 
 func _on_plasma_attack_timer_timeout():
-	if plasma_ammo > 0:
+	if plasma_ammo > 0 and active_projectile_count < MAX_PROJECTILES:
 		var plasma_attack = plasma.instantiate()
 		var target_pos: Vector2 = Vector2.UP
 		if additional_attacks > 0:
@@ -347,7 +355,9 @@ func _on_plasma_attack_timer_timeout():
 		plasma_attack.position = position + offset
 		
 		plasma_attack.level = plasma_level
+		plasma_attack.add_to_group("attack")
 		plasmaBase.add_child(plasma_attack)
+		active_projectile_count += 1
 		plasma_ammo -= 1
 		if plasma_ammo > 0:
 			plasmaAttackTimer.start()
@@ -363,7 +373,7 @@ func _on_ion_laser_timer_timeout():
 	ionLaserAttackTimer.start()
 
 func _on_ion_laser_attack_timer_timeout():
-	if ionlaser_ammo > 0:
+	if ionlaser_ammo > 0 and active_projectile_count < MAX_PROJECTILES:
 		var laser = ionLaser.instantiate()
 		var target_pos: Vector2
 		if additional_attacks > 0:
@@ -382,7 +392,9 @@ func _on_ion_laser_attack_timer_timeout():
 		laser.global_position = global_position + offset
 		laser.rotation = laser_direction
 		laser.level = ionlaser_level
+		laser.add_to_group("attack")
 		get_parent().add_child(laser)
+		active_projectile_count += 1
 		ionlaser_ammo -= 1
 		if ionlaser_ammo > 0:
 			ionLaserAttackTimer.start()
@@ -469,6 +481,9 @@ func fire_scatter_shot() -> void:
 		sound_player.play()
 	
 	for i in range(pellet_count):
+		if active_projectile_count >= MAX_PROJECTILES:
+			break
+		
 		var angle_offset = 0.0
 		if pellet_count > 1:
 			angle_offset = cone_angle * ((float(i) / float(pellet_count - 1)) - 0.5)
@@ -480,6 +495,7 @@ func fire_scatter_shot() -> void:
 		pellet.attack_size = pellet_size
 		pellet.setup(direction, pellet_speed, pellet_damage, pellet_hp)
 		add_child(pellet)
+		active_projectile_count += 1
 
 
 func _set_player_frame(frame_index: int) -> void:
@@ -520,6 +536,39 @@ func _cleanup_enemy_arrays() -> void:
 		enemy_close.resize(50)
 	if targeted_enemies.size() > 20:
 		targeted_enemies.clear()
+
+func _cleanup_projectiles() -> void:
+	# Count and cleanup stale projectiles
+	active_projectile_count = 0
+	var projectiles_to_remove = []
+	
+	# Check all children and PlasmaBase children
+	for child in get_children():
+		if child.is_in_group("attack"):
+			if is_instance_valid(child):
+				active_projectile_count += 1
+			else:
+				projectiles_to_remove.append(child)
+	
+	if plasmaBase:
+		for child in plasmaBase.get_children():
+			if is_instance_valid(child):
+				active_projectile_count += 1
+			else:
+				projectiles_to_remove.append(child)
+	
+	# Remove invalid projectiles
+	for proj in projectiles_to_remove:
+		if is_instance_valid(proj):
+			proj.queue_free()
+	
+	# If over limit, remove oldest projectiles
+	if active_projectile_count > MAX_PROJECTILES:
+		var oldest_count = 0
+		for child in get_children():
+			if child.is_in_group("attack") and oldest_count < 50:
+				child.queue_free()
+				oldest_count += 1
 
 func _on_enemy_detection_area_body_entered(body):
 	if not enemy_close.has(body):
