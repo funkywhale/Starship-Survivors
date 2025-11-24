@@ -10,7 +10,7 @@ var cache_update_counter: int = 0
 
 # Enemy count management
 var active_enemy_count: int = 0
-const MAX_ENEMIES: int = 150 # Hard cap for web performance
+const MAX_ENEMIES: int = 250 # Hard cap for web performance
 const CLEANUP_CHECK_INTERVAL: int = 30 # Check every 30 seconds
 var cleanup_timer: int = 0
 
@@ -76,8 +76,8 @@ func _on_timer_timeout() -> void:
 
 				var counter = 0
 				while counter < adjusted_enemy_num:
-					# Instead of preventing spawns at cap, reposition far enemies
-					if active_enemy_count >= MAX_ENEMIES:
+					# Bosses always spawn regardless of cap
+					if not is_boss and active_enemy_count >= MAX_ENEMIES:
 						_reposition_far_enemies(adjusted_enemy_num - counter)
 						break
 					
