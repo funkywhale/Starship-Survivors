@@ -17,22 +17,10 @@ func _load_leaderboard():
 	for child in entries_container.get_children():
 		child.queue_free()
 
-	if not Talo.current_alias:
-		loading_label.text = "Please log in to view leaderboard"
-		return
-
-	var options = Talo.leaderboards.GetEntriesOptions.new()
-	options.page = 0
-
-	var res = await Talo.leaderboards.get_entries(LEADERBOARD_NAME, options)
-
-	if not is_instance_valid(res):
-		loading_label.text = "Failed to load leaderboard. Make sure '%s' exists in Talo dashboard." % LEADERBOARD_NAME
-		return
+	# Get local leaderboard entries
+	var entries = LocalProfile.get_leaderboard()
 
 	loading_label.visible = false
-
-	var entries = res.entries
 
 	if entries.size() == 0:
 		var no_entries_label = Label.new()
@@ -59,7 +47,7 @@ func _create_entry_row(rank: int, entry):
 
 	# Player name
 	var name_label = Label.new()
-	name_label.text = entry.player_alias.identifier
+	name_label.text = entry.get("profile_name", "Unknown")
 	name_label.custom_minimum_size = Vector2(150, 0)
 	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	name_label.add_theme_font_size_override("font_size", 10)
@@ -67,7 +55,7 @@ func _create_entry_row(rank: int, entry):
 
 	# Score (survival time)
 	var score_label = Label.new()
-	var time_survived = int(entry.score)
+	var time_survived = int(entry.get("time", 0))
 	var minutes = int(time_survived / 60.0)
 	var seconds = time_survived % 60
 	score_label.text = "%02d:%02d" % [minutes, seconds]
@@ -76,9 +64,20 @@ func _create_entry_row(rank: int, entry):
 	score_label.add_theme_font_size_override("font_size", 10)
 	hbox.add_child(score_label)
 
-	# Level is tracked internally but not displayed
+	# Level
+	var level_label = Label.new()
+	level_label.text = "Lvl " + str(entry.get("level", 1))
+	level_label.custom_minimum_size = Vector2(50, 0)
+	level_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	level_label.add_theme_font_size_override("font_size", 10)
+	hbox.add_child(level_label)
 
 	entries_container.add_child(hbox)
 
 func _on_back_button_pressed():
-	get_tree().change_scene_to_file("res://TitleScreen/menu.tscn")
+	# If embedded inside menu, call its close method; else fallback to scene change.
+	var parent = get_parent()
+	if parent and parent.has_method("_close_leaderboard"):
+		parent._close_leaderboard()
+	else:
+		get_tree().change_scene_to_file("res://TitleScreen/menu.tscn")

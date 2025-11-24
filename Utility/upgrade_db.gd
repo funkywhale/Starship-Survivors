@@ -108,6 +108,38 @@ const UPGRADES = {
 		"prerequisite": [],
 		"type": "upgrade"
 	},
+	"ionlaser1": {
+		"icon": WEAPON_PATH + "ion_laser.png",
+		"displayname": "Ion Laser",
+		"details": "Fires a growing beam of plasma energy that pierces enemies",
+		"level": "Level: 1",
+		"prerequisite": [],
+		"type": "weapon"
+	},
+	"ionlaser2": {
+		"icon": WEAPON_PATH + "ion_laser.png",
+		"displayname": "Ion Laser",
+		"details": "Increased damage, range, and faster firing rate",
+		"level": "Level: 2",
+		"prerequisite": ["ionlaser1"],
+		"type": "weapon"
+	},
+	"ionlaser3": {
+		"icon": WEAPON_PATH + "ion_laser.png",
+		"displayname": "Ion Laser",
+		"details": "Increased damage, range, and even faster firing rate",
+		"level": "Level: 3",
+		"prerequisite": ["ionlaser2"],
+		"type": "weapon"
+	},
+	"ionlaser4": {
+		"icon": WEAPON_PATH + "ion_laser.png",
+		"displayname": "Ion Laser",
+		"details": "Maximum damage, range, and firing rate",
+		"level": "Level: 4",
+		"prerequisite": ["ionlaser3"],
+		"type": "weapon"
+	},
 	"armor2": {
 		"icon": ICON_PATH + "armor.png",
 		"displayname": "Armor Plating",
@@ -199,7 +231,7 @@ const UPGRADES = {
 	"thick1": {
 		"icon": ICON_PATH + "plasma_reactor.png",
 		"displayname": "Reactor",
-		"details": "Increases the size of weapons 10%",
+		"details": "Increases the size of weapons 20%",
 		"level": "Level: 1",
 		"prerequisite": [],
 		"type": "upgrade"
@@ -207,7 +239,7 @@ const UPGRADES = {
 	"thick2": {
 		"icon": ICON_PATH + "plasma_reactor.png",
 		"displayname": "Reactor",
-		"details": "Increases the size of weapons 10%",
+		"details": "Increases the size of weapons 20%",
 		"level": "Level: 2",
 		"prerequisite": ["thick1"],
 		"type": "upgrade"
@@ -215,7 +247,7 @@ const UPGRADES = {
 	"thick3": {
 		"icon": ICON_PATH + "plasma_reactor.png",
 		"displayname": "Reactor",
-		"details": "Increases the size of weapons 10%",
+		"details": "Increases the size of weapons 20%",
 		"level": "Level: 3",
 		"prerequisite": ["thick2"],
 		"type": "upgrade"
@@ -223,7 +255,7 @@ const UPGRADES = {
 	"thick4": {
 		"icon": ICON_PATH + "plasma_reactor.png",
 		"displayname": "Reactor",
-		"details": "Increases the size of weapons 10%",
+		"details": "Increases the size of weapons 20%",
 		"level": "Level: 4",
 		"prerequisite": ["thick3"],
 		"type": "upgrade"

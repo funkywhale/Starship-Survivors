@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://ublpf26ovrar" path="res://TitleScreen/menu.gd" id="1_oi0p3"]
 [ext_resource type="Texture2D" uid="uid://bcj6p83xed2sp" path="res://Textures/titlecard.png" id="2_yf0qj"]
 [ext_resource type="PackedScene" uid="uid://b7c7gsdx2rkjm" path="res://Utility/basic_button.tscn" id="3_kwsdd"]
-[ext_resource type="AudioStream" uid="uid://djx6vbschomi5" path="res://Audio/Music/titleMusic.mp3" id="5_yf0qj"]
+[ext_resource type="FontFile" uid="uid://dlth4bsmavf24" path="res://Font/globet_bold.ttf" id="5_0eg15"]
 
 [sub_resource type="Animation" id="Animation_0eg15"]
 length = 0.001
@@ -18,18 +18,6 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [0.0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("titleMusic:volume_db")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [-6.0]
 }
 
 [sub_resource type="Animation" id="Animation_yf0qj"]
@@ -47,25 +35,13 @@ tracks/0/keys = {
 "update": 0,
 "values": [0.0, 1.0]
 }
-tracks/1/type = "value"
+tracks/1/type = "method"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("titleMusic:volume_db")
+tracks/1/path = NodePath(".")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.6),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [-6.0, -80.0]
-}
-tracks/2/type = "method"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath(".")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
 "times": PackedFloat32Array(0.56666666),
 "transitions": PackedFloat32Array(1),
 "values": [{
@@ -96,45 +72,32 @@ offset_bottom = 361.0
 texture = ExtResource("2_yf0qj")
 expand_mode = 3
 
-[node name="btn_skins" parent="." instance=ExtResource("3_kwsdd")]
-layout_mode = 0
-offset_left = 480.0
-offset_top = 22.0
-offset_right = 612.0
-offset_bottom = 56.0
-text = "Ships"
-
 [node name="btn_play" parent="." instance=ExtResource("3_kwsdd")]
 layout_mode = 0
-offset_left = 217.0
+offset_left = 282.71
 offset_top = 305.0
-offset_right = 297.0
+offset_right = 362.71005
 offset_bottom = 339.0
 text = "Start"
 
 [node name="btn_leaderboard" parent="." instance=ExtResource("3_kwsdd")]
 layout_mode = 0
-offset_left = 217.0
-offset_top = 265.0
-offset_right = 420.0
-offset_bottom = 299.0
+offset_left = 456.0
+offset_top = 263.0
+offset_right = 613.08
+offset_bottom = 297.0
 text = "Leaderboard"
 
 [node name="btn_exit" parent="." instance=ExtResource("3_kwsdd")]
 layout_mode = 0
-offset_left = 340.0
+offset_left = 533.585
 offset_top = 305.0
-offset_right = 420.0
+offset_right = 613.5857
 offset_bottom = 339.0
 text = "Exit"
 
-[node name="titleMusic" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("5_yf0qj")
-volume_db = -6.0
-autoplay = true
-parameters/looping = false
-
 [node name="Fade" type="ColorRect" parent="."]
+visible = false
 layout_mode = 0
 offset_right = 640.0
 offset_bottom = 360.0
@@ -146,7 +109,16 @@ libraries = {
 &"": SubResource("AnimationLibrary_dsl36")
 }
 
-[connection signal="click_end" from="btn_skins" to="." method="_on_btn_skins_click_end"]
+[node name="ProfileLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 9.0
+offset_top = 310.0
+offset_right = 217.0
+offset_bottom = 333.0
+theme_override_fonts/font = ExtResource("5_0eg15")
+text = "Profile: "
+vertical_alignment = 1
+
 [connection signal="click_end" from="btn_play" to="." method="_on_btn_play_click_end"]
 [connection signal="click_end" from="btn_leaderboard" to="." method="_on_btn_leaderboard_click_end"]
 [connection signal="click_end" from="btn_exit" to="." method="_on_btn_exit_click_end"]

@@ -83,12 +83,16 @@ func _ready():
 	angle_less = global_position.direction_to(move_to_less)
 	angle_more = global_position.direction_to(move_to_more)
 	
-	var initital_tween = create_tween().set_parallel(true)
-	initital_tween.tween_property(self, "scale", Vector2(1, 1) * attack_size, 3).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
+	# Apply rocket size immediately
+	var final_scale = Vector2(1, 1) * attack_size
+	scale = final_scale
+	
+	# Animate speed increase
 	var final_speed = speed
 	speed = speed / 5.0
-	initital_tween.tween_property(self, "speed", final_speed, 6).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
-	initital_tween.play()
+	var speed_tween = create_tween()
+	speed_tween.tween_property(self, "speed", final_speed, 6).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
+	speed_tween.play()
 	
 	var tween = create_tween()
 	var set_angle = randi_range(0, 1)
@@ -160,10 +164,10 @@ func _spawn_explosion() -> void:
 	queue_free()
 
 func _on_body_entered(body: Node2D) -> void:
-	# Explode when hitting a rock (StaticBody2D on layer 1)
-	if body is StaticBody2D:
+	# Explode when hitting a rock (CharacterBody2D with rock.gd script)
+	if body.get_script() and body.get_script().resource_path.ends_with("rock.gd"):
 		_spawn_explosion()
 
-func _on_area_entered(area: Area2D) -> void:
+func _on_area_entered(_area: Area2D) -> void:
 	# This might be used for other interactions in the future
 	pass

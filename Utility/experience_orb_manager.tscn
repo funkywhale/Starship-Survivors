@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://ddhmxuknylsaf"]
+
+[ext_resource type="Script" path="res://Utility/experience_orb_manager.gd" id="1_abc12"]
+
+[node name="ExperienceOrbManager" type="Node2D"]
+script = ExtResource("1_abc12")
+max_offscreen_orbs = 50
+check_interval = 2.0
+screen_margin = 100.0

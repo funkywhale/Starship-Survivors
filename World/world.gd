@@ -1,4 +1,4 @@
-extends Node2D   
+extends Node2D
 
 @onready var pause_menu: CanvasLayer = $PauseMenu
 @onready var resume_button: Button = $PauseMenu/Panel/VBoxContainer/ResumeButton
@@ -8,6 +8,9 @@ extends Node2D
 
 func _ready() -> void:
 	pause_menu.visible = false
+	
+	# Stop title music when entering game world
+	TitleMusicPlayer.stop_title_music()
 
 	resume_button.pressed.connect(_on_resume_pressed)
 	main_menu_button.pressed.connect(_on_main_menu_pressed)

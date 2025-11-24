@@ -12,7 +12,6 @@ signal changetime(time)
 
 func _ready() -> void:
 	connect("changetime", Callable(player, "change_time"))
-	# Find or create difficulty manager
 	difficulty_manager = get_tree().get_first_node_in_group("difficulty_manager")
 	if not difficulty_manager:
 		difficulty_manager = preload("res://Utility/difficulty_manager.gd").new()
@@ -23,8 +22,6 @@ func _ready() -> void:
 func _on_timer_timeout() -> void:
 	time += 1
 	var enemy_spawns = spawns
-
-	# Get difficulty multipliers
 	var spawn_rate_mult = 1.0
 	var enemy_count_mult = 1.0
 	if difficulty_manager:
@@ -33,7 +30,6 @@ func _on_timer_timeout() -> void:
 
 	for i in enemy_spawns:
 		if time >= i.time_start and time <= i.time_end:
-			# Apply difficulty to spawn delay (higher difficulty = faster spawns)
 			var adjusted_spawn_delay = max(1, int(i.enemy_spawn_delay / spawn_rate_mult))
 
 			if i.spawn_delay_counter < adjusted_spawn_delay:
@@ -42,10 +38,21 @@ func _on_timer_timeout() -> void:
 				i.spawn_delay_counter = 0
 				var new_enemy = i.enemy
 
-				# Apply difficulty to enemy count (higher difficulty = more enemies)
-				# Base spawn reduction: 0.85x the normal amount for better balance
+				# Check if this is a boss enemy - bosses should only spawn once
+				var is_boss = false
+				if new_enemy and new_enemy.resource_path.contains("enemy_boss"):
+					is_boss = true
+					# Check if boss already exists in the scene
+					var existing_bosses = get_tree().get_nodes_in_group("boss")
+					if existing_bosses.size() > 0:
+						continue # Skip spawning if boss already exists
+
 				var base_spawn_reduction = 0.85
 				var adjusted_enemy_num = max(1, int(i.enemy_num * enemy_count_mult * base_spawn_reduction))
+				
+				# Force boss to only spawn 1, regardless of difficulty multiplier
+				if is_boss:
+					adjusted_enemy_num = 1
 
 				var counter = 0
 				while counter < adjusted_enemy_num:
@@ -62,7 +69,7 @@ func get_random_position() -> Vector2:
 	var bottom_left = Vector2(player.global_position.x - vpr.x / 2, player.global_position.y + vpr.y / 2)
 	var bottom_right = Vector2(player.global_position.x + vpr.x / 2, player.global_position.y + vpr.y / 2)
 
-	# Try up to 10 times to find a valid spawn position
+
 	var max_attempts = 10
 	var spawn_pos1 = Vector2.ZERO
 	var spawn_pos2 = Vector2.ZERO
@@ -84,26 +91,23 @@ func get_random_position() -> Vector2:
 				spawn_pos1 = top_left
 				spawn_pos2 = bottom_left
 
-		var x_spawn = randf_range(spawn_pos1.x, spawn_pos2.x)
-		var y_spawn = randf_range(spawn_pos1.y, spawn_pos2.y)
-		var spawn_position = Vector2(x_spawn, y_spawn)
+		var x_spawn_attempt = randf_range(spawn_pos1.x, spawn_pos2.x)
+		var y_spawn_attempt = randf_range(spawn_pos1.y, spawn_pos2.y)
+		var spawn_position = Vector2(x_spawn_attempt, y_spawn_attempt)
 
-		# Check if spawn position overlaps with a rock
+
 		if not is_position_blocked_by_rock(spawn_position):
 			return spawn_position
 
-	# If all attempts failed, return the last position anyway
-	# (Better to spawn on a rowwdwdawdck rarely than to break the game)
 	var x_spawn = randf_range(spawn_pos1.x, spawn_pos2.x)
 	var y_spawn = randf_range(spawn_pos1.y, spawn_pos2.y)
 	return Vector2(x_spawn, y_spawn)
 
 func is_position_blocked_by_rock(pos: Vector2) -> bool:
-	# Use physics query to check for rocks at spawn position
 	var space_state = get_world_2d().direct_space_state
 	var query = PhysicsPointQueryParameters2D.new()
 	query.position = pos
-	query.collision_mask = 1  # World layer (rocks)
+	query.collision_mask = 1
 	var result = space_state.intersect_point(query, 1)
 
 	return not result.is_empty()

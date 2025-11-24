@@ -45,10 +45,8 @@ func _ready():
 			knockback_amount = 50
 			attack_size = 1.0 * (1 + player.spell_size)
 
-	
-	var tween = create_tween()
-	tween.tween_property(self, "scale", Vector2(1, 1) * attack_size, 1).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
-	tween.play()
+	# Apply size directly
+	scale = Vector2(1, 1) * attack_size
 
 func _physics_process(delta: float) -> void:
 	position += angle * speed * delta
@@ -65,7 +63,7 @@ func _on_timer_timeout():
 	queue_free()
 
 func _on_body_entered(body: Node2D) -> void:
-	# Destroy projectile when it hits a rock (StaticBody2D on layer 1)
-	if body is StaticBody2D:
+	# Destroy projectile when it hits a rock (CharacterBody2D with rock script)
+	if body.get_script() and body.get_script().resource_path.ends_with("rock.gd"):
 		emit_signal("remove_from_array", self)
 		queue_free()

@@ -1,17 +1,22 @@
-[gd_scene load_steps=3 format=3 uid="uid://b4kiam2xp7qwj"]
+[gd_scene load_steps=4 format=3 uid="uid://c3jeky4njtmwe"]
 
-[ext_resource type="Texture2D" path="res://Textures/Rocks/rock2.png" id="1_rock2"]
+[ext_resource type="Texture2D" uid="uid://bkttsrnuqjic7" path="res://Textures/Rocks/rock2.png" id="1_rock2"]
+[ext_resource type="Script" uid="uid://o4bm1k4ujjem" path="res://Objects/rock.gd" id="rock_script"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_medium"]
-radius = 12.0
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_xnnyh"]
+radius = 7.066319
+height = 33.7
 
-[node name="RockMedium" type="StaticBody2D"]
-collision_layer = 1
-collision_mask = 0
+[node name="RockMedium" type="CharacterBody2D"]
+collision_layer = 3
+collision_mask = 2
+script = ExtResource("rock_script")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.055, 0.055)
 texture = ExtResource("1_rock2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_medium")
+position = Vector2(-1, 0)
+rotation = 0.8220501
+shape = SubResource("CapsuleShape2D_xnnyh")

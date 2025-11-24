@@ -26,9 +26,9 @@ func _ready() -> void:
 
 	# Connect to body_entered to detect rock collisions
 	body_entered.connect(_on_body_entered)
-	var t = create_tween()
-	t.tween_property(self, "scale", Vector2(1, 1) * attack_size, 0.15).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
-	t.play()
+	
+	# Apply size directly
+	scale = Vector2(1, 1) * attack_size
 
 func update_plasma() -> void:
 	if player:
@@ -64,7 +64,7 @@ func update_plasma() -> void:
 
 	if player:
 		attack_speed = float(player.pulselaser_attackspeed) * 2.0
-	scale = Vector2.ONE * attack_size
+	# Don't set scale here, let _ready() handle it with tween
 
 func _physics_process(delta: float) -> void:
 	position += angle * speed * delta
@@ -80,7 +80,14 @@ func _on_timer_timeout() -> void:
 	queue_free()
 
 func _on_body_entered(body: Node2D) -> void:
-	# Destroy projectile when it hits a rock (StaticBody2D on layer 1)
-	if body is StaticBody2D:
+	# Destroy when hitting a rock. Rocks use `rock.gd` (CharacterBody2D)
+	var is_rock := false
+	if body.get_script():
+		var script_path = body.get_script().resource_path
+		if script_path.ends_with("rock.gd"):
+			is_rock = true
+	if not is_rock and body.is_in_group("rock"):
+		is_rock = true
+	if is_rock:
 		emit_signal("remove_from_array", self)
 		queue_free()

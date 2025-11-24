@@ -29,4 +29,4 @@ autostart = true
 stream = ExtResource("2_oyefn")
 volume_db = -20.733
 pitch_scale = 1.71
-autoplay = true
+autoplay = false

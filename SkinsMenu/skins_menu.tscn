@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://blrgo8psh5oh5"]
+[gd_scene load_steps=3 format=3 uid="uid://blrgo8psh5oh5"]
 
 [ext_resource type="Script" uid="uid://ceda6bjvseefv" path="res://SkinsMenu/skins_menu.gd" id="1_gmy47"]
+[ext_resource type="Texture2D" uid="uid://dgnvouv20cu6u" path="res://Textures/titlecard_2.png" id="2_8tr3r"]
 
 [node name="SkinsMenu" type="Control"]
 layout_mode = 3
@@ -20,6 +21,13 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.1, 0.1, 0.15, 1)
 
+[node name="TextureRect" type="TextureRect" parent="Background"]
+layout_mode = 0
+offset_right = 641.0
+offset_bottom = 361.0
+texture = ExtResource("2_8tr3r")
+expand_mode = 3
+
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
@@ -35,10 +43,34 @@ alignment = 1
 [node name="CenterContainer" type="CenterContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Preview" type="TextureRect" parent="MarginContainer/VBoxContainer/CenterContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/CenterContainer"]
+layout_mode = 2
+
+[node name="Preview" type="TextureRect" parent="MarginContainer/VBoxContainer/CenterContainer/HBoxContainer"]
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 2
 stretch_mode = 5
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/CenterContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_right = 20
+
+[node name="WeaponInfo" type="VBoxContainer" parent="MarginContainer/VBoxContainer/CenterContainer/HBoxContainer/MarginContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="WeaponIcon" type="TextureRect" parent="MarginContainer/VBoxContainer/CenterContainer/HBoxContainer/MarginContainer/WeaponInfo"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+stretch_mode = 5
+
+[node name="WeaponName" type="Label" parent="MarginContainer/VBoxContainer/CenterContainer/HBoxContainer/MarginContainer/WeaponInfo"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 1
 
 [node name="SkinName" type="Label" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -72,7 +104,7 @@ alignment = 1
 [node name="Select" type="Button" parent="MarginContainer/VBoxContainer/actionButtons"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "Equip
+text = "Start
 "
 
 [node name="BackButton" type="Button" parent="."]

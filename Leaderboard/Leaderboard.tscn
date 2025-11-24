@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://c4ydk5e06knff"]
+[gd_scene load_steps=5 format=3 uid="uid://c4ydk5e06knff"]
 
-[ext_resource type="Script" path="res://Leaderboard/Leaderboard.gd" id="1_leaderboard"]
+[ext_resource type="Script" uid="uid://xomotnfhvqre" path="res://Leaderboard/Leaderboard.gd" id="1_leaderboard"]
+[ext_resource type="Texture2D" uid="uid://dgnvouv20cu6u" path="res://Textures/titlecard_2.png" id="2_6qxc2"]
 [ext_resource type="PackedScene" uid="uid://b7c7gsdx2rkjm" path="res://Utility/basic_button.tscn" id="2_button"]
 [ext_resource type="FontFile" uid="uid://dlth4bsmavf24" path="res://Font/globet_bold.ttf" id="3_font"]
 
@@ -21,6 +22,13 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.1, 0.1, 0.15, 1)
+
+[node name="TextureRect" type="TextureRect" parent="Background"]
+layout_mode = 0
+offset_right = 641.0
+offset_bottom = 361.0
+texture = ExtResource("2_6qxc2")
+expand_mode = 3
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -87,5 +95,4 @@ horizontal_alignment = 1
 
 [node name="BackButton" parent="MarginContainer/VBoxContainer" instance=ExtResource("2_button")]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("3_font")
 text = "Back to Menu"

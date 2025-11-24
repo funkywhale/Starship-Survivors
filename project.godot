@@ -20,6 +20,8 @@ config/icon="res://icon.svg"
 UpgradeDb="*res://Utility/upgrade_db.tscn"
 Talo="*res://addons/talo/talo_manager.gd"
 SkinManager="*res://Utility/skin_manager.gd"
+LocalProfile="*res://Utility/local_profile_manager.gd"
+TitleMusicPlayer="*res://Audio/Music/title_music_player.tscn"
 
 [display]
 
@@ -84,3 +86,4 @@ pause={
 textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+viewport/hdr_2d=true

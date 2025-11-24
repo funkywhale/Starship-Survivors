@@ -13,11 +13,16 @@ var knockback: Vector2 = Vector2.ZERO
 @onready var sprite = $Sprite2D
 @onready var anim = get_node_or_null("AnimationPlayer")
 @onready var snd_hit = $snd_hit
-@onready var hitBox = $HitBox
+@onready var player_collision_area = $PlayerCollisionArea
 
 var difficulty_manager: Node = null
 var base_movement_speed: float = 0.0
 var current_speed_multiplier: float = 1.0
+var has_collided_with_player: bool = false
+
+# Obstacle avoidance
+var obstacle_raycast: RayCast2D
+var obstacle_check_distance: float = 50.0
 
 var death_anim: PackedScene = preload("res://Enemy/explosion.tscn")
 var exp_gem: PackedScene = preload("res://Objects/experience_orb.tscn")
@@ -34,22 +39,33 @@ func _ready():
 		anim.play("walk")
 	else:
 		_set_sprite_frame_safe(0)
-	hitBox.damage = enemy_damage
 
 	# Connect to difficulty manager and store base speed
 	difficulty_manager = get_tree().get_first_node_in_group("difficulty_manager")
 	base_movement_speed = movement_speed
+	
+	# Connect player collision signal
+	if player_collision_area:
+		player_collision_area.body_entered.connect(_on_player_collision)
+	
+	# Setup obstacle detection raycast
+	obstacle_raycast = RayCast2D.new()
+	add_child(obstacle_raycast)
+	obstacle_raycast.enabled = true
+	obstacle_raycast.collision_mask = 2 # Layer 2 = rocks
+	obstacle_raycast.hit_from_inside = false
 
-	# HitBox will deal damage through the hurt_box.gd system
-	# Enemy will die after dealing damage through the HurtBoxType = 2 system
-
-func on_damage_dealt():
-	# Called when enemy HitBox deals damage to player
-	# Make enemy disappear instantly
-	if sprite:
-		sprite.visible = false
-	set_physics_process(false)
-	call_deferred("death")
+func _on_player_collision(body: Node2D) -> void:
+	# Simple collision detection - if enemy touches player, explode and damage them
+	if body.is_in_group("player") and not has_collided_with_player:
+		has_collided_with_player = true
+		
+		# Damage the player directly
+		if body.has_method("take_enemy_damage"):
+			body.take_enemy_damage(enemy_damage)
+		
+		# Enemy explodes immediately
+		death()
 
 func _set_sprite_frame_safe(frame_index: int) -> void:
 	if not sprite:
@@ -69,7 +85,7 @@ func _set_sprite_frame_safe(frame_index: int) -> void:
 
 func _physics_process(_delta: float) -> void:
 	# Skip processing if already dead
-	if not sprite or not sprite.visible:
+	if not sprite or not sprite.visible or has_collided_with_player:
 		return
 
 	knockback = knockback.move_toward(Vector2.ZERO, knockback_recovery)
@@ -86,6 +102,18 @@ func _physics_process(_delta: float) -> void:
 		movement_speed = base_movement_speed * current_speed_multiplier
 
 	var direction = global_position.direction_to(player.global_position)
+	
+	# Simple obstacle avoidance: check ahead for rocks
+	if obstacle_raycast:
+		obstacle_raycast.target_position = direction * obstacle_check_distance
+		obstacle_raycast.force_raycast_update()
+		
+		if obstacle_raycast.is_colliding():
+			# Get the normal of the obstacle surface
+			var collision_normal = obstacle_raycast.get_collision_normal()
+			# Steer perpendicular to the obstacle (slide around it)
+			direction = direction.slide(collision_normal).normalized()
+	
 	velocity = direction * movement_speed
 	velocity += knockback
 
@@ -115,6 +143,7 @@ func death() -> void:
 
 
 func _on_hurt_box_hurt(damage, angle, knockback_amount):
+	# Handles damage from player weapons (not player collision)
 	hp -= damage
 	knockback = angle * knockback_amount
 	if hp <= 0:

@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://boeuffoebk7k2"]
+[gd_scene load_steps=4 format=3 uid="uid://boeuffoebk7k2"]
 
 [ext_resource type="Script" uid="uid://ocikl6hxgcu5" path="res://LoginScreen.gd" id="1_abcde"]
 [ext_resource type="PackedScene" uid="uid://b7c7gsdx2rkjm" path="res://Utility/basic_button.tscn" id="2_fghij"]
+[ext_resource type="Texture2D" uid="uid://bcj6p83xed2sp" path="res://Textures/titlecard.png" id="2_p8x2n"]
 
 [node name="LoginScreen" type="Control"]
 layout_mode = 3
@@ -12,44 +13,42 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_abcde")
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="Background" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+color = Color(0.1, 0.1, 0.15, 1)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
-layout_mode = 2
+[node name="TextureRect" type="TextureRect" parent="Background"]
+layout_mode = 0
+offset_right = 641.0
+offset_bottom = 361.0
+texture = ExtResource("2_p8x2n")
+expand_mode = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 145.0
+offset_top = 235.0
+offset_right = 497.0
+offset_bottom = 343.0
 theme_override_constants/separation = 10
 
-[node name="TitleLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+[node name="ProfileNameInput" type="LineEdit" parent="VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 48
-text = "Starship Survivors"
-horizontal_alignment = 1
+placeholder_text = "Enter Profile Name"
+max_length = 20
 
-[node name="EmailInput" type="LineEdit" parent="CenterContainer/VBoxContainer"]
+[node name="ContinueButton" parent="VBoxContainer" instance=ExtResource("2_fghij")]
 layout_mode = 2
-placeholder_text = "Email"
+text = "Continue"
 
-[node name="PasswordInput" type="LineEdit" parent="CenterContainer/VBoxContainer"]
-layout_mode = 2
-placeholder_text = "Password"
-secret = true
-
-[node name="StatusLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+[node name="StatusLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2
 horizontal_alignment = 1
-
-[node name="LoginButton" parent="CenterContainer/VBoxContainer" instance=ExtResource("2_fghij")]
-layout_mode = 2
-text = "Login"
-
-[node name="RegisterButton" parent="CenterContainer/VBoxContainer" instance=ExtResource("2_fghij")]
-layout_mode = 2
-text = "Register"
 
 [node name="SkipButton" parent="." instance=ExtResource("2_fghij")]
 layout_mode = 0
@@ -58,6 +57,3 @@ offset_top = 323.0
 offset_right = 635.0
 offset_bottom = 357.0
 text = "Skip"
-
-[connection signal="click_end" from="CenterContainer/VBoxContainer/LoginButton" to="." method="_on_LoginButton_click_end"]
-[connection signal="click_end" from="CenterContainer/VBoxContainer/RegisterButton" to="." method="_on_RegisterButton_click_end"]

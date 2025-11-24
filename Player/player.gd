@@ -28,6 +28,7 @@ var pulseLaser: PackedScene = preload("res://Player/Attack/pulse_laser.tscn")
 var rocket: PackedScene = preload("res://Player/Attack/rocket.tscn")
 var plasma: PackedScene = preload("res://Player/Attack/plasma.tscn")
 var scatterShot: PackedScene = preload("res://Player/Attack/scatter_shot.tscn")
+var ionLaser: PackedScene = preload("res://Player/Attack/ion_laser_beam.tscn")
 
 @onready var pulseLaserTimer = get_node("%PulseLaserTimer")
 @onready var pulseLaserAttackTimer = get_node("%PulseLaserAttackTimer")
@@ -36,12 +37,13 @@ var scatterShot: PackedScene = preload("res://Player/Attack/scatter_shot.tscn")
 @onready var plasmaBase = get_node("%PlasmaBase")
 @onready var plasmaTimer = get_node("%PlasmaTimer")
 @onready var plasmaAttackTimer = get_node("%PlasmaAttackTimer")
+@onready var ionLaserTimer = get_node("%IonLaserTimer")
+@onready var ionLaserAttackTimer = get_node("%IonLaserAttackTimer")
 
 #UPGRADES
 var collected_upgrades: Array = []
 var upgrade_options: Array = []
 var armor: int = 0
-var speed: int = 0
 var spell_cooldown: float = 0.0
 var spell_size: float = 0.0
 var additional_attacks: int = 0
@@ -70,17 +72,22 @@ var scattershot_level: int = 0
 var scattershot_attackspeed: float = 2.0
 var scattershot_damage: int = 5
 var scattershot_penetration: int = 1
+
+# Ion Laser weapon state
+var ionlaser_level: int = 0
+var ionlaser_attackspeed: float = 2.5
+var ionlaser_ammo: int = 0
+var ionlaser_baseammo: int = 0
 var scattershot_pellets: int = 3
 var scattershot_timer: float = 0.0
 
 #Enemy Related
 var enemy_close: Array = []
-var targeted_enemies: Array = [] # Track enemies targeted in current attack salvo
+var targeted_enemies: Array = []
 
 
 @onready var sprite = $Sprite2D
 @onready var skin_manager = get_node("/root/SkinManager")
-@onready var walkTimer = get_node("%walkTimer")
 @onready var camera = $Camera2D
 
 #GUI
@@ -113,9 +120,16 @@ signal playerdeath
 
 func _ready() -> void:
 	_apply_skin()
-	upgrade_character("pulselaser1")
+	var starting_weapon = skin_manager.get_starting_weapon()
+	upgrade_character(starting_weapon)
 	set_expbar(experience, calculate_experiencecap())
 	_on_hurt_box_hurt(0.0, Vector2.ZERO, 0.0)
+
+	# Ensure ion laser timer signals are connected
+	if ionLaserTimer and not ionLaserTimer.is_connected("timeout", Callable(self, "_on_ion_laser_timer_timeout")):
+		ionLaserTimer.timeout.connect(_on_ion_laser_timer_timeout)
+	if ionLaserAttackTimer and not ionLaserAttackTimer.is_connected("timeout", Callable(self, "_on_ion_laser_attack_timer_timeout")):
+		ionLaserAttackTimer.timeout.connect(_on_ion_laser_attack_timer_timeout)
 
 	difficulty_manager = get_tree().get_first_node_in_group("difficulty_manager")
 	start_camera_intro()
@@ -127,15 +141,13 @@ func _apply_skin() -> void:
 	var tex: Texture2D = skin_manager.get_equipped_texture()
 	if tex:
 		sprite.texture = tex
-		sprite.hframes = 2   
+		sprite.hframes = 2
 		sprite.vframes = 1
 	print("Player: applied skin = ", skin_manager.equipped)
 
 
 func _physics_process(_delta: float) -> void:
 	movement(_delta)
-
-	# Don't fire weapons during intro
 	if not intro_playing and scattershot_level > 0:
 		scattershot_timer -= _delta
 		if scattershot_timer <= 0:
@@ -143,7 +155,6 @@ func _physics_process(_delta: float) -> void:
 			scattershot_timer = scattershot_attackspeed * (1 - spell_cooldown)
 
 func movement(delta: float) -> void:
-	# Disable movement during camera intro
 	if intro_playing:
 		return
 
@@ -204,6 +215,29 @@ func attack() -> void:
 			plasmaTimer.start()
 		if plasma_ammo > 0 and plasmaAttackTimer.is_stopped():
 			plasmaAttackTimer.start()
+	if ionlaser_level > 0:
+		ionLaserTimer.wait_time = ionlaser_attackspeed * (1 - spell_cooldown)
+		if ionLaserTimer.is_stopped():
+			ionLaserTimer.start()
+		if ionlaser_ammo > 0 and ionLaserAttackTimer.is_stopped():
+			ionLaserAttackTimer.start()
+
+func take_enemy_damage(damage: int) -> void:
+	var actual_damage = max(damage - armor, 1)
+	
+	if not difficulty_manager:
+		difficulty_manager = get_tree().get_first_node_in_group("difficulty_manager")
+	
+	if difficulty_manager:
+		difficulty_manager.record_damage(actual_damage)
+	
+	var health_loss = actual_damage * 2.0
+	hp -= health_loss
+	healthBar.max_value = maxhp
+	healthBar.value = hp
+	
+	if hp <= 0:
+		death()
 
 func _on_hurt_box_hurt(damage: float, _angle: Vector2, _knockback: float) -> void:
 	var actual_damage = clamp(damage - armor, 1.0, 999.0)
@@ -232,11 +266,22 @@ func _on_pulse_laser_timer_timeout():
 func _on_pulse_laser_attack_timer_timeout():
 	if pulselaser_ammo > 0:
 		var pulselaser_attack = pulseLaser.instantiate()
-		pulselaser_attack.position = position
+		var target_pos: Vector2
 		if additional_attacks > 0:
-			pulselaser_attack.target = get_different_target()
+			target_pos = get_different_target()
 		else:
-			pulselaser_attack.target = get_closest_target()
+			target_pos = get_closest_target()
+		pulselaser_attack.target = target_pos
+		
+		# Calculate direction and apply offset
+		var laser_direction: float
+		if target_pos != Vector2.UP:
+			laser_direction = (target_pos - global_position).angle()
+		else:
+			laser_direction = sprite.rotation
+		var offset = Vector2(12, 0).rotated(laser_direction)
+		pulselaser_attack.position = position + offset
+		
 		pulselaser_attack.level = pulselaser_level
 		add_child(pulselaser_attack)
 		pulselaser_ammo -= 1
@@ -254,7 +299,16 @@ func _on_rocket_timer_timeout():
 func _on_rocket_attack_timer_timeout():
 	if rocket_ammo > 0:
 		var rocket_attack = rocket.instantiate()
-		rocket_attack.position = position
+		
+		# Calculate direction and apply offset
+		var rocket_direction: float
+		if last_movement.length() > 0.01:
+			rocket_direction = last_movement.angle()
+		else:
+			rocket_direction = sprite.rotation
+		var offset = Vector2(12, 0).rotated(rocket_direction)
+		rocket_attack.position = position + offset
+		
 		rocket_attack.last_movement = last_movement
 		rocket_attack.level = rocket_level
 		add_child(rocket_attack)
@@ -273,10 +327,21 @@ func _on_plasma_timer_timeout():
 func _on_plasma_attack_timer_timeout():
 	if plasma_ammo > 0:
 		var plasma_attack = plasma.instantiate()
-		plasma_attack.position = position
-		plasma_attack.level = plasma_level
+		var target_pos: Vector2 = Vector2.UP
 		if additional_attacks > 0:
-			plasma_attack.target = get_different_target()
+			target_pos = get_different_target()
+			plasma_attack.target = target_pos
+		
+		# Calculate direction and apply offset
+		var plasma_direction: float
+		if target_pos != Vector2.UP:
+			plasma_direction = (target_pos - global_position).angle()
+		else:
+			plasma_direction = sprite.rotation
+		var offset = Vector2(12, 0).rotated(plasma_direction)
+		plasma_attack.position = position + offset
+		
+		plasma_attack.level = plasma_level
 		plasmaBase.add_child(plasma_attack)
 		plasma_ammo -= 1
 		if plasma_ammo > 0:
@@ -286,24 +351,40 @@ func _on_plasma_attack_timer_timeout():
 			if additional_attacks > 0:
 				targeted_enemies.clear()
 
-func spawn_plasma():
-	var get_plasma_total = plasmaBase.get_child_count()
-	var calc_spawns = (plasma_ammo + additional_attacks) - get_plasma_total
-	while calc_spawns > 0:
-		var plasma_spawn = plasma.instantiate()
-		plasma_spawn.global_position = global_position
-		plasmaBase.add_child(plasma_spawn)
-		calc_spawns -= 1
-	var get_plasmas = plasmaBase.get_children()
-	for i in get_plasmas:
-		if i.has_method("update_plasma"):
-			i.update_plasma()
+func _on_ion_laser_timer_timeout():
+	ionlaser_ammo += ionlaser_baseammo + additional_attacks
+	if additional_attacks > 0:
+		targeted_enemies.clear()
+	ionLaserAttackTimer.start()
 
-func get_random_target():
-	if enemy_close.size() > 0:
-		return enemy_close.pick_random().global_position
-	else:
-		return Vector2.UP
+func _on_ion_laser_attack_timer_timeout():
+	if ionlaser_ammo > 0:
+		var laser = ionLaser.instantiate()
+		var target_pos: Vector2
+		if additional_attacks > 0:
+			target_pos = get_different_target()
+		else:
+			target_pos = get_closest_target()
+		
+		var laser_direction: float
+		if target_pos != Vector2.UP:
+			laser_direction = (target_pos - global_position).angle()
+		else:
+			laser_direction = sprite.rotation
+		
+		# Offset laser spawn point to front tip of ship
+		var offset = Vector2(12, 0).rotated(laser_direction)
+		laser.global_position = global_position + offset
+		laser.rotation = laser_direction
+		laser.level = ionlaser_level
+		get_parent().add_child(laser)
+		ionlaser_ammo -= 1
+		if ionlaser_ammo > 0:
+			ionLaserAttackTimer.start()
+		else:
+			ionLaserAttackTimer.stop()
+			if additional_attacks > 0:
+				targeted_enemies.clear()
 
 func get_different_target():
 	for i in enemy_close.duplicate():
@@ -364,10 +445,20 @@ func get_closest_target():
 func fire_scatter_shot() -> void:
 	var base_angle = sprite.rotation
 	var cone_angle = deg_to_rad(30.0)
-	var pellet_count = scattershot_pellets
+	var pellet_count = scattershot_pellets + additional_attacks
 	var pellet_damage = scattershot_damage + damage_bonus
 	var pellet_hp = scattershot_penetration
 	var pellet_speed = 200.0
+	var pellet_size = 1.0 * (1 + spell_size)
+	
+	# Play sound once for the entire volley
+	var sound_player = AudioStreamPlayer.new()
+	sound_player.stream = preload("res://Audio/SoundEffect/scatter_shot.wav")
+	sound_player.volume_db = -20.733
+	sound_player.pitch_scale = 1.71
+	add_child(sound_player)
+	sound_player.play()
+	sound_player.finished.connect(func(): sound_player.queue_free())
 	
 	for i in range(pellet_count):
 		var angle_offset = 0.0
@@ -378,6 +469,7 @@ func fire_scatter_shot() -> void:
 		var direction = Vector2.UP.rotated(base_angle + angle_offset)
 		pellet.position = Vector2.UP.rotated(base_angle) * 8
 		pellet.level = scattershot_level
+		pellet.attack_size = pellet_size
 		pellet.setup(direction, pellet_speed, pellet_damage, pellet_hp)
 		add_child(pellet)
 
@@ -531,6 +623,19 @@ func upgrade_character(upgrade: String) -> void:
 			scattershot_damage = 12
 			scattershot_penetration = 4
 			scattershot_attackspeed = 1.2
+		"ionlaser1":
+			ionlaser_level = 1
+			ionlaser_baseammo = 1
+			ionlaser_attackspeed = 2.5
+		"ionlaser2":
+			ionlaser_level = 2
+			ionlaser_attackspeed = 2.2
+		"ionlaser3":
+			ionlaser_level = 3
+			ionlaser_attackspeed = 1.9
+		"ionlaser4":
+			ionlaser_level = 4
+			ionlaser_attackspeed = 1.6
 		"damage1":
 			damage_bonus += 3
 		"damage2":
@@ -547,7 +652,7 @@ func upgrade_character(upgrade: String) -> void:
 			decel += 20.0
 			damping += 10.0
 		"thick1", "thick2", "thick3", "thick4":
-			spell_size += 0.10
+			spell_size += 0.20
 		"firerate1", "firerate2", "firerate3", "firerate4":
 			spell_cooldown += 0.1
 		"weapon1", "weapon2":
@@ -623,21 +728,13 @@ func adjust_gui_collection(upgrade: String) -> void:
 					collectedUpgrades.add_child(new_item)
 
 func _submit_score_to_leaderboard() -> void:
-	if not Talo.current_alias:
-		print("Player not logged in, skipping leaderboard submission")
+	var profile_name = LocalProfile.get_current_profile()
+	if profile_name.is_empty():
+		print("No profile set, skipping leaderboard submission")
 		return
 
 	var score = time
-
-	var res = await Talo.leaderboards.add_entry("survival_time", score, {level = experience_level})
-
-	if is_instance_valid(res):
-		if res.updated:
-			print("New high score! Time: %d seconds, Level: %d" % [score, experience_level])
-		else:
-			print("Score submitted: Time: %d seconds, Level: %d" % [score, experience_level])
-	else:
-		print("Failed to submit score to leaderboard")
+	LocalProfile.submit_score(profile_name, score, experience_level)
 
 func death() -> void:
 	deathPanel.visible = true
@@ -665,25 +762,15 @@ func _on_btn_menu_click_end():
 	var _level = get_tree().change_scene_to_file("res://TitleScreen/menu.tscn")
 
 func start_camera_intro():
-	# Set camera to show entire map initially (2000x2000 world)
-	# Viewport is 640x360, so zoom out to fit 2000px
-	camera.zoom = Vector2(0.25, 0.25)
-
-	# Pause the game during intro
+	# Intro zoom: show a moderately zoomed-out view (was 0.25, now 0.5)
+	camera.zoom = Vector2(0.5, 0.5)
 	get_tree().paused = true
-
-	# Wait a moment to show the full map, then zoom in
-	await get_tree().create_timer(1.5, true, false, true).timeout
-
-	# Tween camera zoom to normal (1.0)
+	await get_tree().create_timer(1.0, true, false, true).timeout
+	# Tween to gameplay zoom (1.0) faster due to smaller distance
 	var tween = create_tween()
-	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)  # Continue during pause
-	tween.tween_property(camera, "zoom", Vector2(1.0, 1.0), 2.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
-
-	# When tween finishes, unpause and enable gameplay
+	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	tween.tween_property(camera, "zoom", Vector2(1.0, 1.0), 1.8).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
 	await tween.finished
 	intro_playing = false
 	get_tree().paused = false
-
-	# Start attacks after intro completes
 	attack()

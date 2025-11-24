@@ -17,6 +17,9 @@ func _ready() -> void:
 
 	# Connect to body_entered to detect rock collisions
 	body_entered.connect(_on_body_entered)
+	
+	# Apply size scaling
+	scale = Vector2.ONE * attack_size
 
 func setup(direction: Vector2, pellet_speed: float, pellet_damage: int, pellet_hp: int) -> void:
 	angle = direction.normalized()
@@ -36,7 +39,15 @@ func enemy_hit(charge: int = 1) -> void:
 		queue_free()
 
 func _on_body_entered(body: Node2D) -> void:
-	# Destroy projectile when it hits a rock (StaticBody2D on layer 1)
-	if body is StaticBody2D:
+	# Destroy when hitting a rock. Rocks use `rock.gd` (CharacterBody2D), not StaticBody2D.
+	var is_rock := false
+	if body.get_script():
+		var script_path = body.get_script().resource_path
+		if script_path.ends_with("rock.gd"):
+			is_rock = true
+	# Optional group-based fallback if rocks are later grouped
+	if not is_rock and body.is_in_group("rock"):
+		is_rock = true
+	if is_rock:
 		emit_signal("remove_from_array", self)
 		queue_free()

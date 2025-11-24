@@ -84,10 +84,17 @@ HurtBoxType = 1
 position = Vector2(0, 0.5)
 shape = SubResource("CircleShape2D_mydk5")
 
-[node name="HitBox" parent="." instance=ExtResource("4_vyjdl")]
+[node name="HitBox" parent="." groups=["attack"] instance=ExtResource("4_vyjdl")]
 collision_layer = 2
 
 [node name="CollisionShape2D" parent="HitBox" index="0"]
+shape = SubResource("CircleShape2D_c3om3")
+
+[node name="PlayerCollisionArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerCollisionArea"]
 shape = SubResource("CircleShape2D_c3om3")
 
 [node name="snd_hit" type="AudioStreamPlayer2D" parent="."]
