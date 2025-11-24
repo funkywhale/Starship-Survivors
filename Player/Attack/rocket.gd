@@ -130,6 +130,13 @@ func enemy_hit(charge: int = 1) -> void:
 		_spawn_explosion()
 
 func _on_timer_timeout() -> void:
+	_cleanup()
+
+func _cleanup() -> void:
+	# Kill any running tweens to prevent memory leaks
+	var tween_node = get_node_or_null("Tween")
+	if tween_node and tween_node is Tween:
+		tween_node.kill()
 	emit_signal("remove_from_array", self)
 	queue_free()
 
@@ -160,8 +167,7 @@ func _spawn_explosion() -> void:
 		root.call_deferred("add_child", explosion)
 	else:
 		get_parent().call_deferred("add_child", explosion)
-	emit_signal("remove_from_array", self)
-	queue_free()
+	_cleanup()
 
 func _on_body_entered(body: Node2D) -> void:
 	# Explode when hitting a rock (CharacterBody2D with rock.gd script)

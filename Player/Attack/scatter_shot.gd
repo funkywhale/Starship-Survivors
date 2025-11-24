@@ -15,8 +15,9 @@ func _ready() -> void:
 	# Add to attack group so hurt_box can detect it
 	add_to_group("attack")
 
-	# Connect to body_entered to detect rock collisions
-	body_entered.connect(_on_body_entered)
+	# Connect to body_entered to detect rock collisions (disconnect on cleanup)
+	if not body_entered.is_connected(_on_body_entered):
+		body_entered.connect(_on_body_entered)
 	
 	# Apply size scaling
 	scale = Vector2.ONE * attack_size

@@ -35,7 +35,6 @@ func _process(_delta: float) -> void:
 	_update_chunks()
 
 func setup_noise_generators():
-
 	var seed_value = Time.get_ticks_msec()
 
 	print("Rock Manager: Generating cluster-based terrain with seed: ", seed_value)
@@ -198,12 +197,15 @@ func _generate_chunk(chunk_coord: Vector2i) -> void:
 				var dict = {"pos": sample_pos, "type": cluster_type}
 				cluster_centers_global.append(dict)
 				chunk_data.clusters.append(dict)
+				# Limit global cluster tracking to prevent memory bloat
+				if cluster_centers_global.size() > 500:
+					cluster_centers_global.remove_at(0)
 
 	for cluster in chunk_data.clusters:
 		var center = cluster.pos
 		var cluster_type = cluster.type
 		var base_count = ROCKS_PER_DENSE_CLUSTER if cluster_type == "dense" else ROCKS_PER_MEDIUM_CLUSTER
-		var rock_count = int(float(base_count) * 0.5) 
+		var rock_count = int(float(base_count) * 0.5)
 		for i in range(int(rock_count)):
 			var angle = randf() * TAU
 			var distance = abs(randfn(0.0, 0.5)) * CLUSTER_SPREAD
@@ -254,11 +256,25 @@ func _cull_chunk(coord: Vector2i) -> void:
 	var chunk_data = chunks.get(coord, null)
 	if not chunk_data:
 		return
+	
+	# Clean up spatial grid entries for rocks in this chunk
 	for rock in chunk_data.rocks:
 		if is_instance_valid(rock):
+			_remove_from_spatial_grid(rock.position)
 			rock.queue_free()
+	
 	for cluster in chunk_data.clusters:
 		for i in range(cluster_centers_global.size() - 1, -1, -1):
 			if cluster_centers_global[i].pos == cluster.pos:
 				cluster_centers_global.remove_at(i)
 	chunks.erase(coord)
+
+func _remove_from_spatial_grid(pos: Vector2) -> void:
+	var grid_key = get_grid_key(pos)
+	if spatial_grid.has(grid_key):
+		for i in range(spatial_grid[grid_key].size() - 1, -1, -1):
+			if spatial_grid[grid_key][i].position.distance_to(pos) < 1.0:
+				spatial_grid[grid_key].remove_at(i)
+				break
+		if spatial_grid[grid_key].is_empty():
+			spatial_grid.erase(grid_key)

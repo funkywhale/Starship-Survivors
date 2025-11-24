@@ -5,6 +5,8 @@ extends Node2D
 
 @onready var player: CharacterBody2D = get_tree().get_first_node_in_group("player")
 var difficulty_manager: Node = null
+var cached_viewport_size: Vector2 = Vector2.ZERO
+var cache_update_counter: int = 0
 
 @export var time: int = 0
 
@@ -63,14 +65,20 @@ func _on_timer_timeout() -> void:
 	emit_signal("changetime", time)
 
 func get_random_position() -> Vector2:
-	var vpr = get_viewport_rect().size * randf_range(1.1, 1.4)
+	# Cache viewport size for performance (update every 60 spawns)
+	cache_update_counter += 1
+	if cache_update_counter > 60 or cached_viewport_size == Vector2.ZERO:
+		cached_viewport_size = get_viewport_rect().size
+		cache_update_counter = 0
+	
+	var vpr = cached_viewport_size * randf_range(1.1, 1.4)
 	var top_left = Vector2(player.global_position.x - vpr.x / 2, player.global_position.y - vpr.y / 2)
 	var top_right = Vector2(player.global_position.x + vpr.x / 2, player.global_position.y - vpr.y / 2)
 	var bottom_left = Vector2(player.global_position.x - vpr.x / 2, player.global_position.y + vpr.y / 2)
 	var bottom_right = Vector2(player.global_position.x + vpr.x / 2, player.global_position.y + vpr.y / 2)
 
-
-	var max_attempts = 10
+	# Reduce rock check attempts for performance
+	var max_attempts = 3 # Reduced from 10
 	var spawn_pos1 = Vector2.ZERO
 	var spawn_pos2 = Vector2.ZERO
 

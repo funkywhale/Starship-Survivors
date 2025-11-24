@@ -17,8 +17,9 @@ func _ready():
 	angle = global_position.direction_to(target)
 	rotation = angle.angle() + deg_to_rad(135)
 
-	# Connect to body_entered to detect rock collisions
-	body_entered.connect(_on_body_entered)
+	# Connect to body_entered to detect rock collisions (disconnect on cleanup)
+	if not body_entered.is_connected(_on_body_entered):
+		body_entered.connect(_on_body_entered)
 	match level:
 		1:
 			hp = 1

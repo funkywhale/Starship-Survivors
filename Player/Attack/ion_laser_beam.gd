@@ -113,13 +113,14 @@ func _physics_process(delta: float) -> void:
 	beam_line.width = (3.0 * attack_size) * pulse
 	glow_line.width = (8.0 * attack_size) * pulse
 
-	# Shape query damage (multi-hit across beam span)
-	_apply_shape_query_damage(end_point.x)
+	# Shape query damage (multi-hit across beam span) - reduce frequency for performance
+	if int(lifetime * 60.0) % 2 == 0: # Every other frame
+		_apply_shape_query_damage(end_point.x)
 	# Sustain then disappear
 	if lifetime >= sustain_time and not disappearing:
 		_start_disappear()
 	# Damage application (continuous hit scan)
-	if is_colliding(): # still apply impact damage at tip once
+	elif is_colliding(): # still apply impact damage at tip once
 		_var_damage_application()
 	# Apply damage to enemies newly entering beam via area_entered (handled by signal)
 

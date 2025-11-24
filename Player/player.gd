@@ -148,6 +148,11 @@ func _apply_skin() -> void:
 
 func _physics_process(_delta: float) -> void:
 	movement(_delta)
+	
+	# Cleanup invalid enemies from arrays to prevent memory leaks
+	if Engine.get_frames_drawn() % 60 == 0: # Every 60 frames (~1 second)
+		_cleanup_enemy_arrays()
+	
 	if not intro_playing and scattershot_level > 0:
 		scattershot_timer -= _delta
 		if scattershot_timer <= 0:
@@ -451,14 +456,17 @@ func fire_scatter_shot() -> void:
 	var pellet_speed = 200.0
 	var pellet_size = 1.0 * (1 + spell_size)
 	
-	# Play sound once for the entire volley
-	var sound_player = AudioStreamPlayer.new()
-	sound_player.stream = preload("res://Audio/SoundEffect/scatter_shot.wav")
-	sound_player.volume_db = -20.733
-	sound_player.pitch_scale = 1.71
-	add_child(sound_player)
-	sound_player.play()
-	sound_player.finished.connect(func(): sound_player.queue_free())
+	# Use get_node_or_null to check if audio player exists, create only once
+	var sound_player = get_node_or_null("ScatterShotAudio")
+	if sound_player == null:
+		sound_player = AudioStreamPlayer.new()
+		sound_player.name = "ScatterShotAudio"
+		sound_player.stream = preload("res://Audio/SoundEffect/scatter_shot.wav")
+		sound_player.volume_db = -20.733
+		sound_player.pitch_scale = 1.71
+		add_child(sound_player)
+	if not sound_player.playing:
+		sound_player.play()
 	
 	for i in range(pellet_count):
 		var angle_offset = 0.0
@@ -496,6 +504,22 @@ func _set_player_frame(frame_index: int) -> void:
 
 	sprite.frame = idx
 
+
+func _cleanup_enemy_arrays() -> void:
+	# Remove invalid enemies from tracking arrays
+	for i in range(enemy_close.size() - 1, -1, -1):
+		if not is_instance_valid(enemy_close[i]):
+			enemy_close.remove_at(i)
+	
+	for i in range(targeted_enemies.size() - 1, -1, -1):
+		if not is_instance_valid(targeted_enemies[i]):
+			targeted_enemies.remove_at(i)
+	
+	# Limit array sizes to prevent unbounded growth
+	if enemy_close.size() > 50:
+		enemy_close.resize(50)
+	if targeted_enemies.size() > 20:
+		targeted_enemies.clear()
 
 func _on_enemy_detection_area_body_entered(body):
 	if not enemy_close.has(body):
