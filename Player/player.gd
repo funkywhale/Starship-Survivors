@@ -127,13 +127,6 @@ func _ready() -> void:
 	upgrade_character(starting_weapon)
 	set_expbar(experience, calculate_experiencecap())
 	_on_hurt_box_hurt(0.0, Vector2.ZERO, 0.0)
-
-	# Ensure ion laser timer signals are connected
-	if ionLaserTimer and not ionLaserTimer.is_connected("timeout", Callable(self, "_on_ion_laser_timer_timeout")):
-		ionLaserTimer.timeout.connect(_on_ion_laser_timer_timeout)
-	if ionLaserAttackTimer and not ionLaserAttackTimer.is_connected("timeout", Callable(self, "_on_ion_laser_attack_timer_timeout")):
-		ionLaserAttackTimer.timeout.connect(_on_ion_laser_attack_timer_timeout)
-
 	difficulty_manager = get_tree().get_first_node_in_group("difficulty_manager")
 	start_camera_intro()
 
@@ -152,8 +145,11 @@ func _apply_skin() -> void:
 func _physics_process(_delta: float) -> void:
 	movement(_delta)
 	
-	# Cleanup invalid enemies from arrays to prevent memory leaks
-	if Engine.get_frames_drawn() % 60 == 0: # Every 60 frames (~1 second)
+	var cleanup_frequency = 60
+	if enemy_close.size() > 30 or active_projectile_count > 150:
+		cleanup_frequency = 15
+	
+	if Engine.get_frames_drawn() % cleanup_frequency == 0:
 		_cleanup_enemy_arrays()
 		_cleanup_projectiles()
 	
@@ -522,53 +518,58 @@ func _set_player_frame(frame_index: int) -> void:
 
 
 func _cleanup_enemy_arrays() -> void:
-	# Remove invalid enemies from tracking arrays
-	for i in range(enemy_close.size() - 1, -1, -1):
-		if not is_instance_valid(enemy_close[i]):
-			enemy_close.remove_at(i)
-	
-	for i in range(targeted_enemies.size() - 1, -1, -1):
-		if not is_instance_valid(targeted_enemies[i]):
-			targeted_enemies.remove_at(i)
+	# Remove invalid enemies from tracking arrays using filter (faster)
+	enemy_close = enemy_close.filter(func(e): return is_instance_valid(e))
+	targeted_enemies = targeted_enemies.filter(func(e): return is_instance_valid(e))
 	
 	# Limit array sizes to prevent unbounded growth
-	if enemy_close.size() > 50:
-		enemy_close.resize(50)
-	if targeted_enemies.size() > 20:
+	if enemy_close.size() > 40:
+		# Keep only the closest 40 enemies
+		enemy_close.sort_custom(func(a, b):
+			return global_position.distance_squared_to(a.global_position) < global_position.distance_squared_to(b.global_position)
+		)
+		enemy_close.resize(40)
+	
+	if targeted_enemies.size() > 15:
 		targeted_enemies.clear()
 
 func _cleanup_projectiles() -> void:
 	# Count and cleanup stale projectiles
-	active_projectile_count = 0
+	var valid_count = 0
 	var projectiles_to_remove = []
 	
 	# Check all children and PlasmaBase children
 	for child in get_children():
 		if child.is_in_group("attack"):
 			if is_instance_valid(child):
-				active_projectile_count += 1
+				valid_count += 1
 			else:
 				projectiles_to_remove.append(child)
 	
 	if plasmaBase:
 		for child in plasmaBase.get_children():
 			if is_instance_valid(child):
-				active_projectile_count += 1
+				valid_count += 1
 			else:
 				projectiles_to_remove.append(child)
 	
-	# Remove invalid projectiles
+	# Remove invalid projectiles immediately
 	for proj in projectiles_to_remove:
 		if is_instance_valid(proj):
 			proj.queue_free()
+			valid_count -= 1
 	
-	# If over limit, remove oldest projectiles
-	if active_projectile_count > MAX_PROJECTILES:
-		var oldest_count = 0
+	active_projectile_count = max(0, valid_count)
+	
+	# If significantly over limit, aggressively cull oldest projectiles
+	if active_projectile_count > MAX_PROJECTILES * 0.9: # At 90% capacity
+		var to_remove = int((active_projectile_count - MAX_PROJECTILES * 0.8) * 1.5) # Remove extra
+		var removed = 0
 		for child in get_children():
-			if child.is_in_group("attack") and oldest_count < 50:
+			if child.is_in_group("attack") and removed < to_remove:
 				child.queue_free()
-				oldest_count += 1
+				removed += 1
+				active_projectile_count -= 1
 
 func _on_enemy_detection_area_body_entered(body):
 	if not enemy_close.has(body):

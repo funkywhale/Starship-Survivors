@@ -1,11 +1,6 @@
 res://World/world.tscn
 res://Player/player.gd
-res://Player/Attack/ion_laser_beam.gd
-res://Player/Attack/plasma.gd
-res://Player/Attack/pulse_laser.gd
-res://Player/Attack/rocket.gd
-res://Player/Attack/scatter_shot.gd
+res://Utility/difficulty_manager.gd
 res://Utility/enemy_spawner.gd
-res://Utility/rock_manager.gd
 res://addons/talo/samples/authentication/assets/theme.tres
-res://Enemy/enemy.gd
+res://Enemy/enemy_battleship.tscn

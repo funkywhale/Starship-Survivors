@@ -36,8 +36,13 @@ func _on_timer_timeout() -> void:
 	time += 1
 	cleanup_timer += 1
 	
+	# More frequent cleanup when enemy count is high
+	var cleanup_interval = CLEANUP_CHECK_INTERVAL
+	if active_enemy_count > 150:
+		cleanup_interval = 10 # Every 10 seconds when high load
+	
 	# Periodic cleanup of dead enemies
-	if cleanup_timer >= CLEANUP_CHECK_INTERVAL:
+	if cleanup_timer >= cleanup_interval:
 		cleanup_timer = 0
 		_cleanup_dead_enemies()
 	

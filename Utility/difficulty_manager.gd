@@ -140,6 +140,9 @@ func _evaluate_performance():
 		performance_score *= 1.05
 	if time_alive > 240: # After 4 minutes
 		performance_score *= 1.05
+	# Reduce growth rate after 4 minutes to prevent performance issues
+	if time_alive > 240 and current_difficulty > 1.5:
+		performance_score *= 0.95 # Slow down difficulty increases
 
 	# Adjust target difficulty based on performance - Gradual scaling
 	if performance_score >= PERFORM_VERY_WELL:
@@ -155,11 +158,15 @@ func _evaluate_performance():
 		# Player is really struggling - reduce difficulty
 		target_difficulty = current_difficulty - 0.25 # Significant decrease
 
-	# Ensure difficulty never goes below 0.1 (but no upper limit)
-	target_difficulty = max(0.1, target_difficulty)
+	# Ensure difficulty stays in reasonable bounds
+	target_difficulty = clamp(target_difficulty, 0.1, 2.5) # Cap at 2.5x for performance
 
 	# Smoothly adjust current difficulty toward target
 	current_difficulty = lerp(current_difficulty, target_difficulty, DIFFICULTY_CHANGE_RATE)
+	
+	# Soft cap: Above 2.0, make it harder to increase further
+	if current_difficulty > 2.0:
+		current_difficulty = 2.0 + (current_difficulty - 2.0) * 0.5
 
 	# Reset interval stats
 	damage_this_interval = 0.0
