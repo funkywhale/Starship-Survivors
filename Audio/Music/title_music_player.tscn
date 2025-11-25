@@ -1,10 +1,10 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=3 format=3 uid="uid://t75sagf80oss"]
 
-[ext_resource type="Script" path="res://Audio/Music/title_music_player.gd" id="1"]
+[ext_resource type="Script" uid="uid://bgfl02cbtm6k0" path="res://Audio/Music/title_music_player.gd" id="1"]
 [ext_resource type="AudioStream" uid="uid://djx6vbschomi5" path="res://Audio/Music/titleMusic.mp3" id="2"]
 
 [node name="TitleMusicPlayer" type="AudioStreamPlayer"]
 stream = ExtResource("2")
-volume_db = -6.0
+volume_db = -15.253
 autoplay = true
 script = ExtResource("1")
