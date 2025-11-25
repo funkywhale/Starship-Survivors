@@ -21,3 +21,4 @@ res://Utility/upgrade_db.gd
 res://Player/player.gd
 res://Audio/Music/title_music_player.tscn
 res://Audio/Music/title_music_player.gd
+res://SkinsMenu/skins_menu.tscn

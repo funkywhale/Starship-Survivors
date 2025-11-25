@@ -21,7 +21,7 @@ res://addons/talo/samples/multiscene_saves/scenes/star.tscn::26602e815fcbdd06a62
 res://addons/talo/samples/multiscene_saves/starting_zone.tscn::ffb03560e3197f579b756d916724a6a3::1763624734::res://.godot/exported/133200997/export-2cbc28aa80e4e997f0985bb6a1132a8b-starting_zone.scn
 res://addons/talo/samples/persistent_buttons/persistent_buttons.tscn::d799a73a802648ba1111e1c41f09866b::1763624734::res://.godot/exported/133200997/export-36d25e9b20484e3baf8ada6a8aa1a400-persistent_buttons.scn
 res://addons/talo/samples/playground/playground.tscn::6d09deb4d715183a788ef2ef31c59229::1763624734::res://.godot/exported/133200997/export-32ce8f1453229e929029aef409eb7067-playground.scn
-res://Audio/Music/title_music_player.tscn::fcd8b144a2e23ed9417e4243e8b240c3::1764037116::res://.godot/exported/133200997/export-85b8bc6e7293c878d040fd7a1a74e0ee-title_music_player.scn
+res://Audio/Music/title_music_player.tscn::fcd8b144a2e23ed9417e4243e8b240c3::1764037256::res://.godot/exported/133200997/export-85b8bc6e7293c878d040fd7a1a74e0ee-title_music_player.scn
 res://Enemy/enemy_battleship.tscn::584ba7383bb5f67c11b747b69dccf5b7::1764032351::res://.godot/exported/133200997/export-cd0d56276b0a3a8fc3df7413898949d6-enemy_battleship.scn
 res://Enemy/enemy_boss.tscn::8d709a34d1a50714ae246753bd79165b::1764032532::res://.godot/exported/133200997/export-d382ff4a14d60756fc8696e8a18d3f61-enemy_boss.scn
 res://Enemy/enemy_drone.tscn::de3fd71c22a456c54c82778986d076f9::1764032519::res://.godot/exported/133200997/export-e927f24e0b2d18b4db00ffed350ae37c-enemy_drone.scn
@@ -41,7 +41,7 @@ res://Player/Attack/rocket.tscn::aa7bb5494aee963a68cd6071b30e2d41::1764036790::r
 res://Player/Attack/scatter_shot.tscn::d52cfd5a070cc5e6307a7e0ab04d3590::1764033743::res://.godot/exported/133200997/export-2d10217599e21821ca39fe477217079a-scatter_shot.scn
 res://Player/GUI/item_container.tscn::122ef00a6f19281a28d795b9a926cbec::1758968536::res://.godot/exported/133200997/export-05edbfa53f42d3499031f0b1b250ce32-item_container.scn
 res://Player/player.tscn::e63d067ac2ca597f12f8f33b54b22bc5::1764035081::res://.godot/exported/133200997/export-d267b47f7e81a3258979164d56d0d9c2-player.scn
-res://SkinsMenu/skins_menu.tscn::4c924aa7851f29a45720478833a35bdf::1763952374::res://.godot/exported/133200997/export-de2f540595bb88b8fec133d976fcb061-skins_menu.scn
+res://SkinsMenu/skins_menu.tscn::a14d7be8a78b3f94b9408a5e45921cfe::1764037592::res://.godot/exported/133200997/export-de2f540595bb88b8fec133d976fcb061-skins_menu.scn
 res://TitleScreen/menu.tscn::560774af51ac63159cde678a245e4eca::1764031066::res://.godot/exported/133200997/export-2fcc99cb4d261fcd27c44064a8e599c4-menu.scn
 res://Utility/basic_button.tscn::3b2af2c8957f5a6b8f9b5a802eab013b::1759285972::res://.godot/exported/133200997/export-f20e3aa69651915552de52fb9f7d007d-basic_button.scn
 res://Utility/enemy_spawner.tscn::9edf947533221c1e2bca7d185b67ac36::1759286357::res://.godot/exported/133200997/export-6538c176aa9d792f5b57f4c211309eaa-enemy_spawner.scn
