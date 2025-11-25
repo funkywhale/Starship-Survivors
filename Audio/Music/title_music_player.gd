@@ -11,6 +11,11 @@ func stop_title_music():
 	should_play = false
 	stop()
 
+func start_title_music():
+	should_play = true
+	if not playing:
+		play()
+
 func _on_finished():
 	if should_play:
 		play()

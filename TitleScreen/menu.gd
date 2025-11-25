@@ -9,6 +9,9 @@ var skins_menu_scene: PackedScene = preload("res://SkinsMenu/skins_menu.tscn")
 var leaderboard_scene: PackedScene = preload("res://Leaderboard/Leaderboard.tscn")
 
 func _ready() -> void:
+	# Restart title music when returning to menu
+	TitleMusicPlayer.start_title_music()
+	
 	if has_node("ProfileLabel"):
 		var profile_name = ""
 		if Engine.has_singleton("LocalProfile"):
