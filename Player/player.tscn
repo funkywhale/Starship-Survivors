@@ -53,7 +53,7 @@ corner_radius_bottom_left = 3
 shadow_size = 1
 
 [node name="Player" type="CharacterBody2D" groups=["player"]]
-collision_mask = 5
+collision_mask = 6
 motion_mode = 1
 script = ExtResource("1_37q80")
 
@@ -159,7 +159,6 @@ texture_progress = ExtResource("5_5ive2")
 
 [node name="lbl_level" type="Label" parent="GUILayer/GUI/ExperienceBar"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 0
 offset_left = 540.0
 offset_top = -340.0
@@ -184,7 +183,6 @@ texture_progress = ExtResource("9_uker1")
 [node name="LevelUp" type="Panel" parent="GUILayer/GUI"]
 unique_name_in_owner = true
 process_mode = 2
-visible = false
 texture_filter = 1
 layout_mode = 0
 offset_left = 800.0
@@ -218,7 +216,6 @@ volume_db = -10.0
 [node name="DeathPanel" type="Panel" parent="GUILayer/GUI"]
 unique_name_in_owner = true
 process_mode = 2
-visible = false
 layout_mode = 0
 offset_left = 230.0
 offset_top = -266.0

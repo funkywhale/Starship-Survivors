@@ -30,7 +30,7 @@ func _ready() -> void:
 	add_to_group("attack")
 	if player:
 		_update_from_level()
-	# Initialize line start near muzzle (slight forward)
+
 	beam_line.clear_points()
 	glow_line.clear_points()
 	var origin = Vector2.ZERO
@@ -42,7 +42,7 @@ func _ready() -> void:
 	glow_line.modulate = Color(0.6, 0.75, 1.0, 0.85) # Blue-ish glow
 	beam_line.width = 3.0 * attack_size
 	glow_line.width = 8.0 * attack_size
-	# Appear animation (width grow + distance extension handled in _physics_process)
+
 	beam_tween = create_tween()
 	beam_line.width = 0.0
 	glow_line.width = 0.0
@@ -50,7 +50,6 @@ func _ready() -> void:
 	beam_tween.parallel().tween_property(glow_line, "width", 8.0 * attack_size, fade_time * 2.0).from(0.0)
 	snd_player.play()
 	if hit_area:
-		# Use a fresh RectangleShape2D sized dynamically each frame
 		var rect := RectangleShape2D.new()
 		hit_shape.shape = rect
 		hit_area.area_entered.connect(_on_hit_area_area_entered)
@@ -58,8 +57,8 @@ func _ready() -> void:
 func _update_from_level() -> void:
 	level = player.ionlaser_level
 	var base_damage = 15
-	var base_length = 300.0
-	var base_speed = 700.0
+	var base_length = 100.0
+	var base_speed = 100.0
 	match level:
 		1:
 			damage = base_damage + player.damage_bonus
@@ -68,17 +67,17 @@ func _update_from_level() -> void:
 			grow_speed = base_speed
 		2:
 			damage = base_damage + 5 + player.damage_bonus
-			max_length = (base_length + 50) * (1 + player.spell_size)
+			max_length = (base_length + 25) * (1 + player.spell_size)
 			attack_size = 1.05 * (1 + player.spell_size)
 			grow_speed = base_speed + 100
 		3:
 			damage = base_damage + 10 + player.damage_bonus
-			max_length = (base_length + 100) * (1 + player.spell_size)
+			max_length = (base_length + 50) * (1 + player.spell_size)
 			attack_size = 1.1 * (1 + player.spell_size)
 			grow_speed = base_speed + 150
 		4:
 			damage = base_damage + 15 + player.damage_bonus
-			max_length = (base_length + 150) * (1 + player.spell_size)
+			max_length = (base_length + 100) * (1 + player.spell_size)
 			attack_size = 1.15 * (1 + player.spell_size)
 			grow_speed = base_speed + 200
 	# Adjust widths if already initialized

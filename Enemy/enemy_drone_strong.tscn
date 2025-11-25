@@ -51,7 +51,7 @@ _data = {
 radius = 15.008331
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_c3om3"]
-radius = 13.5
+radius = 12.0
 
 [node name="enemy_kobold_strong" type="CharacterBody2D"]
 collision_layer = 4
@@ -68,7 +68,7 @@ texture = ExtResource("2_mydk5")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 0.81332344
-scale = Vector2(1.97, 1.97)
+scale = Vector2(1.7, 1.7)
 shape = SubResource("CircleShape2D_ww036")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
@@ -77,6 +77,7 @@ libraries = {
 }
 
 [node name="HurtBox" parent="." instance=ExtResource("3_c3om3")]
+visible = false
 collision_mask = 4
 HurtBoxType = 1
 
@@ -84,7 +85,8 @@ HurtBoxType = 1
 position = Vector2(0, 0.5)
 shape = SubResource("CircleShape2D_mydk5")
 
-[node name="HitBox" parent="." groups=["attack"] instance=ExtResource("4_vyjdl")]
+[node name="HitBox" parent="." instance=ExtResource("4_vyjdl")]
+visible = false
 collision_layer = 2
 
 [node name="CollisionShape2D" parent="HitBox" index="0"]
@@ -92,7 +94,6 @@ shape = SubResource("CircleShape2D_c3om3")
 
 [node name="PlayerCollisionArea" type="Area2D" parent="."]
 collision_layer = 0
-collision_mask = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerCollisionArea"]
 shape = SubResource("CircleShape2D_c3om3")

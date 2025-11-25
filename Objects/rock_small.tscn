@@ -7,7 +7,7 @@
 radius = 8.0
 
 [node name="RockSmall" type="CharacterBody2D"]
-collision_layer = 3
+collision_layer = 2
 collision_mask = 2
 script = ExtResource("rock_script")
 

@@ -22,7 +22,9 @@ var has_collided_with_player: bool = false
 
 # Obstacle avoidance
 var obstacle_raycast: RayCast2D
-var obstacle_check_distance: float = 50.0
+var obstacle_check_distance: float = 90.0
+var side_check_offset: float = 24.0
+var side_check_fraction: float = 0.7
 
 var death_anim: PackedScene = preload("res://Enemy/explosion.tscn")
 var exp_gem: PackedScene = preload("res://Objects/experience_orb.tscn")
@@ -110,17 +112,39 @@ func _physics_process(_delta: float) -> void:
 		movement_speed = base_movement_speed * current_speed_multiplier
 
 	var direction = global_position.direction_to(player.global_position)
-	
-	# Only do expensive raycast checks every 3rd frame to reduce overhead
-	if obstacle_raycast and Engine.get_frames_drawn() % 3 == 0:
+
+	# Steering to avoid rocks while still colliding with them
+	if obstacle_raycast and Engine.get_frames_drawn() % 2 == 0:
+		obstacle_raycast.global_position = global_position
 		obstacle_raycast.target_position = direction * obstacle_check_distance
 		obstacle_raycast.force_raycast_update()
-		
+
 		if obstacle_raycast.is_colliding():
-			# Get the normal of the obstacle surface
 			var collision_normal = obstacle_raycast.get_collision_normal()
-			# Steer perpendicular to the obstacle (slide around it)
-			direction = direction.slide(collision_normal).normalized()
+			var right = Vector2(-direction.y, direction.x)
+			var left = - right
+			var side_offset = side_check_offset
+			var check_dist = obstacle_check_distance * side_check_fraction
+			var right_pos = global_position + right * side_offset
+			var left_pos = global_position + left * side_offset
+			var space_state = get_world_2d().direct_space_state
+			var query = PhysicsRayQueryParameters2D.create(
+				right_pos,
+				right_pos + direction * check_dist,
+				2
+			)
+			var hit_right = space_state.intersect_ray(query)
+			query.from = left_pos
+			query.to = left_pos + direction * check_dist
+			var hit_left = space_state.intersect_ray(query)
+			var steer_dir := Vector2.ZERO
+			if hit_right and not hit_left:
+				steer_dir = left
+			elif hit_left and not hit_right:
+				steer_dir = right
+			else:
+				steer_dir = direction.slide(collision_normal).normalized()
+			direction = (direction * 0.4 + steer_dir * 0.6).normalized()
 	
 	velocity = direction * movement_speed
 	velocity += knockback

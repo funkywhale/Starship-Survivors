@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://btf7clk4jja87"]
+[gd_scene load_steps=13 format=3 uid="uid://btf7clk4jja87"]
 
 [ext_resource type="Script" uid="uid://dbaohik2hgpgx" path="res://Enemy/enemy.gd" id="1_544l3"]
 [ext_resource type="Texture2D" uid="uid://dyagaa608hok0" path="res://Textures/Enemy/space_boss.png" id="2_lwcbe"]
@@ -53,6 +53,9 @@ size = Vector2(108, 108)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ucec4"]
 size = Vector2(96.3, 95.4)
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_lwcbe"]
+radius = 54.589375
+
 [node name="enemy_super" type="CharacterBody2D" groups=["boss"]]
 collision_layer = 4
 collision_mask = 5
@@ -77,6 +80,7 @@ libraries = {
 }
 
 [node name="HurtBox" parent="." instance=ExtResource("3_mba5l")]
+visible = false
 collision_mask = 4
 HurtBoxType = 1
 
@@ -85,6 +89,7 @@ position = Vector2(-1, 1)
 shape = SubResource("RectangleShape2D_rborl")
 
 [node name="HitBox" parent="." instance=ExtResource("4_uo1gu")]
+visible = false
 collision_layer = 2
 
 [node name="CollisionShape2D" parent="HitBox" index="0"]
@@ -95,8 +100,7 @@ shape = SubResource("RectangleShape2D_ucec4")
 collision_layer = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerCollisionArea"]
-position = Vector2(-1.5, 1)
-shape = SubResource("RectangleShape2D_ucec4")
+shape = SubResource("CircleShape2D_lwcbe")
 
 [node name="snd_hit" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("5_4ehyp")

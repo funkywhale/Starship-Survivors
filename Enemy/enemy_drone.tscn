@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://gvm5jcbbgwdv"]
+[gd_scene load_steps=10 format=3 uid="uid://gvm5jcbbgwdv"]
 
 [ext_resource type="Script" uid="uid://dbaohik2hgpgx" path="res://Enemy/enemy.gd" id="1_1bh7b"]
 [ext_resource type="Texture2D" uid="uid://bn1sbw7m0jkgw" path="res://Textures/Enemy/space_drone.png" id="2_mm2yx"]
@@ -14,6 +14,9 @@ size = Vector2(16.5, 14.875)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ucec4"]
 size = Vector2(14.4, 12.6)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_nnhai"]
+radius = 7.0
 
 [node name="enemy_drone" type="CharacterBody2D"]
 collision_layer = 4
@@ -33,6 +36,7 @@ scale = Vector2(0.985, 0.985)
 shape = SubResource("CircleShape2D_nfe5w")
 
 [node name="HurtBox" parent="." instance=ExtResource("3_gamcv")]
+visible = false
 collision_mask = 4
 HurtBoxType = 1
 
@@ -41,6 +45,7 @@ position = Vector2(4, 4)
 shape = SubResource("RectangleShape2D_rborl")
 
 [node name="HitBox" parent="." instance=ExtResource("4_vdnsx")]
+visible = false
 collision_layer = 2
 
 [node name="CollisionShape2D" parent="HitBox" index="0"]
@@ -52,7 +57,8 @@ collision_layer = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerCollisionArea"]
 position = Vector2(4, 4)
-shape = SubResource("RectangleShape2D_ucec4")
+scale = Vector2(1.03, 1.03)
+shape = SubResource("CircleShape2D_nnhai")
 
 [node name="snd_hit" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("5_03jve")
