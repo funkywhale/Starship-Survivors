@@ -60,6 +60,7 @@ var rocket_ammo: int = 0
 var rocket_baseammo: int = 0
 var rocket_attackspeed: float = 3.0
 var rocket_level: int = 0
+var rocket_next_from_left: bool = false
 
 # Plasma weapon state
 var plasma_ammo: int = 0
@@ -306,17 +307,16 @@ func _on_rocket_timer_timeout():
 func _on_rocket_attack_timer_timeout():
 	if rocket_ammo > 0 and active_projectile_count < MAX_PROJECTILES:
 		var rocket_attack = rocket.instantiate()
-		
-		# Calculate direction and apply offset
-		var rocket_direction: float
-		if last_movement.length() > 0.01:
-			rocket_direction = last_movement.angle()
-		else:
-			rocket_direction = sprite.rotation
-		var offset = Vector2(12, 0).rotated(rocket_direction)
+		var rocket_direction: float = sprite.rotation
+		var forward: Vector2 = Vector2.UP.rotated(rocket_direction)
+		var right: Vector2 = Vector2.RIGHT.rotated(rocket_direction)
+		var nose_offset: Vector2 = forward * 12.0
+		var wing_offset_amount: float = 8.0
+		var side_dir: Vector2 = - right if rocket_next_from_left else right
+		var wing_offset: Vector2 = side_dir * wing_offset_amount
+		rocket_next_from_left = not rocket_next_from_left
+		var offset: Vector2 = nose_offset + wing_offset
 		rocket_attack.position = position + offset
-		
-		rocket_attack.last_movement = last_movement
 		rocket_attack.level = rocket_level
 		rocket_attack.add_to_group("attack")
 		add_child(rocket_attack)
@@ -341,7 +341,6 @@ func _on_plasma_attack_timer_timeout():
 			target_pos = get_different_target()
 			plasma_attack.target = target_pos
 		
-		# Calculate direction and apply offset
 		var plasma_direction: float
 		if target_pos != Vector2.UP:
 			plasma_direction = (target_pos - global_position).angle()
@@ -383,7 +382,6 @@ func _on_ion_laser_attack_timer_timeout():
 		else:
 			laser_direction = sprite.rotation
 		
-		# Offset laser spawn point to front tip of ship
 		var offset = Vector2(12, 0).rotated(laser_direction)
 		laser.global_position = global_position + offset
 		laser.rotation = laser_direction

@@ -1,11 +1,11 @@
 [gd_scene load_steps=5 format=3 uid="uid://de2roxkujmcik"]
 
 [ext_resource type="Script" uid="uid://me5bevc0yxre" path="res://Player/Attack/rocket.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://bntx8s4khxc0i" path="res://Textures/Items/Weapons/rocket.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://c6wqkdpim5g37" path="res://Textures/Items/Weapons/storm_shadow.png" id="2_7rxus"]
 [ext_resource type="AudioStream" uid="uid://ctk88rh0am23a" path="res://Audio/SoundEffect/missile.mp3" id="3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dd51k"]
-size = Vector2(14.15, 21.585)
+size = Vector2(14.15, 25.157234)
 
 [node name="Rocket" type="Area2D" groups=["attack"]]
 top_level = true
@@ -15,11 +15,11 @@ collision_mask = 3
 script = ExtResource("1")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2")
+scale = Vector2(0.77, 0.77)
+texture = ExtResource("2_7rxus")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-0.72, -0.435)
-scale = Vector2(0.795, 0.795)
+scale = Vector2(0.79499984, 0.79499984)
 shape = SubResource("RectangleShape2D_dd51k")
 
 [node name="Timer" type="Timer" parent="."]

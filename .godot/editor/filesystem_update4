@@ -16,3 +16,6 @@ res://Utility/experience_orb_manager.gd
 res://Enemy/enemy.gd
 res://Utility/experience_orb_manager.tscn
 res://Player/Attack/ion_laser_beam.gd
+res://Player/Attack/rocket.gd
+res://Utility/upgrade_db.gd
+res://Player/player.gd

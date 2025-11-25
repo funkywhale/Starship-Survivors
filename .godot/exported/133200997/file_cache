@@ -37,7 +37,7 @@ res://Player/Attack/explosion_area.tscn::3e14c8748baae2437f68d203257a2d0e::17639
 res://Player/Attack/ion_laser_beam.tscn::35baba8e4b189713e1baf0fd2d1e317e::1764033033::res://.godot/exported/133200997/export-6fd001179592c6d5c129e4f28bef534d-ion_laser_beam.scn
 res://Player/Attack/plasma.tscn::d27fa7d1d4d0d6d54e4c974d22f41bd5::1764033234::res://.godot/exported/133200997/export-6e9e0c93c6467d3687815ebd7d80ba03-plasma.scn
 res://Player/Attack/pulse_laser.tscn::513198b76511ba3c0cc1adf3fc94b8a4::1764033234::res://.godot/exported/133200997/export-6aebfd4d47250050721e2dc95acc3ede-pulse_laser.scn
-res://Player/Attack/rocket.tscn::e5f84302c1bdef00343d1f6c6f6ee092::1764033234::res://.godot/exported/133200997/export-b01c8b115de1f3a0be813a4c1fd7d046-rocket.scn
+res://Player/Attack/rocket.tscn::aa7bb5494aee963a68cd6071b30e2d41::1764036772::res://.godot/exported/133200997/export-b01c8b115de1f3a0be813a4c1fd7d046-rocket.scn
 res://Player/Attack/scatter_shot.tscn::d52cfd5a070cc5e6307a7e0ab04d3590::1764033743::res://.godot/exported/133200997/export-2d10217599e21821ca39fe477217079a-scatter_shot.scn
 res://Player/GUI/item_container.tscn::122ef00a6f19281a28d795b9a926cbec::1758968536::res://.godot/exported/133200997/export-05edbfa53f42d3499031f0b1b250ce32-item_container.scn
 res://Player/player.tscn::e63d067ac2ca597f12f8f33b54b22bc5::1764035081::res://.godot/exported/133200997/export-d267b47f7e81a3258979164d56d0d9c2-player.scn
@@ -45,7 +45,7 @@ res://SkinsMenu/skins_menu.tscn::4c924aa7851f29a45720478833a35bdf::1763952374::r
 res://TitleScreen/menu.tscn::560774af51ac63159cde678a245e4eca::1764031066::res://.godot/exported/133200997/export-2fcc99cb4d261fcd27c44064a8e599c4-menu.scn
 res://Utility/basic_button.tscn::3b2af2c8957f5a6b8f9b5a802eab013b::1759285972::res://.godot/exported/133200997/export-f20e3aa69651915552de52fb9f7d007d-basic_button.scn
 res://Utility/enemy_spawner.tscn::9edf947533221c1e2bca7d185b67ac36::1759286357::res://.godot/exported/133200997/export-6538c176aa9d792f5b57f4c211309eaa-enemy_spawner.scn
-res://Utility/experience_orb_manager.tscn::841929f8ddcca2344d56df2fc2184e1e::1764035296::res://.godot/exported/133200997/export-671ee90815859de68585bed389fdd9c1-experience_orb_manager.scn
+res://Utility/experience_orb_manager.tscn::841929f8ddcca2344d56df2fc2184e1e::1764035599::res://.godot/exported/133200997/export-671ee90815859de68585bed389fdd9c1-experience_orb_manager.scn
 res://Utility/hit_box.tscn::d3ceedfbe905cc39d8141f7dd1140929::1717904380::res://.godot/exported/133200997/export-c0b8329470e3a8a3346cddcfda3f2815-hit_box.scn
 res://Utility/hurt_box.tscn::d2cfe249dc2ada2529560ab038ea880d::1758955372::res://.godot/exported/133200997/export-a60fe6600d20ea02ad9949a92024b18d-hurt_box.scn
 res://Utility/item_option.tscn::15365e627df792a018cfe5e23fe66073::1759052563::res://.godot/exported/133200997/export-4cd66e9d2ef6bda90c064d5e204f02d5-item_option.scn

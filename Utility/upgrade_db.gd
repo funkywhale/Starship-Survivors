@@ -69,7 +69,7 @@ const UPGRADES = {
 		"type": "weapon"
 	},
 	"rocket1": {
-		"icon": WEAPON_PATH + "rocket.png",
+		"icon": WEAPON_PATH + "storm_shadow.png",
 		"displayname": "Rocket",
 		"details": "A rocket is launched and heads somewhere in the player's direction",
 		"level": "Level: 1",
@@ -77,7 +77,7 @@ const UPGRADES = {
 		"type": "weapon"
 	},
 	"rocket2": {
-		"icon": WEAPON_PATH + "rocket.png",
+		"icon": WEAPON_PATH + "storm_shadow.png",
 		"displayname": "Rocket",
 		"details": "An additional Rocket is created",
 		"level": "Level: 2",
@@ -85,7 +85,7 @@ const UPGRADES = {
 		"type": "weapon"
 	},
 	"rocket3": {
-		"icon": WEAPON_PATH + "rocket.png",
+		"icon": WEAPON_PATH + "storm_shadow.png",
 		"displayname": "Rocket",
 		"details": "The Rocket cooldown is reduced by 0.5 seconds",
 		"level": "Level: 3",
@@ -93,7 +93,7 @@ const UPGRADES = {
 		"type": "weapon"
 	},
 	"rocket4": {
-		"icon": WEAPON_PATH + "rocket.png",
+		"icon": WEAPON_PATH + "storm_shadow.png",
 		"displayname": "Rocket",
 		"details": "An additional Rocket is created and the knockback is increased by 25%",
 		"level": "Level: 4",

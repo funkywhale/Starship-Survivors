@@ -2,15 +2,27 @@ extends Area2D
 
 var level: int = 1
 var hp: int = 9999
-var speed: float = 100.0
+var speed: float = 140.0
 var damage: int = 5
 var knockback_amount: int = 100
 var attack_size: float = 1.0
 
-var last_movement: Vector2 = Vector2.ZERO
-var angle: Vector2 = Vector2.ZERO
-var angle_less: Vector2 = Vector2.ZERO
-var angle_more: Vector2 = Vector2.ZERO
+# Direction the rocket is travelling in (normalized)
+var direction: Vector2 = Vector2.ZERO
+
+# Homing behaviour
+var homing_delay: float = 1.0
+var homing_time: float = 0.0
+var homing_active: bool = false
+# Lower turn speed for a wider, smoother curve
+var homing_turn_speed: float = 1.0 # radians per second
+var homing_max_distance: float = 900.0
+var homing_target: Node2D = null
+
+# Lifetime
+var max_lifetime: float = 4.5
+var age: float = 0.0
+
 var exploded: bool = false
 
 signal remove_from_array(object)
@@ -25,94 +37,47 @@ func _has_prop(obj, prop_name: String) -> bool:
 	return false
 
 func _ready():
+	# Set base stats from player and level
 	match level:
 		1:
 			hp = 1
-			speed = 100.0
+			speed = 140.0
 			damage = 10 + (player.damage_bonus if player else 0)
 			knockback_amount = 100
 			attack_size = 1.0 * (1 + player.spell_size)
 		2:
 			hp = 1
-			speed = 100.0
+			speed = 140.0
 			damage = 10 + (player.damage_bonus if player else 0)
 			knockback_amount = 100
 			attack_size = 1.0 * (1 + player.spell_size)
 		3:
 			hp = 1
-			speed = 100.0
+			speed = 140.0
 			damage = 10 + (player.damage_bonus if player else 0)
 			knockback_amount = 100
 			attack_size = 1.0 * (1 + player.spell_size)
 		4:
 			hp = 1
-			speed = 100.0
+			speed = 150.0
 			damage = 10 + (player.damage_bonus if player else 0)
 			knockback_amount = 125
 			attack_size = 1.0 * (1 + player.spell_size)
 
-			
-	var move_to_less = Vector2.ZERO
-	var move_to_more = Vector2.ZERO
-	var lm = last_movement
-	if lm.length() < 0.01:
-		lm = Vector2.UP
-	else:
-		lm = lm.normalized()
+	# Initial direction: always the way the player is facing (forward)
+	var forward := Vector2.UP
+	if player and player.has_node("Sprite2D"):
+		var spr: Node2D = player.get_node("Sprite2D")
+		forward = Vector2.UP.rotated(spr.rotation)
+	direction = forward.normalized()
+	rotation = direction.angle() + PI / 2
 
-
-	var spread_min = randf_range(0.15, 0.35)
-	var spread_max = randf_range(0.7, 1.2)
-
-	var dir_less = lm.rotated(-spread_min)
-	var dir_more = lm.rotated(spread_min)
-
-
-	var dir_less_wide = lm.rotated(-spread_max)
-	var dir_more_wide = lm.rotated(spread_max)
-
-	move_to_less = global_position + dir_less * 500
-	move_to_more = global_position + dir_more * 500
-
-
-	if randi_range(0, 1) == 0:
-		move_to_less = global_position + dir_less_wide * 500
-	if randi_range(0, 1) == 0:
-		move_to_more = global_position + dir_more_wide * 500
-
-	angle_less = global_position.direction_to(move_to_less)
-	angle_more = global_position.direction_to(move_to_more)
-	
 	# Apply rocket size immediately
-	var final_scale = Vector2(1, 1) * attack_size
-	scale = final_scale
-	
-	# Animate speed increase
-	var final_speed = speed
-	speed = speed / 5.0
-	var speed_tween = create_tween()
-	speed_tween.tween_property(self, "speed", final_speed, 6).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
-	speed_tween.play()
-	
-	var tween = create_tween()
-	var set_angle = randi_range(0, 1)
-	if set_angle == 1:
-		angle = angle_less
-		tween.tween_property(self, "angle", angle_more, 2)
-		tween.tween_property(self, "angle", angle_less, 2)
-		tween.tween_property(self, "angle", angle_more, 2)
-		tween.tween_property(self, "angle", angle_less, 2)
-		tween.tween_property(self, "angle", angle_more, 2)
-		tween.tween_property(self, "angle", angle_less, 2)
-	else:
-		angle = angle_more
-		tween.tween_property(self, "angle", angle_less, 2)
-		tween.tween_property(self, "angle", angle_more, 2)
-		tween.tween_property(self, "angle", angle_less, 2)
-		tween.tween_property(self, "angle", angle_more, 2)
-		tween.tween_property(self, "angle", angle_less, 2)
-		tween.tween_property(self, "angle", angle_more, 2)
-	tween.play()
+	scale = Vector2.ONE * attack_size
+
+	homing_time = 0.0
+	homing_active = false
+	homing_target = null
 
 	if not is_connected("area_entered", Callable(self, "_on_area_entered")):
 		connect("area_entered", Callable(self, "_on_area_entered"))
@@ -120,9 +85,73 @@ func _ready():
 		connect("body_entered", Callable(self, "_on_body_entered"))
 
 func _physics_process(delta: float) -> void:
-	if angle != Vector2.ZERO:
-		rotation = angle.angle() + PI / 2
-	position += angle * speed * delta
+	# Update timers
+	age += delta
+	if age >= max_lifetime and not exploded:
+		_spawn_explosion()
+		return
+
+	homing_time += delta
+	if not homing_active and homing_time >= homing_delay:
+		homing_active = true
+		_pick_homing_target()
+
+	if homing_active:
+		_update_homing(delta)
+
+	if direction != Vector2.ZERO:
+		rotation = direction.angle() + PI / 2
+	position += direction * speed * delta
+
+	# Auto-cleanup if far away from player (failsafe)
+	if player and global_position.distance_to(player.global_position) > 3000.0:
+		_cleanup()
+
+func _pick_homing_target() -> void:
+	# Choose a single target once when homing starts; no retargeting.
+	var enemy_group := get_tree().get_nodes_in_group("enemy")
+	var best_enemy: Node2D = null
+	var best_dist: float = homing_max_distance
+	for e in enemy_group:
+		if not is_instance_valid(e):
+			continue
+		if not ("global_position" in e):
+			continue
+		var enemy_pos: Vector2 = e.global_position
+		var to_enemy: Vector2 = enemy_pos - global_position
+		var dist: float = to_enemy.length()
+		if dist <= 0.01 or dist > homing_max_distance:
+			continue
+		# Prefer enemies generally in front of the rocket (narrow cone)
+		var dir: Vector2 = to_enemy / dist
+		var dot: float = dir.dot(direction)
+		if dot < 0.7: # about 45 degrees cone
+			continue
+		if dist < best_dist:
+			best_dist = dist
+			best_enemy = e
+	homing_target = best_enemy
+	if homing_target == null:
+		homing_active = false
+
+func _update_homing(delta: float) -> void:
+	if not homing_target or not is_instance_valid(homing_target):
+		homing_active = false
+		return
+	var enemy_pos: Vector2 = homing_target.global_position
+	var to_enemy: Vector2 = enemy_pos - global_position
+	var dist: float = to_enemy.length()
+	if dist <= 0.01:
+		return
+	var target_dir: Vector2 = to_enemy / dist
+	# Smoothly rotate current direction toward target_dir (limited turn rate)
+	var current_angle: float = direction.angle()
+	var target_angle: float = target_dir.angle()
+	var diff: float = wrapf(target_angle - current_angle, -PI, PI)
+	var max_step: float = homing_turn_speed * delta
+	var step: float = clamp(diff, -max_step, max_step)
+	var new_angle_val: float = current_angle + step
+	direction = Vector2.RIGHT.rotated(new_angle_val).normalized()
 
 func enemy_hit(charge: int = 1) -> void:
 	hp -= charge
@@ -133,10 +162,6 @@ func _on_timer_timeout() -> void:
 	_cleanup()
 
 func _cleanup() -> void:
-	# Kill any running tweens to prevent memory leaks
-	var tween_node = get_node_or_null("Tween")
-	if tween_node and tween_node is Tween:
-		tween_node.kill()
 	emit_signal("remove_from_array", self)
 	queue_free()
 
@@ -159,9 +184,9 @@ func _spawn_explosion() -> void:
 	else:
 		explosion.set("radius", 48.0 * attack_size)
 	if _has_prop(explosion, "angle"):
-		explosion.angle = angle
+		explosion.angle = direction
 	else:
-		explosion.set("angle", angle)
+		explosion.set("angle", direction)
 	var root = get_tree().get_current_scene()
 	if root:
 		root.call_deferred("add_child", explosion)
