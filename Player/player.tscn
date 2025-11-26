@@ -1,7 +1,7 @@
 [gd_scene load_steps=18 format=3 uid="uid://dncgepmkc4jf4"]
 
 [ext_resource type="Script" uid="uid://cpndvo858r5uf" path="res://Player/player.gd" id="1_37q80"]
-[ext_resource type="Texture2D" uid="uid://p0up1j2hnvko" path="res://Textures/Player/player_sprite2.png" id="2_p5o4e"]
+[ext_resource type="Texture2D" uid="uid://61fjwk8sxdp8" path="res://Textures/Player/ship_3.png" id="2_x3vf3"]
 [ext_resource type="PackedScene" uid="uid://xy3cvpwdy828" path="res://Utility/hurt_box.tscn" id="3_gs51i"]
 [ext_resource type="Texture2D" uid="uid://dlx33roiu0vlj" path="res://Textures/GUI/exp_progress.png" id="5_5ive2"]
 [ext_resource type="AudioStream" uid="uid://rlhdbyjq2q3r" path="res://Audio/SoundEffect/levelup.ogg" id="7_wl7d2"]
@@ -12,19 +12,19 @@
 [ext_resource type="PackedScene" uid="uid://b7c7gsdx2rkjm" path="res://Utility/basic_button.tscn" id="12_i8esf"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_5htga"]
-radius = 7.0
+radius = 6.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_x3vf3"]
-radius = 14.0
+radius = 12.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_anwqc"]
 radius = 370.951
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_p2554"]
-radius = 34.0
+radius = 21.023796
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_6vwp8"]
-radius = 20.0
+radius = 32.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5htga"]
 bg_color = Color(0.046510585, 0.00038310874, 0.25372905, 1)
@@ -58,12 +58,15 @@ motion_mode = 1
 script = ExtResource("1_37q80")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_p5o4e")
-hframes = 2
+texture_repeat = 1
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_x3vf3")
+hframes = 3
 
 [node name="Camera2D" type="Camera2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -2)
 scale = Vector2(2, 2)
 shape = SubResource("CircleShape2D_5htga")
 
@@ -77,6 +80,7 @@ collision_mask = 2
 HurtBoxType = 2
 
 [node name="CollisionShape2D" parent="HurtBox" index="0"]
+position = Vector2(0, -2)
 shape = SubResource("CircleShape2D_x3vf3")
 
 [node name="Attack" type="Node2D" parent="."]
@@ -155,18 +159,18 @@ layout_mode = 0
 offset_top = 342.0
 offset_right = 640.0
 offset_bottom = 362.0
+nine_patch_stretch = true
 texture_progress = ExtResource("5_5ive2")
 
 [node name="lbl_level" type="Label" parent="GUILayer/GUI/ExperienceBar"]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 540.0
+offset_left = 470.0
 offset_top = -340.0
-offset_right = 640.0
+offset_right = 570.0
 offset_bottom = -320.0
 theme_override_font_sizes/font_size = 14
 text = "Level: 1"
-horizontal_alignment = 1
 vertical_alignment = 2
 
 [node name="HealthBar" type="TextureProgressBar" parent="GUILayer/GUI"]

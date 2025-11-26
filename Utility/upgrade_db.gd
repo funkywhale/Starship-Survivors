@@ -199,7 +199,7 @@ const UPGRADES = {
 	"speed1": {
 		"icon": ICON_PATH + "thrusters.png",
 		"displayname": "Thrusters",
-		"details": "Movement Speed Increased by 50%",
+		"details": "Movement speed Increased by 25%",
 		"level": "Level: 1",
 		"prerequisite": [],
 		"type": "upgrade"
@@ -207,7 +207,7 @@ const UPGRADES = {
 	"speed2": {
 		"icon": ICON_PATH + "thrusters.png",
 		"displayname": "Thrusters",
-		"details": "Movement Speed Increased by an additional 50%",
+		"details": "Movement speed Increased by an additional 25%",
 		"level": "Level: 2",
 		"prerequisite": ["speed1"],
 		"type": "upgrade"
@@ -215,7 +215,7 @@ const UPGRADES = {
 	"speed3": {
 		"icon": ICON_PATH + "thrusters.png",
 		"displayname": "Thrusters",
-		"details": "Movement Speed Increased by an additional 50%",
+		"details": "Movement speed Increased by an additional 25%",
 		"level": "Level: 3",
 		"prerequisite": ["speed2"],
 		"type": "upgrade"
@@ -223,7 +223,7 @@ const UPGRADES = {
 	"speed4": {
 		"icon": ICON_PATH + "thrusters.png",
 		"displayname": "Thrusters",
-		"details": "Movement Speed Increased an additional 50%",
+		"details": "Movement speed Increased an additional 25%",
 		"level": "Level: 4",
 		"prerequisite": ["speed3"],
 		"type": "upgrade"

@@ -6,33 +6,38 @@ const SAVE_PATH := "user://skins.save"
 var skins := {
 	"ship_1": {
 		"name": "Starfighter Mk I",
-		#"price": 0,
-		"texture_path": "res://Textures/Player/player_sprite2.png",
-		"starting_weapon": "pulselaser1"
+		"texture_path": "res://Textures/Player/ship_1.png",
+		"starting_weapon": "pulselaser1",
+		"hframes": 3,
+		"vframes": 1
 	},
 	"ship_2": {
 		"name": "Starfighter Mk II",
-		#"price": 0,
-		"texture_path": "res://Textures/Player/player_sprite.png",
-		"starting_weapon": "rocket1"
+		"texture_path": "res://Textures/Player/ship_2.png",
+		"starting_weapon": "rocket1",
+		"hframes": 3,
+		"vframes": 1
 	},
 	"ship_3": {
 		"name": "Skyfeather",
-		#"price": 0,
-		"texture_path": "res://Textures/Player/player_sprite3.png",
-		"starting_weapon": "plasma1"
+		"texture_path": "res://Textures/Player/ship_3.png",
+		"starting_weapon": "plasma1",
+		"hframes": 3,
+		"vframes": 1
 	},
 	"ship_4": {
 		"name": "Lightning Craft",
-		#"price": 0,
-		"texture_path": "res://Textures/Player/player_sprite4.png",
-		"starting_weapon": "scattershot1"
+		"texture_path": "res://Textures/Player/ship_4.png",
+		"starting_weapon": "scattershot1",
+		"hframes": 3,
+		"vframes": 1
 	},
 	"ship_5": {
 		"name": "Cosmic Serpent",
-		#"price": 0,
-		"texture_path": "res://Textures/Player/player_sprite5.png",
-		"starting_weapon": "ionlaser1"
+		"texture_path": "res://Textures/Player/ship_5.png",
+		"starting_weapon": "ionlaser1",
+		"hframes": 3,
+		"vframes": 1
 	},
 }
 

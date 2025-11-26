@@ -1,7 +1,7 @@
 [gd_scene load_steps=13 format=3 uid="uid://bok7kd2psi5gl"]
 
 [ext_resource type="Script" uid="uid://dbaohik2hgpgx" path="res://Enemy/enemy.gd" id="1_7ayo0"]
-[ext_resource type="Texture2D" uid="uid://dgh77frxat7xe" path="res://Textures/Enemy/space_drone_stronger.png" id="2_tvn8k"]
+[ext_resource type="Texture2D" uid="uid://b33cr543js4s2" path="res://Textures/Enemy/enemy_drone_stronger.png" id="2_7ayo0"]
 [ext_resource type="PackedScene" uid="uid://xy3cvpwdy828" path="res://Utility/hurt_box.tscn" id="3_3fvre"]
 [ext_resource type="PackedScene" uid="uid://uhr6mtuisqm1" path="res://Utility/hit_box.tscn" id="4_5ycqw"]
 [ext_resource type="AudioStream" uid="uid://bi7t7cjthnhhc" path="res://Audio/SoundEffect/enemy_hit.ogg" id="5_t6uwb"]
@@ -69,7 +69,8 @@ experience = 5
 enemy_damage = 5
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_tvn8k")
+scale = Vector2(0.78, 0.78)
+texture = ExtResource("2_7ayo0")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 scale = Vector2(0.965, 0.965)

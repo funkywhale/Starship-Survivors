@@ -1,7 +1,7 @@
 [gd_scene load_steps=12 format=3 uid="uid://hcjnrdsb563h"]
 
 [ext_resource type="Script" uid="uid://dbaohik2hgpgx" path="res://Enemy/enemy.gd" id="1_wmgsu"]
-[ext_resource type="Texture2D" uid="uid://cdplp8iinsoer" path="res://Textures/Enemy/space_battleship.png" id="2_lbgjd"]
+[ext_resource type="Texture2D" uid="uid://daq3p6k0c5bbu" path="res://Textures/Enemy/enemy_battleship.png" id="2_wmgsu"]
 [ext_resource type="PackedScene" uid="uid://xy3cvpwdy828" path="res://Utility/hurt_box.tscn" id="3_rko2w"]
 [ext_resource type="PackedScene" uid="uid://uhr6mtuisqm1" path="res://Utility/hit_box.tscn" id="4_cs1pa"]
 [ext_resource type="AudioStream" uid="uid://bi7t7cjthnhhc" path="res://Audio/SoundEffect/enemy_hit.ogg" id="5_esm0j"]
@@ -48,10 +48,10 @@ _data = {
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rborl"]
-size = Vector2(30, 24)
+size = Vector2(26, 25)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ucec4"]
-size = Vector2(27, 21.6)
+size = Vector2(25, 25)
 
 [node name="enemy_juggernaut" type="CharacterBody2D"]
 collision_layer = 4
@@ -65,10 +65,11 @@ experience = 100
 enemy_damage = 10
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(0.33, 0.33)
-texture = ExtResource("2_lbgjd")
+scale = Vector2(0.815, 0.815)
+texture = ExtResource("2_wmgsu")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource("CircleShape2D_wmgsu")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
@@ -77,13 +78,16 @@ libraries = {
 }
 
 [node name="HurtBox" parent="." instance=ExtResource("3_rko2w")]
+visible = false
 collision_mask = 4
 HurtBoxType = 1
 
 [node name="CollisionShape2D" parent="HurtBox" index="0"]
+position = Vector2(0, -0.5)
 shape = SubResource("RectangleShape2D_rborl")
 
 [node name="HitBox" parent="." instance=ExtResource("4_cs1pa")]
+visible = false
 collision_layer = 2
 
 [node name="CollisionShape2D" parent="HitBox" index="0"]
@@ -93,6 +97,7 @@ shape = SubResource("RectangleShape2D_ucec4")
 collision_layer = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerCollisionArea"]
+position = Vector2(-0.5, 0.49999952)
 shape = SubResource("RectangleShape2D_ucec4")
 
 [node name="snd_hit" type="AudioStreamPlayer2D" parent="."]

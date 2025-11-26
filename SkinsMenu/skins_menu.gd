@@ -51,7 +51,8 @@ func _update_ui() -> void:
 	var tex: Texture2D = load(data["texture_path"])
 	var atlas := AtlasTexture.new()
 	atlas.atlas = tex
-	var frame_width: int = int(tex.get_width() / 2.0)
+	var hframes: int = int(data.get("hframes", 2))
+	var frame_width: int = int(float(tex.get_width()) / float(hframes))
 	atlas.region = Rect2(0, 0, frame_width, tex.get_height())
 	preview_texture.texture = atlas
 	var base_name: String = data["name"]

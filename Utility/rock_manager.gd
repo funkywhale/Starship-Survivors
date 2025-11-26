@@ -197,7 +197,7 @@ func _generate_chunk(chunk_coord: Vector2i) -> void:
 				var dict = {"pos": sample_pos, "type": cluster_type}
 				cluster_centers_global.append(dict)
 				chunk_data.clusters.append(dict)
-				# Limit global cluster tracking to prevent memory bloat
+
 				if cluster_centers_global.size() > 500:
 					cluster_centers_global.remove_at(0)
 
@@ -248,7 +248,8 @@ func _instantiate_rock(rock_type: String, pos: Vector2) -> Node2D:
 	var rock = rock_scene.instantiate()
 	rock.position = pos
 	rock.rotation = randf() * TAU
-	add_child(rock)
+
+	call_deferred("add_child", rock)
 	add_to_spatial_grid(pos, ROCK_SIZES[rock_type])
 	return rock
 
@@ -257,7 +258,7 @@ func _cull_chunk(coord: Vector2i) -> void:
 	if not chunk_data:
 		return
 	
-	# Clean up spatial grid entries for rocks in this chunk
+
 	for rock in chunk_data.rocks:
 		if is_instance_valid(rock):
 			_remove_from_spatial_grid(rock.position)

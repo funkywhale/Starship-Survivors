@@ -12,7 +12,6 @@ var decel: float = 320.0
 var damping: float = 180.0
 var rotation_speed_base: float = 3.2
 
-# Dash (forward boost) parameters
 var is_dashing: bool = false
 var dash_boost: float = 140.0
 var dash_duration: float = 0.30
@@ -88,7 +87,7 @@ var targeted_enemies: Array = []
 
 # Attack/Projectile tracking for cleanup
 var active_projectile_count: int = 0
-const MAX_PROJECTILES: int = 200 # Hard cap for web performance
+const MAX_PROJECTILES: int = 200
 
 @onready var sprite = $Sprite2D
 @onready var skin_manager = get_node("/root/SkinManager")
@@ -113,13 +112,11 @@ const MAX_PROJECTILES: int = 200 # Hard cap for web performance
 @onready var sndVictory = get_node("%snd_victory")
 @onready var sndLose = get_node("%snd_lose")
 
-#Difficulty Manager
+
 var difficulty_manager: Node = null
-
-#Camera Intro
 var intro_playing: bool = true
+var move_anim_time: float = 0.0
 
-#Signal
 signal playerdeath
 
 func _ready() -> void:
@@ -138,8 +135,9 @@ func _apply_skin() -> void:
 	var tex: Texture2D = skin_manager.get_equipped_texture()
 	if tex:
 		sprite.texture = tex
-		sprite.hframes = 2
+		sprite.hframes = 3
 		sprite.vframes = 1
+		sprite.scale = Vector2(0.5, 0.5)
 	print("Player: applied skin = ", skin_manager.equipped)
 
 
@@ -188,22 +186,31 @@ func movement(delta: float) -> void:
 		velocity = forward * dash_boost
 
 	if not is_dashing:
-		if thrust > 0:
+		if thrust != 0:
 			velocity += forward * accel * thrust * delta
-		elif thrust < 0:
-			velocity += forward * decel * thrust * delta
-		else:
-			velocity = velocity.move_toward(Vector2.ZERO, damping * delta)
+
+
 		var speed_len = velocity.length()
-		if speed_len > max_speed:
-			velocity = velocity.normalized() * max_speed
+		var max_allowed_speed = max_speed
+		if thrust < 0:
+			max_allowed_speed = max_speed * 0.5
+		if speed_len > max_allowed_speed:
+			velocity = velocity.normalized() * max_allowed_speed
 
 	move_and_slide()
 
-	if velocity.length_squared() > 1.0:
-		last_movement = velocity.normalized()
-		_set_player_frame(1)
+
+	var is_thrusting = (Input.get_action_strength("up") - Input.get_action_strength("down")) != 0
+	if is_thrusting or is_dashing:
+		if velocity.length_squared() > 1.0:
+			last_movement = velocity.normalized()
+		move_anim_time += delta
+		var anim_fps := 6.0
+		var moving_frames := [1, 2]
+		var idx := int(floor(move_anim_time * anim_fps)) % moving_frames.size()
+		_set_player_frame(moving_frames[idx])
 	else:
+		move_anim_time = 0.0
 		_set_player_frame(0)
 
 func attack() -> void:
@@ -279,7 +286,6 @@ func _on_pulse_laser_attack_timer_timeout():
 			target_pos = get_closest_target()
 		pulselaser_attack.target = target_pos
 		
-		# Calculate direction and apply offset
 		var laser_direction: float
 		if target_pos != Vector2.UP:
 			laser_direction = (target_pos - global_position).angle()
@@ -462,7 +468,7 @@ func fire_scatter_shot() -> void:
 	var pellet_speed = 200.0
 	var pellet_size = 1.0 * (1 + spell_size)
 	
-	# Use get_node_or_null to check if audio player exists, create only once
+
 	var sound_player = get_node_or_null("ScatterShotAudio")
 	if sound_player == null:
 		sound_player = AudioStreamPlayer.new()
@@ -516,13 +522,11 @@ func _set_player_frame(frame_index: int) -> void:
 
 
 func _cleanup_enemy_arrays() -> void:
-	# Remove invalid enemies from tracking arrays using filter (faster)
 	enemy_close = enemy_close.filter(func(e): return is_instance_valid(e))
 	targeted_enemies = targeted_enemies.filter(func(e): return is_instance_valid(e))
 	
-	# Limit array sizes to prevent unbounded growth
+
 	if enemy_close.size() > 40:
-		# Keep only the closest 40 enemies
 		enemy_close.sort_custom(func(a, b):
 			return global_position.distance_squared_to(a.global_position) < global_position.distance_squared_to(b.global_position)
 		)
@@ -532,11 +536,10 @@ func _cleanup_enemy_arrays() -> void:
 		targeted_enemies.clear()
 
 func _cleanup_projectiles() -> void:
-	# Count and cleanup stale projectiles
 	var valid_count = 0
 	var projectiles_to_remove = []
 	
-	# Check all children and PlasmaBase children
+
 	for child in get_children():
 		if child.is_in_group("attack"):
 			if is_instance_valid(child):
@@ -551,7 +554,7 @@ func _cleanup_projectiles() -> void:
 			else:
 				projectiles_to_remove.append(child)
 	
-	# Remove invalid projectiles immediately
+
 	for proj in projectiles_to_remove:
 		if is_instance_valid(proj):
 			proj.queue_free()
@@ -559,9 +562,9 @@ func _cleanup_projectiles() -> void:
 	
 	active_projectile_count = max(0, valid_count)
 	
-	# If significantly over limit, aggressively cull oldest projectiles
-	if active_projectile_count > MAX_PROJECTILES * 0.9: # At 90% capacity
-		var to_remove = int((active_projectile_count - MAX_PROJECTILES * 0.8) * 1.5) # Remove extra
+
+	if active_projectile_count > MAX_PROJECTILES * 0.9:
+		var to_remove = int((active_projectile_count - MAX_PROJECTILES * 0.8) * 1.5)
 		var removed = 0
 		for child in get_children():
 			if child.is_in_group("attack") and removed < to_remove:
@@ -590,7 +593,7 @@ func _on_collect_area_area_entered(area: Area2D) -> void:
 func calculate_experience(gem_exp: int) -> void:
 	var exp_required = calculate_experiencecap()
 	collected_experience += gem_exp
-	if experience + collected_experience >= exp_required: # level up
+	if experience + collected_experience >= exp_required:
 		collected_experience -= exp_required - experience
 		experience_level += 1
 		experience = 0
@@ -728,9 +731,9 @@ func upgrade_character(upgrade: String) -> void:
 		"armor1", "armor2", "armor3", "armor4":
 			armor += 1
 		"speed1", "speed2", "speed3", "speed4":
-			max_speed += 20.0
-			accel += 20.0
-			decel += 20.0
+			max_speed += 10.0
+			accel += 1.0
+			decel += 10.0
 			damping += 10.0
 		"thick1", "thick2", "thick3", "thick4":
 			spell_size += 0.20
