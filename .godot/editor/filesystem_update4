@@ -1,5 +1,3 @@
-res://Enemy/enemy_drone_strong.tscn
-res://Player/Attack/plasma.gd
-res://addons/talo/samples/authentication/assets/theme.tres
-res://Player/player.gd
 res://Player/Attack/plasma.tscn
+res://Utility/enemy_spawner.gd
+res://addons/talo/samples/authentication/assets/theme.tres

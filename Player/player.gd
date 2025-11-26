@@ -141,7 +141,7 @@ func _prewarm_weapon_resources() -> void:
 	var warmup_plasma = plasma.instantiate()
 	warmup_plasma.position = Vector2(-10000, -10000)
 	warmup_plasma.play_sound = false
-	warmup_plasma.target = Vector2(-10000, -10000) 
+	warmup_plasma.target = Vector2(-10000, -10000)
 	add_child(warmup_plasma)
 	await get_tree().process_frame
 	warmup_plasma.queue_free()
