@@ -27,7 +27,9 @@ var collected_experience: int = 0
 
 var pulseLaser: PackedScene = preload("res://Player/Attack/pulse_laser.tscn")
 var rocket: PackedScene = preload("res://Player/Attack/rocket.tscn")
+var explosion_area: PackedScene = preload("res://Player/Attack/explosion_area.tscn")
 var plasma: PackedScene = preload("res://Player/Attack/plasma.tscn")
+var plasma_trail: PackedScene = preload("res://Player/Attack/plasma_trail.tscn")
 var scatterShot: PackedScene = preload("res://Player/Attack/scatter_shot.tscn")
 var ionLaser: PackedScene = preload("res://Player/Attack/ion_laser_beam.tscn")
 
