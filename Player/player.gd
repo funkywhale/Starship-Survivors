@@ -128,7 +128,7 @@ signal playerdeath
 
 func _ready() -> void:
 	_apply_skin()
-	_prewarm_weapon_resources()
+	await _prewarm_weapon_resources()
 	var starting_weapon = skin_manager.get_starting_weapon()
 	upgrade_character(starting_weapon)
 	set_expbar(experience, calculate_experiencecap())
@@ -138,6 +138,14 @@ func _ready() -> void:
 	start_camera_intro()
 
 func _prewarm_weapon_resources() -> void:
+	var warmup_plasma = plasma.instantiate()
+	warmup_plasma.position = Vector2(-10000, -10000)
+	warmup_plasma.play_sound = false
+	add_child(warmup_plasma)
+	await get_tree().process_frame
+	warmup_plasma.queue_free()
+	
+
 	var warmup_trail = plasma_trail.instantiate()
 	warmup_trail.position = Vector2(-10000, -10000)
 	add_child(warmup_trail)

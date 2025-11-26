@@ -25,7 +25,7 @@ res://Audio/Music/title_music_player.tscn::fcd8b144a2e23ed9417e4243e8b240c3::176
 res://Enemy/enemy_battleship.tscn::398fbf2a62bcff15a784fa997e963552::1764135108::res://.godot/exported/133200997/export-cd0d56276b0a3a8fc3df7413898949d6-enemy_battleship.scn
 res://Enemy/enemy_boss.tscn::b3f1b6cb5265342f64bef07ddab6eb27::1764135030::res://.godot/exported/133200997/export-d382ff4a14d60756fc8696e8a18d3f61-enemy_boss.scn
 res://Enemy/enemy_drone.tscn::e709be5de8951d917e4007f947043384::1764135030::res://.godot/exported/133200997/export-e927f24e0b2d18b4db00ffed350ae37c-enemy_drone.scn
-res://Enemy/enemy_drone_strong.tscn::2c50eedf8be37bd00e884782d4bbfe17::1764161677::res://.godot/exported/133200997/export-b57d51b94ff6533ef3b398163ca924b2-enemy_drone_strong.scn
+res://Enemy/enemy_drone_strong.tscn::2c50eedf8be37bd00e884782d4bbfe17::1764161938::res://.godot/exported/133200997/export-b57d51b94ff6533ef3b398163ca924b2-enemy_drone_strong.scn
 res://Enemy/enemy_drone_stronger.tscn::0290d5de88b683e9facd9360d7fbd56c::1764147826::res://.godot/exported/133200997/export-9e0a8521bd24369858f622e2be5b0011-enemy_drone_stronger.scn
 res://Enemy/explosion.tscn::c245193e0e49f1b6679e79c88aa54907::1759284504::res://.godot/exported/133200997/export-1f6c10fbb05585bbe950672868bd380f-explosion.scn
 res://Leaderboard/Leaderboard.tscn::d7737e8b7e8a9d4e0f70ed236682f5fe::1763940903::res://.godot/exported/133200997/export-db7e27f0718002827a0a758bfc885b51-Leaderboard.scn
