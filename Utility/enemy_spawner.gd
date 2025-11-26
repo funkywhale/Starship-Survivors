@@ -10,15 +10,15 @@ var cache_update_counter: int = 0
 
 # Enemy count management
 var active_enemy_count: int = 0
-const MAX_ENEMIES: int = 150 
-const CLEANUP_CHECK_INTERVAL: int = 30 
+const MAX_ENEMIES: int = 150
+const CLEANUP_CHECK_INTERVAL: int = 30
 var cleanup_timer: int = 0
 
 
-const TELEPORT_DISTANCE: float = 800.0 
-const REPOSITION_DISTANCE: float = 400.0 
-const MAX_REPOSITION_CANDIDATES: int = 40 
-var enemy_list: Array = [] 
+const TELEPORT_DISTANCE: float = 800.0
+const REPOSITION_DISTANCE: float = 400.0
+const MAX_REPOSITION_CANDIDATES: int = 40
+var enemy_list: Array = []
 
 @export var time: int = 0
 
@@ -39,7 +39,7 @@ func _on_timer_timeout() -> void:
 	
 	var cleanup_interval = CLEANUP_CHECK_INTERVAL
 	if active_enemy_count > 150:
-		cleanup_interval = 10 
+		cleanup_interval = 10
 	
 	if cleanup_timer >= cleanup_interval:
 		cleanup_timer = 0
@@ -74,7 +74,7 @@ func _on_timer_timeout() -> void:
 					is_boss = true
 					var existing_bosses = get_tree().get_nodes_in_group("boss")
 					if existing_bosses.size() > 0:
-						continue 
+						continue
 
 				var base_spawn_reduction = 0.85
 				var adjusted_enemy_num = max(1, int(i.enemy_num * enemy_count_mult * base_spawn_reduction))
@@ -161,7 +161,7 @@ func get_random_position() -> Vector2:
 		if not is_position_blocked_by_rock(spawn_position):
 			return spawn_position
 
-	# Fallback: random on last computed side segment
+
 	var x_spawn = randf_range(spawn_pos1.x, spawn_pos2.x)
 	var y_spawn = randf_range(spawn_pos1.y, spawn_pos2.y)
 	return Vector2(x_spawn, y_spawn)
@@ -199,77 +199,58 @@ func _cleanup_dead_enemies() -> void:
 func _reposition_far_enemies(count_to_reposition: int) -> void:
 	if not player or enemy_list.is_empty():
 		return
-	
 
-	var player_velocity = Vector2.ZERO
-	if player.has_method("get_velocity"):
-		player_velocity = player.get_velocity()
-	elif "velocity" in player:
-		player_velocity = player.velocity
-	
-	var player_direction = Vector2.ZERO
-	if player_velocity.length() > 1.0:
-		player_direction = player_velocity.normalized()
-	elif "last_movement" in player and player.last_movement.length() > 0.1:
-		player_direction = player.last_movement.normalized()
-	else:
-		if "sprite" in player and player.sprite:
-			player_direction = Vector2.UP.rotated(player.sprite.rotation)
-		else:
-			player_direction = Vector2.UP
-
-	if player_direction.length_squared() < 0.001:
+	var player_direction = _get_player_direction()
+	if player_direction == Vector2.ZERO:
 		return
 
 	player_direction = player_direction.normalized()
-	
+
 	var enemies_to_reposition: Array = []
 	var behind_direction = - player_direction
-	
 	var teleport_distance_sq = TELEPORT_DISTANCE * TELEPORT_DISTANCE
 
 	for enemy in enemy_list:
 		if not is_instance_valid(enemy):
 			continue
-		
 		var to_enemy = enemy.global_position - player.global_position
 		var distance_sq = to_enemy.length_squared()
-		
 		if distance_sq > teleport_distance_sq:
 			var dot = to_enemy.normalized().dot(behind_direction)
-			if dot > 0.5: 
-				var entry = {"enemy": enemy, "distance_sq": distance_sq}
-				var inserted = false
-				for idx in range(enemies_to_reposition.size()):
-					if distance_sq > enemies_to_reposition[idx]["distance_sq"]:
-						enemies_to_reposition.insert(idx, entry)
-						inserted = true
-						break
-				if not inserted:
-					enemies_to_reposition.append(entry)
+			if dot > 0.5:
+				enemies_to_reposition.append(enemy)
 
-				if enemies_to_reposition.size() > MAX_REPOSITION_CANDIDATES:
-					enemies_to_reposition.pop_back()
-	
+
+	var num_to_reposition = int(enemies_to_reposition.size() * 0.8)
+	if num_to_reposition < 1:
+		num_to_reposition = enemies_to_reposition.size()
+	if count_to_reposition > num_to_reposition:
+		num_to_reposition = count_to_reposition
+
+	if num_to_reposition > enemies_to_reposition.size():
+		num_to_reposition = enemies_to_reposition.size()
+
 	var repositioned = 0
-	for enemy_data in enemies_to_reposition:
-		if repositioned >= count_to_reposition:
+	for i in range(num_to_reposition):
+		if repositioned >= num_to_reposition:
 			break
-		
-		var enemy = enemy_data["enemy"]
+		var enemy = enemies_to_reposition[i]
 		if not is_instance_valid(enemy):
 			continue
-		
-		var forward_offset = player_direction * REPOSITION_DISTANCE
-		var side_offset = Vector2(-player_direction.y, player_direction.x) * randf_range(-200, 200)
-		var new_position = player.global_position + forward_offset + side_offset
-		
+
+
+		var vpr = cached_viewport_size * randf_range(1.1, 1.3)
+		var base_pos = player.global_position + player_direction * REPOSITION_DISTANCE * randf_range(1.0, 1.3)
+		var side_angle = randf_range(-0.7, 0.7)
+		var spread_vec = player_direction.rotated(side_angle) * randf_range(100, vpr.x / 3)
+		var new_position = base_pos + spread_vec
+
 		if not is_position_blocked_by_rock(new_position):
 			enemy.global_position = new_position
 			repositioned += 1
 		else:
-			side_offset = Vector2(player_direction.y, -player_direction.x) * randf_range(100, 300)
-			new_position = player.global_position + forward_offset + side_offset
+			spread_vec = player_direction.rotated(-side_angle) * randf_range(100, vpr.x / 3)
+			new_position = base_pos + spread_vec
 			if not is_position_blocked_by_rock(new_position):
 				enemy.global_position = new_position
 				repositioned += 1
