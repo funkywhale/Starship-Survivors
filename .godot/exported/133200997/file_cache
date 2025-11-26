@@ -35,7 +35,7 @@ res://Objects/rock_medium.tscn::ff57fc304493ab17f35957b3f47726a3::1763954370::re
 res://Objects/rock_small.tscn::1baee2092fb6da5bba542a259fcfb59b::1764033234::res://.godot/exported/133200997/export-6f63e3dc59cf453d62d1cf6d6b3e6d26-rock_small.scn
 res://Player/Attack/explosion_area.tscn::3e14c8748baae2437f68d203257a2d0e::1764153804::res://.godot/exported/133200997/export-d523c4ea17c72d6a03c15053f9c3e399-explosion_area.scn
 res://Player/Attack/ion_laser_beam.tscn::35baba8e4b189713e1baf0fd2d1e317e::1764033033::res://.godot/exported/133200997/export-6fd001179592c6d5c129e4f28bef534d-ion_laser_beam.scn
-res://Player/Attack/plasma.tscn::f00832b11e615eabc439839a20cdf5dd::1764163299::res://.godot/exported/133200997/export-6e9e0c93c6467d3687815ebd7d80ba03-plasma.scn
+res://Player/Attack/plasma.tscn::f00832b11e615eabc439839a20cdf5dd::1764164056::res://.godot/exported/133200997/export-6e9e0c93c6467d3687815ebd7d80ba03-plasma.scn
 res://Player/Attack/pulse_laser.tscn::513198b76511ba3c0cc1adf3fc94b8a4::1764033234::res://.godot/exported/133200997/export-6aebfd4d47250050721e2dc95acc3ede-pulse_laser.scn
 res://Player/Attack/rocket.tscn::aa7bb5494aee963a68cd6071b30e2d41::1764148101::res://.godot/exported/133200997/export-b01c8b115de1f3a0be813a4c1fd7d046-rocket.scn
 res://Player/Attack/scatter_shot.tscn::d52cfd5a070cc5e6307a7e0ab04d3590::1764033743::res://.godot/exported/133200997/export-2d10217599e21821ca39fe477217079a-scatter_shot.scn

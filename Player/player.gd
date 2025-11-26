@@ -340,7 +340,9 @@ func _on_hurt_box_hurt(damage: float, _angle: Vector2, _knockback: float) -> voi
 
 func _on_pulse_laser_timer_timeout():
 	pulselaser_ammo += pulselaser_baseammo + additional_attacks
-	if additional_attacks > 0:
+	# Clear targeted enemies if firing multiple shots
+	var use_different_targets = (pulselaser_baseammo + additional_attacks) > 1
+	if use_different_targets:
 		targeted_enemies.clear()
 	pulseLaserAttackTimer.start()
 
@@ -348,8 +350,9 @@ func _on_pulse_laser_timer_timeout():
 func _on_pulse_laser_attack_timer_timeout():
 	if pulselaser_ammo > 0 and active_projectile_count < MAX_PROJECTILES:
 		var pulselaser_attack = pulseLaser.instantiate()
+		var use_different_targets = (pulselaser_baseammo + additional_attacks) > 1
 		var target_pos: Vector2
-		if additional_attacks > 0:
+		if use_different_targets:
 			target_pos = get_different_target()
 		else:
 			target_pos = get_closest_target()
@@ -372,7 +375,8 @@ func _on_pulse_laser_attack_timer_timeout():
 			pulseLaserAttackTimer.start()
 		else:
 			pulseLaserAttackTimer.stop()
-			if additional_attacks > 0:
+			# Clear targeted enemies after firing all shots
+			if use_different_targets:
 				targeted_enemies.clear()
 
 func _on_rocket_timer_timeout():
@@ -407,7 +411,8 @@ func _on_plasma_timer_timeout():
 	var shots_to_fire = min(plasma_ammo, MAX_PROJECTILES - active_projectile_count)
 	
 
-	if additional_attacks > 0:
+	var use_different_targets = (plasma_baseammo + additional_attacks) > 1
+	if use_different_targets:
 		targeted_enemies.clear()
 	
 	for i in range(shots_to_fire):
@@ -417,7 +422,7 @@ func _on_plasma_timer_timeout():
 		var target_pos: Vector2
 		
 
-		if additional_attacks > 0:
+		if use_different_targets:
 			target_pos = get_different_target()
 		else:
 			target_pos = get_closest_target()
@@ -442,7 +447,7 @@ func _on_plasma_timer_timeout():
 		plasma_ammo -= 1
 	
 
-	if additional_attacks > 0:
+	if use_different_targets:
 		targeted_enemies.clear()
 
 func _on_plasma_attack_timer_timeout():
@@ -450,15 +455,18 @@ func _on_plasma_attack_timer_timeout():
 
 func _on_ion_laser_timer_timeout():
 	ionlaser_ammo += ionlaser_baseammo + additional_attacks
-	if additional_attacks > 0:
+
+	var use_different_targets = (ionlaser_baseammo + additional_attacks) > 1
+	if use_different_targets:
 		targeted_enemies.clear()
 	ionLaserAttackTimer.start()
 
 func _on_ion_laser_attack_timer_timeout():
 	if ionlaser_ammo > 0 and active_projectile_count < MAX_PROJECTILES:
 		var laser = ionLaser.instantiate()
+		var use_different_targets = (ionlaser_baseammo + additional_attacks) > 1
 		var target_pos: Vector2
-		if additional_attacks > 0:
+		if use_different_targets:
 			target_pos = get_different_target()
 		else:
 			target_pos = get_closest_target()
@@ -481,7 +489,8 @@ func _on_ion_laser_attack_timer_timeout():
 			ionLaserAttackTimer.start()
 		else:
 			ionLaserAttackTimer.stop()
-			if additional_attacks > 0:
+
+			if use_different_targets:
 				targeted_enemies.clear()
 
 func get_different_target():
