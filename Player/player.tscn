@@ -1,15 +1,18 @@
-[gd_scene load_steps=18 format=3 uid="uid://dncgepmkc4jf4"]
+[gd_scene load_steps=22 format=3 uid="uid://dncgepmkc4jf4"]
 
 [ext_resource type="Script" uid="uid://cpndvo858r5uf" path="res://Player/player.gd" id="1_37q80"]
 [ext_resource type="Texture2D" uid="uid://61fjwk8sxdp8" path="res://Textures/Player/ship_3.png" id="2_x3vf3"]
 [ext_resource type="PackedScene" uid="uid://xy3cvpwdy828" path="res://Utility/hurt_box.tscn" id="3_gs51i"]
-[ext_resource type="Texture2D" uid="uid://dlx33roiu0vlj" path="res://Textures/GUI/exp_progress.png" id="5_5ive2"]
+[ext_resource type="Texture2D" uid="uid://s6qv2e0mg0du" path="res://Textures/GUI/exp_under.png" id="4_apopc"]
+[ext_resource type="Texture2D" uid="uid://to6foj0f4ow8" path="res://Textures/GUI/exp_over.png" id="5_5htga"]
 [ext_resource type="AudioStream" uid="uid://rlhdbyjq2q3r" path="res://Audio/SoundEffect/levelup.ogg" id="7_wl7d2"]
 [ext_resource type="FontFile" uid="uid://dlth4bsmavf24" path="res://Font/globet_bold.ttf" id="8_apopc"]
 [ext_resource type="Texture2D" uid="uid://cj6a5rhwov14" path="res://Textures/GUI/healthbar.png" id="8_flesq"]
 [ext_resource type="Texture2D" uid="uid://da53mspvqfxq4" path="res://Textures/GUI/health.png" id="9_uker1"]
 [ext_resource type="AudioStream" uid="uid://carqvtnmy7e5p" path="res://Audio/SoundEffect/Victory.ogg" id="10_rwm3p"]
+[ext_resource type="Texture2D" uid="uid://cbm663cer5qna" path="res://Textures/GUI/keyboard.png" id="12_5htga"]
 [ext_resource type="PackedScene" uid="uid://b7c7gsdx2rkjm" path="res://Utility/basic_button.tscn" id="12_i8esf"]
+[ext_resource type="Texture2D" uid="uid://bmtqwri8uagdo" path="res://Textures/GUI/keyboard2.png" id="13_p5o4e"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_5htga"]
 radius = 6.0
@@ -51,6 +54,8 @@ corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 shadow_size = 1
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5htga"]
 
 [node name="Player" type="CharacterBody2D" groups=["player"]]
 collision_mask = 6
@@ -156,20 +161,24 @@ offset_bottom = 360.0
 [node name="ExperienceBar" type="TextureProgressBar" parent="GUILayer/GUI"]
 unique_name_in_owner = true
 layout_mode = 0
-offset_top = 342.0
-offset_right = 640.0
-offset_bottom = 362.0
+offset_left = 1.0
+offset_top = 353.0
+offset_right = 132.0
+offset_bottom = 359.0
 nine_patch_stretch = true
-texture_progress = ExtResource("5_5ive2")
+stretch_margin_left = 12
+stretch_margin_right = 12
+texture_over = ExtResource("5_5htga")
+texture_progress = ExtResource("4_apopc")
 
 [node name="lbl_level" type="Label" parent="GUILayer/GUI/ExperienceBar"]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 470.0
-offset_top = -340.0
-offset_right = 570.0
-offset_bottom = -320.0
-theme_override_font_sizes/font_size = 14
+offset_left = 7.0
+offset_top = -19.0
+offset_right = 107.0
+offset_bottom = 1.0
+theme_override_font_sizes/font_size = 10
 text = "Level: 1"
 vertical_alignment = 2
 
@@ -280,13 +289,12 @@ vertical_alignment = 1
 [node name="lblDifficulty" type="Label" parent="GUILayer/GUI"]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 460.0
-offset_top = 20.0
-offset_right = 600.0
-offset_bottom = 46.0
-theme_override_font_sizes/font_size = 14
+offset_left = 135.0
+offset_top = 343.0
+offset_right = 275.0
+offset_bottom = 362.0
+theme_override_font_sizes/font_size = 12
 text = "Difficulty: Normal"
-horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="CollectedWeapons" type="GridContainer" parent="GUILayer/GUI"]
@@ -306,6 +314,49 @@ offset_top = 40.0
 offset_right = 208.0
 offset_bottom = 56.0
 columns = 10
+
+[node name="Keys" type="Panel" parent="GUILayer/GUI"]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 303.0
+offset_right = 84.0
+offset_bottom = 343.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_5htga")
+
+[node name="W" type="Sprite2D" parent="GUILayer/GUI/Keys"]
+position = Vector2(27, 16)
+texture = ExtResource("12_5htga")
+hframes = 8
+vframes = 14
+frame = 38
+
+[node name="W2" type="Sprite2D" parent="GUILayer/GUI/Keys"]
+position = Vector2(12, 30)
+texture = ExtResource("12_5htga")
+hframes = 8
+vframes = 14
+frame = 16
+
+[node name="W3" type="Sprite2D" parent="GUILayer/GUI/Keys"]
+position = Vector2(27, 30)
+texture = ExtResource("12_5htga")
+hframes = 8
+vframes = 14
+frame = 34
+
+[node name="W4" type="Sprite2D" parent="GUILayer/GUI/Keys"]
+position = Vector2(42, 30)
+texture = ExtResource("12_5htga")
+hframes = 8
+vframes = 14
+frame = 19
+
+[node name="W5" type="Sprite2D" parent="GUILayer/GUI/Keys"]
+position = Vector2(66, 30)
+texture = ExtResource("13_p5o4e")
+hframes = 4
+vframes = 8
+frame = 10
 
 [connection signal="hurt" from="HurtBox" to="." method="_on_hurt_box_hurt"]
 [connection signal="timeout" from="Attack/PulseLaserTimer" to="." method="_on_pulse_laser_timer_timeout"]

@@ -14,10 +14,12 @@ var rotation_speed_base: float = 3.2
 
 var is_dashing: bool = false
 var dash_boost: float = 140.0
-var dash_duration: float = 0.30
-var dash_cooldown: float = 3.0
+var dash_duration: float = 1.2
+var dash_cooldown: float = 6.0
 var dash_time_left: float = 0.0
 var dash_cooldown_left: float = 0.0
+var post_dash_time: float = 0.0
+var post_dash_duration: float = 0.5
 
 var experience: int = 0
 var experience_level: int = 1
@@ -168,6 +170,10 @@ func movement(delta: float) -> void:
 		dash_time_left -= delta
 		if dash_time_left <= 0.0:
 			is_dashing = false
+			post_dash_time = post_dash_duration
+	
+	if post_dash_time > 0.0:
+		post_dash_time = max(post_dash_time - delta, 0.0)
 
 
 	var turn = Input.get_action_strength("right") - Input.get_action_strength("left")
@@ -185,10 +191,39 @@ func movement(delta: float) -> void:
 		dash_cooldown_left = dash_cooldown
 		velocity = forward * dash_boost
 
-	if not is_dashing:
+	if is_dashing or post_dash_time > 0.0:
+		var boost_speed = 0.0
+		
+		if is_dashing:
+
+			var dash_progress = 1.0 - (dash_time_left / dash_duration)
+			var decay = exp(-dash_progress * 3.0)
+			var falloff_factor = decay
+			boost_speed = dash_boost * falloff_factor
+		else:
+
+			var transition_progress = 1.0 - (post_dash_time / post_dash_duration)
+
+			var ease_out = pow(1.0 - transition_progress, 2.0)
+			boost_speed = dash_boost * 0.15 * ease_out
+		
+
+		if thrust != 0:
+			var accel_mult = 0.4 if is_dashing else 0.7
+			velocity += forward * (accel * accel_mult) * thrust * delta
+		
+
+		var current_speed = velocity.length()
+		var target_speed = max_speed + boost_speed
+		var lerp_factor = 0.2 if is_dashing else 0.15
+		var new_speed = lerp(current_speed, target_speed, lerp_factor)
+		
+
+		if velocity.length_squared() > 0.1:
+			velocity = velocity.normalized() * new_speed
+	else:
 		if thrust != 0:
 			velocity += forward * accel * thrust * delta
-
 
 		var speed_len = velocity.length()
 		var max_allowed_speed = max_speed
