@@ -1,3 +1,4 @@
 res://Player/Attack/plasma.tscn
 res://Utility/enemy_spawner.gd
 res://addons/talo/samples/authentication/assets/theme.tres
+res://Audio/Music/snd_Music.gd

@@ -11,6 +11,7 @@ var playlist = [
 var last_track_index = -1
 
 func _ready():
+	randomize() # Seed the RNG for proper randomization in web builds
 	if playlist.size() > 0:
 		_play_random_track()
 		
