@@ -1,14 +1,2 @@
-res://SkinsMenu/skins_menu.tscn
-res://Player/player.tscn
-res://addons/talo/samples/authentication/assets/theme.tres
-res://Player/player.gd
-res://SkinsMenu/skins_menu.gd
-res://Utility/skin_manager.gd
-res://Utility/upgrade_db.gd
 res://Enemy/enemy_battleship.tscn
-res://Enemy/enemy_drone_strong.tscn
-res://Enemy/enemy_drone.tscn
-res://World/world.tscn
-res://Enemy/enemy_drone_stronger.tscn
-res://Enemy/enemy_boss.tscn
-res://Utility/rock_manager.gd
+res://addons/talo/samples/authentication/assets/theme.tres
