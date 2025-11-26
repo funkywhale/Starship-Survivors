@@ -17,8 +17,7 @@ var angle: Vector2 = Vector2.ZERO
 @onready var player: CharacterBody2D = get_tree().get_first_node_in_group("player")
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var particles: GPUParticles2D = $GPUParticles2D
-
-var plasma_trail_scene = preload("res://Player/Attack/plasma_trail.tscn")
+@onready var plasma_trail_scene: PackedScene = load("res://Player/Attack/plasma_trail.tscn")
 
 signal remove_from_array(object)
 
