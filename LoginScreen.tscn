@@ -52,8 +52,8 @@ horizontal_alignment = 1
 
 [node name="SkipButton" parent="." instance=ExtResource("2_fghij")]
 layout_mode = 0
-offset_left = 555.0
-offset_top = 323.0
-offset_right = 635.0
+offset_left = 554.0
+offset_top = 319.0
+offset_right = 634.0
 offset_bottom = 357.0
 text = "Skip"

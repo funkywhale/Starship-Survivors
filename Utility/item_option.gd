@@ -1,4 +1,4 @@
-extends ColorRect
+extends TextureRect
 
 @onready var lblName = $lbl_name
 @onready var lblDescription = $lbl_description
@@ -12,7 +12,7 @@ var item = null
 signal selected_upgrade(upgrade)
 
 func _ready():
-	connect("selected_upgrade",Callable(player,"upgrade_character"))
+	connect("selected_upgrade", Callable(player, "upgrade_character"))
 	if item == null:
 		item = "heal"
 	lblName.text = UpgradeDb.UPGRADES[item]["displayname"]
@@ -23,7 +23,7 @@ func _ready():
 func _input(event):
 	if event.is_action("click"):
 		if mouse_over:
-			emit_signal("selected_upgrade",item)
+			emit_signal("selected_upgrade", item)
 
 func _on_mouse_entered():
 	mouse_over = true

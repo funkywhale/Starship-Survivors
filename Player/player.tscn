@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://dncgepmkc4jf4"]
+[gd_scene load_steps=25 format=3 uid="uid://dncgepmkc4jf4"]
 
 [ext_resource type="Script" uid="uid://cpndvo858r5uf" path="res://Player/player.gd" id="1_37q80"]
 [ext_resource type="Texture2D" uid="uid://61fjwk8sxdp8" path="res://Textures/Player/ship_3.png" id="2_x3vf3"]
@@ -8,6 +8,7 @@
 [ext_resource type="AudioStream" uid="uid://rlhdbyjq2q3r" path="res://Audio/SoundEffect/levelup.ogg" id="7_wl7d2"]
 [ext_resource type="FontFile" uid="uid://dlth4bsmavf24" path="res://Font/globet_bold.ttf" id="8_apopc"]
 [ext_resource type="Texture2D" uid="uid://cj6a5rhwov14" path="res://Textures/GUI/healthbar.png" id="8_flesq"]
+[ext_resource type="Texture2D" uid="uid://buoi0jkrdhtbf" path="res://Textures/GUI/item_window.png" id="8_gu6f8"]
 [ext_resource type="Texture2D" uid="uid://da53mspvqfxq4" path="res://Textures/GUI/health.png" id="9_uker1"]
 [ext_resource type="AudioStream" uid="uid://carqvtnmy7e5p" path="res://Audio/SoundEffect/Victory.ogg" id="10_rwm3p"]
 [ext_resource type="Texture2D" uid="uid://cbm663cer5qna" path="res://Textures/GUI/keyboard.png" id="12_5htga"]
@@ -29,31 +30,19 @@ radius = 21.023796
 [sub_resource type="CircleShape2D" id="CircleShape2D_6vwp8"]
 radius = 32.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5htga"]
-bg_color = Color(0.046510585, 0.00038310874, 0.25372905, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_blend = true
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-shadow_size = 2
+[sub_resource type="Gradient" id="Gradient_gu6f8"]
+offsets = PackedFloat32Array(0, 0.44720498)
+colors = PackedColorArray(0.446777, 0.44677705, 0.44677705, 1, 1, 1, 1, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_apopc"]
-bg_color = Color(0, 0.1882353, 0.38039216, 0.6039216)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_blend = true
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-shadow_size = 1
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_dkpta"]
+gradient = SubResource("Gradient_gu6f8")
+width = 30
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dkpta"]
+texture = ExtResource("8_gu6f8")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gu6f8"]
+texture = ExtResource("8_gu6f8")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5htga"]
 
@@ -162,8 +151,8 @@ offset_bottom = 360.0
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 1.0
-offset_top = 353.0
-offset_right = 132.0
+offset_top = 347.0
+offset_right = 182.0
 offset_bottom = 359.0
 nine_patch_stretch = true
 stretch_margin_left = 12
@@ -174,9 +163,9 @@ texture_progress = ExtResource("4_apopc")
 [node name="lbl_level" type="Label" parent="GUILayer/GUI/ExperienceBar"]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 7.0
+offset_left = 5.0
 offset_top = -19.0
-offset_right = 107.0
+offset_right = 105.0
 offset_bottom = 1.0
 theme_override_font_sizes/font_size = 10
 text = "Level: 1"
@@ -193,16 +182,28 @@ value = 50.0
 texture_over = ExtResource("8_flesq")
 texture_progress = ExtResource("9_uker1")
 
+[node name="DashCooldownBar" type="TextureProgressBar" parent="GUILayer/GUI"]
+unique_name_in_owner = true
+modulate = Color(1, 1, 0, 1)
+layout_mode = 0
+offset_left = 305.0
+offset_top = 204.0
+offset_right = 335.0
+offset_bottom = 205.0
+value = 100.0
+texture_progress = SubResource("GradientTexture1D_dkpta")
+
 [node name="LevelUp" type="Panel" parent="GUILayer/GUI"]
 unique_name_in_owner = true
 process_mode = 2
+self_modulate = Color(0, 0.39215687, 1, 1)
 texture_filter = 1
 layout_mode = 0
 offset_left = 800.0
 offset_top = 50.0
 offset_right = 1000.0
 offset_bottom = 300.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_5htga")
+theme_override_styles/panel = SubResource("StyleBoxTexture_dkpta")
 
 [node name="lbl_LevelUP" type="Label" parent="GUILayer/GUI/LevelUp"]
 layout_mode = 0
@@ -216,10 +217,10 @@ vertical_alignment = 1
 [node name="UpgradeOptions" type="VBoxContainer" parent="GUILayer/GUI/LevelUp"]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 10.0
+offset_left = 12.0
 offset_top = 50.0
-offset_right = 190.0
-offset_bottom = 100.0
+offset_right = 182.0
+offset_bottom = 95.0
 
 [node name="snd_levelup" type="AudioStreamPlayer" parent="GUILayer/GUI/LevelUp"]
 unique_name_in_owner = true
@@ -229,12 +230,13 @@ volume_db = -10.0
 [node name="DeathPanel" type="Panel" parent="GUILayer/GUI"]
 unique_name_in_owner = true
 process_mode = 2
+self_modulate = Color(0, 0.40392157, 1, 1)
 layout_mode = 0
 offset_left = 230.0
 offset_top = -266.0
 offset_right = 430.0
 offset_bottom = -164.98999
-theme_override_styles/panel = SubResource("StyleBoxFlat_apopc")
+theme_override_styles/panel = SubResource("StyleBoxTexture_gu6f8")
 
 [node name="lbl_Result" type="Label" parent="GUILayer/GUI/DeathPanel"]
 unique_name_in_owner = true
@@ -286,17 +288,6 @@ text = "00:00"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="lblDifficulty" type="Label" parent="GUILayer/GUI"]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 135.0
-offset_top = 343.0
-offset_right = 275.0
-offset_bottom = 362.0
-theme_override_font_sizes/font_size = 12
-text = "Difficulty: Normal"
-vertical_alignment = 1
-
 [node name="CollectedWeapons" type="GridContainer" parent="GUILayer/GUI"]
 unique_name_in_owner = true
 layout_mode = 0
@@ -317,10 +308,11 @@ columns = 10
 
 [node name="Keys" type="Panel" parent="GUILayer/GUI"]
 layout_mode = 0
-offset_left = -1.0
-offset_top = 303.0
-offset_right = 84.0
-offset_bottom = 343.0
+offset_left = 1.0
+offset_top = 290.0
+offset_right = 86.0
+offset_bottom = 330.0
+scale = Vector2(1.2, 1.2)
 theme_override_styles/panel = SubResource("StyleBoxEmpty_5htga")
 
 [node name="W" type="Sprite2D" parent="GUILayer/GUI/Keys"]
@@ -330,28 +322,28 @@ hframes = 8
 vframes = 14
 frame = 38
 
-[node name="W2" type="Sprite2D" parent="GUILayer/GUI/Keys"]
+[node name="A" type="Sprite2D" parent="GUILayer/GUI/Keys"]
 position = Vector2(12, 30)
 texture = ExtResource("12_5htga")
 hframes = 8
 vframes = 14
 frame = 16
 
-[node name="W3" type="Sprite2D" parent="GUILayer/GUI/Keys"]
+[node name="S" type="Sprite2D" parent="GUILayer/GUI/Keys"]
 position = Vector2(27, 30)
 texture = ExtResource("12_5htga")
 hframes = 8
 vframes = 14
 frame = 34
 
-[node name="W4" type="Sprite2D" parent="GUILayer/GUI/Keys"]
+[node name="D" type="Sprite2D" parent="GUILayer/GUI/Keys"]
 position = Vector2(42, 30)
 texture = ExtResource("12_5htga")
 hframes = 8
 vframes = 14
 frame = 19
 
-[node name="W5" type="Sprite2D" parent="GUILayer/GUI/Keys"]
+[node name="Space" type="Sprite2D" parent="GUILayer/GUI/Keys"]
 position = Vector2(66, 30)
 texture = ExtResource("13_p5o4e")
 hframes = 4

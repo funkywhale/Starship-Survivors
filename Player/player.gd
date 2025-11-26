@@ -114,6 +114,9 @@ const MAX_PROJECTILES: int = 200
 @onready var sndVictory = get_node("%snd_victory")
 @onready var sndLose = get_node("%snd_lose")
 
+# Dash cooldown bar
+@onready var dashCooldownBar = get_node("%DashCooldownBar")
+
 
 var difficulty_manager: Node = null
 var intro_playing: bool = true
@@ -128,6 +131,7 @@ func _ready() -> void:
 	set_expbar(experience, calculate_experiencecap())
 	_on_hurt_box_hurt(0.0, Vector2.ZERO, 0.0)
 	difficulty_manager = get_tree().get_first_node_in_group("difficulty_manager")
+	dashCooldownBar.visible = false # Hide dash bar at start
 	start_camera_intro()
 
 func _apply_skin() -> void:
@@ -144,8 +148,16 @@ func _apply_skin() -> void:
 
 
 func _physics_process(_delta: float) -> void:
-	movement(_delta)
-	
+	if intro_playing:
+		dashCooldownBar.visible = false
+	else:
+		movement(_delta)
+		if dash_cooldown_left > 0.0:
+			dashCooldownBar.visible = true
+			dashCooldownBar.value = int(100.0 * (1.0 - dash_cooldown_left / dash_cooldown))
+		else:
+			dashCooldownBar.visible = false
+
 	var cleanup_frequency = 60
 	if enemy_close.size() > 30 or active_projectile_count > 150:
 		cleanup_frequency = 15
@@ -162,10 +174,16 @@ func _physics_process(_delta: float) -> void:
 
 func movement(delta: float) -> void:
 	if intro_playing:
+		dashCooldownBar.visible = false
 		return
 
 	if dash_cooldown_left > 0.0:
 		dash_cooldown_left = max(dash_cooldown_left - delta, 0.0)
+		dashCooldownBar.visible = true
+		dashCooldownBar.value = int(100.0 * (1.0 - dash_cooldown_left / dash_cooldown))
+	else:
+		dashCooldownBar.visible = false
+
 	if is_dashing:
 		dash_time_left -= delta
 		if dash_time_left <= 0.0:
@@ -195,13 +213,11 @@ func movement(delta: float) -> void:
 		var boost_speed = 0.0
 		
 		if is_dashing:
-
 			var dash_progress = 1.0 - (dash_time_left / dash_duration)
 			var decay = exp(-dash_progress * 3.0)
 			var falloff_factor = decay
 			boost_speed = dash_boost * falloff_factor
 		else:
-
 			var transition_progress = 1.0 - (post_dash_time / post_dash_duration)
 
 			var ease_out = pow(1.0 - transition_progress, 2.0)
@@ -369,38 +385,50 @@ func _on_rocket_attack_timer_timeout():
 			rocketAttackTimer.stop()
 
 func _on_plasma_timer_timeout():
-	plasma_ammo += plasma_baseammo + additional_attacks
+	plasma_ammo = plasma_baseammo + additional_attacks
+	var shots_to_fire = min(plasma_ammo, MAX_PROJECTILES - active_projectile_count)
+	
+
 	if additional_attacks > 0:
 		targeted_enemies.clear()
-	plasmaAttackTimer.start()
+	
+	for i in range(shots_to_fire):
+		if active_projectile_count >= MAX_PROJECTILES:
+			break
+		
+		var target_pos: Vector2
+		
 
-func _on_plasma_attack_timer_timeout():
-	if plasma_ammo > 0 and active_projectile_count < MAX_PROJECTILES:
-		var plasma_attack = plasma.instantiate()
-		var target_pos: Vector2 = Vector2.UP
 		if additional_attacks > 0:
 			target_pos = get_different_target()
-			plasma_attack.target = target_pos
-		
-		var plasma_direction: float
-		if target_pos != Vector2.UP:
-			plasma_direction = (target_pos - global_position).angle()
 		else:
-			plasma_direction = sprite.rotation
+			target_pos = get_closest_target()
+		
+		# Don't spawn plasma if there's no valid target
+		if target_pos == Vector2.UP:
+			plasma_ammo -= 1
+			continue
+		
+		var plasma_attack = plasma.instantiate()
+		plasma_attack.target = target_pos
+		
+		var plasma_direction: float = (target_pos - global_position).angle()
 		var offset = Vector2(12, 0).rotated(plasma_direction)
 		plasma_attack.position = position + offset
 		
 		plasma_attack.level = plasma_level
+		plasma_attack.play_sound = (i == 0)
 		plasma_attack.add_to_group("attack")
 		plasmaBase.add_child(plasma_attack)
 		active_projectile_count += 1
 		plasma_ammo -= 1
-		if plasma_ammo > 0:
-			plasmaAttackTimer.start()
-		else:
-			plasmaAttackTimer.stop()
-			if additional_attacks > 0:
-				targeted_enemies.clear()
+	
+
+	if additional_attacks > 0:
+		targeted_enemies.clear()
+
+func _on_plasma_attack_timer_timeout():
+	pass
 
 func _on_ion_laser_timer_timeout():
 	ionlaser_ammo += ionlaser_baseammo + additional_attacks
@@ -690,9 +718,10 @@ func upgrade_character(upgrade: String) -> void:
 			pulselaser_baseammo += 1
 		"pulselaser3":
 			pulselaser_level = 3
+			pulselaser_baseammo += 1
 		"pulselaser4":
 			pulselaser_level = 4
-			pulselaser_baseammo += 2
+			pulselaser_baseammo += 3
 		"rocket1":
 			rocket_level = 1
 			rocket_baseammo += 1
@@ -863,10 +892,10 @@ func death() -> void:
 	tween.tween_property(deathPanel, "position", Vector2(220, 50), 3.0).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
 	tween.play()
 	if time >= 300:
-		lblResult.text = "You Win"
+		lblResult.text = "Awesome run!"
 		sndVictory.play()
 	else:
-		lblResult.text = "You Lose"
+		lblResult.text = "Try again!"
 		sndLose.play()
 
 	_submit_score_to_leaderboard()

@@ -1,16 +1,46 @@
-[gd_scene load_steps=5 format=3 uid="uid://b7c7gsdx2rkjm"]
+[gd_scene load_steps=11 format=3 uid="uid://b7c7gsdx2rkjm"]
 
 [ext_resource type="AudioStream" uid="uid://cj6ifn473uy1h" path="res://Audio/GUI/hover.wav" id="1_2ggfj"]
 [ext_resource type="FontFile" uid="uid://dlth4bsmavf24" path="res://Font/globet_bold.ttf" id="1_qkrmd"]
 [ext_resource type="Script" uid="uid://ivuk8bsanq4j" path="res://Utility/basic_button.gd" id="1_t2e60"]
+[ext_resource type="Texture2D" uid="uid://7ikexobyw3ua" path="res://Player/button_normal.png" id="2_8re6k"]
 [ext_resource type="AudioStream" uid="uid://cxm8lobtpe8fa" path="res://Audio/GUI/click.wav" id="2_jbqnc"]
+[ext_resource type="Texture2D" uid="uid://bl67fwth8xp64" path="res://Textures/GUI/button_pressed.png" id="3_xp0dh"]
+[ext_resource type="Texture2D" uid="uid://b3fmjn83egvae" path="res://Textures/GUI/button_hover.png" id="4_1waw3"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_htfle"]
+texture = ExtResource("2_8re6k")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+modulate_color = Color(0, 0, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hxunt"]
+texture = ExtResource("3_xp0dh")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+modulate_color = Color(0, 0, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dkfiq"]
+texture = ExtResource("4_1waw3")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+modulate_color = Color(0, 0, 1, 1)
 
 [node name="Button" type="Button"]
 custom_minimum_size = Vector2(80, 30)
 offset_right = 8.0
 offset_bottom = 8.0
 theme_override_fonts/font = ExtResource("1_qkrmd")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxTexture_htfle")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_hxunt")
+theme_override_styles/hover = SubResource("StyleBoxTexture_dkfiq")
 text = "Example"
 script = ExtResource("1_t2e60")
 

@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://blrgo8psh5oh5"]
+[gd_scene load_steps=4 format=3 uid="uid://blrgo8psh5oh5"]
 
 [ext_resource type="Script" uid="uid://ceda6bjvseefv" path="res://SkinsMenu/skins_menu.gd" id="1_gmy47"]
 [ext_resource type="Texture2D" uid="uid://dgnvouv20cu6u" path="res://Textures/titlecard_2.png" id="2_8tr3r"]
+[ext_resource type="PackedScene" uid="uid://b7c7gsdx2rkjm" path="res://Utility/basic_button.tscn" id="3_basic"]
 
 [node name="SkinsMenu" type="Control"]
 layout_mode = 3
@@ -81,7 +82,8 @@ horizontal_alignment = 1
 layout_mode = 2
 alignment = 1
 
-[node name="leftArrow" type="Button" parent="MarginContainer/VBoxContainer/Selector"]
+[node name="leftArrow" parent="MarginContainer/VBoxContainer/Selector" instance=ExtResource("3_basic")]
+custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "<"
@@ -92,7 +94,8 @@ theme_override_font_sizes/font_size = 20
 text = "Select Your Ship"
 horizontal_alignment = 1
 
-[node name="rightArrow" type="Button" parent="MarginContainer/VBoxContainer/Selector"]
+[node name="rightArrow" parent="MarginContainer/VBoxContainer/Selector" instance=ExtResource("3_basic")]
+custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = ">"
@@ -101,19 +104,23 @@ text = ">"
 layout_mode = 2
 alignment = 1
 
-[node name="Select" type="Button" parent="MarginContainer/VBoxContainer/actionButtons"]
+[node name="Select" parent="MarginContainer/VBoxContainer/actionButtons" instance=ExtResource("3_basic")]
+custom_minimum_size = Vector2(60, 30)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Start
 "
 
-[node name="BackButton" type="Button" parent="."]
+[node name="BackButton" parent="." instance=ExtResource("3_basic")]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 155.0
 offset_top = -31.0
+offset_right = -158.0
+offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "Back"

@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://ky6usv4c2xnw"]
+
+[ext_resource type="Script" uid="uid://0xnndpb1sata" path="res://Player/Attack/plasma_trail.gd" id="1_trail"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_trail"]
+radius = 8.0
+
+[node name="PlasmaTrail" type="Area2D" groups=["attack"]]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("1_trail")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_trail")
+
+[node name="LifetimeTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+autostart = true
+
+[connection signal="timeout" from="LifetimeTimer" to="." method="_on_lifetime_timer_timeout"]

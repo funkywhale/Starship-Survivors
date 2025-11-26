@@ -23,7 +23,7 @@ const UPGRADES = {
 	"pulselaser3": {
 		"icon": WEAPON_PATH + "pulse_laser.png",
 		"displayname": "Pulse Laser",
-		"details": "Pulse laser now pass through enemies. +1 additional pulse laser is fired",
+		"details": "Pulse laser pierces. +1 additional pulse laser is fired and +5 damage",
 		"level": "Level: 3",
 		"prerequisite": ["pulselaser2"],
 		"type": "weapon"
@@ -31,7 +31,7 @@ const UPGRADES = {
 	"pulselaser4": {
 		"icon": WEAPON_PATH + "pulse_laser.png",
 		"displayname": "Pulse Laser",
-		"details": "+3 damage and +1 additional pulse laser is fired",
+		"details": "Can pierce through 4 enemies. +3 additional pulse lasers are fired",
 		"level": "Level: 4",
 		"prerequisite": ["pulselaser3"],
 		"type": "weapon"
@@ -79,7 +79,7 @@ const UPGRADES = {
 	"rocket2": {
 		"icon": WEAPON_PATH + "storm_shadow.png",
 		"displayname": "Rocket",
-		"details": "An additional Rocket is created",
+		"details": "An additional Rocket is created. +5 damage",
 		"level": "Level: 2",
 		"prerequisite": ["rocket1"],
 		"type": "weapon"
@@ -87,7 +87,7 @@ const UPGRADES = {
 	"rocket3": {
 		"icon": WEAPON_PATH + "storm_shadow.png",
 		"displayname": "Rocket",
-		"details": "The Rocket cooldown is reduced by 0.5 seconds",
+		"details": "The Rocket cooldown is reduced by 0.5 seconds. +5 damage",
 		"level": "Level: 3",
 		"prerequisite": ["rocket2"],
 		"type": "weapon"
@@ -95,7 +95,7 @@ const UPGRADES = {
 	"rocket4": {
 		"icon": WEAPON_PATH + "storm_shadow.png",
 		"displayname": "Rocket",
-		"details": "An additional Rocket is created and the knockback is increased by 25%",
+		"details": "An additional Rocket is created. +5 damage and +25% knockback",
 		"level": "Level: 4",
 		"prerequisite": ["rocket3"],
 		"type": "weapon"
@@ -119,7 +119,7 @@ const UPGRADES = {
 	"ionlaser2": {
 		"icon": WEAPON_PATH + "ion_laser.png",
 		"displayname": "Ion Laser",
-		"details": "Increased damage, range, and faster firing rate",
+		"details": "+5 damage, +25% range, and 12% faster firing rate",
 		"level": "Level: 2",
 		"prerequisite": ["ionlaser1"],
 		"type": "weapon"
@@ -127,7 +127,7 @@ const UPGRADES = {
 	"ionlaser3": {
 		"icon": WEAPON_PATH + "ion_laser.png",
 		"displayname": "Ion Laser",
-		"details": "Increased damage, range, and even faster firing rate",
+		"details": "+10 damage, +50% range, and 24% faster firing rate",
 		"level": "Level: 3",
 		"prerequisite": ["ionlaser2"],
 		"type": "weapon"
@@ -135,7 +135,7 @@ const UPGRADES = {
 	"ionlaser4": {
 		"icon": WEAPON_PATH + "ion_laser.png",
 		"displayname": "Ion Laser",
-		"details": "Maximum damage, range, and firing rate",
+		"details": "+15 damage, +100% range, and 36% faster firing rate",
 		"level": "Level: 4",
 		"prerequisite": ["ionlaser3"],
 		"type": "weapon"
@@ -303,7 +303,7 @@ const UPGRADES = {
 	"weapon2": {
 		"icon": ICON_PATH + "weapon_bay.png",
 		"displayname": "Weapon Bay",
-		"details": "Your weapons now spawn an additional attack",
+		"details": "Your weapons now spawn 1 more additional attack",
 		"level": "Level: 2",
 		"prerequisite": ["weapon1"],
 		"type": "upgrade"
@@ -319,7 +319,7 @@ const UPGRADES = {
 	"scattershot2": {
 		"icon": WEAPON_PATH + "scattershot_icon.png",
 		"displayname": "Scatter Shot",
-		"details": "Fires 5 pellets with increased damage and penetration.",
+		"details": "Fires 5 pellets. Damage increased to 7 and can penetrate 2 enemies",
 		"level": "Level: 2",
 		"prerequisite": ["scattershot1"],
 		"type": "weapon"
@@ -327,7 +327,7 @@ const UPGRADES = {
 	"scattershot3": {
 		"icon": WEAPON_PATH + "scattershot_icon.png",
 		"displayname": "Scatter Shot",
-		"details": "Fires 7 pellets with further increased damage and penetration.",
+		"details": "Fires 7 pellets. Damage increased to 9 and can penetrate 3 enemies",
 		"level": "Level: 3",
 		"prerequisite": ["scattershot2"],
 		"type": "weapon"
@@ -335,7 +335,7 @@ const UPGRADES = {
 	"scattershot4": {
 		"icon": WEAPON_PATH + "scattershot_icon.png",
 		"displayname": "Scatter Shot",
-		"details": "Fires 9 pellets with maximum damage and penetration.",
+		"details": "Fires 9 pellets. Damage increased to 12 and can penetrate 4 enemies",
 		"level": "Level: 4",
 		"prerequisite": ["scattershot3"],
 		"type": "weapon"

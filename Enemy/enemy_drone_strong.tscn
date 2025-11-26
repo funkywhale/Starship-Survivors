@@ -63,12 +63,12 @@ hp = 20
 enemy_damage = 3
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(0.745, 0.745)
+scale = Vector2(0.605, 0.605)
 texture = ExtResource("2_ww036")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 0.81332344
-scale = Vector2(1.7, 1.7)
+scale = Vector2(1.41, 1.41)
 shape = SubResource("CircleShape2D_ww036")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
@@ -82,7 +82,9 @@ collision_mask = 4
 HurtBoxType = 1
 
 [node name="CollisionShape2D" parent="HurtBox" index="0"]
+visible = false
 position = Vector2(0, 0.5)
+scale = Vector2(0.705, 0.705)
 shape = SubResource("CircleShape2D_mydk5")
 
 [node name="HitBox" parent="." instance=ExtResource("4_vyjdl")]
@@ -90,13 +92,14 @@ visible = false
 collision_layer = 2
 
 [node name="CollisionShape2D" parent="HitBox" index="0"]
+scale = Vector2(0.82, 0.82)
 shape = SubResource("CircleShape2D_c3om3")
 
 [node name="PlayerCollisionArea" type="Area2D" parent="."]
-visible = false
 collision_layer = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerCollisionArea"]
+scale = Vector2(0.825, 0.825)
 shape = SubResource("CircleShape2D_c3om3")
 
 [node name="snd_hit" type="AudioStreamPlayer2D" parent="."]

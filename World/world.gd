@@ -4,12 +4,15 @@ extends Node2D
 @onready var resume_button: Button = $PauseMenu/Panel/VBoxContainer/ResumeButton
 @onready var main_menu_button: Button = $PauseMenu/Panel/VBoxContainer/MainMenuButton
 @onready var quit_button: Button = $PauseMenu/Panel/VBoxContainer/QuitButton
+@onready var background_sprite: Sprite2D = $ParallaxBackground/ParallaxLayer/Sprite2D
 
 
 func _ready() -> void:
 	pause_menu.visible = false
 	
-	# Stop title music when entering game world
+
+	_set_random_background()
+	
 	TitleMusicPlayer.stop_title_music()
 
 	resume_button.pressed.connect(_on_resume_pressed)
@@ -41,3 +44,13 @@ func _on_main_menu_pressed() -> void:
 func _on_quit_pressed() -> void:
 	get_tree().paused = false
 	get_tree().quit()
+
+
+func _set_random_background() -> void:
+	var random_bg_num := randi_range(1, 7)
+	var bg_path := "res://Textures/Backgrounds/space_%d.png" % random_bg_num
+	var texture := load(bg_path) as Texture2D
+	if texture:
+		background_sprite.texture = texture
+	else:
+		push_error("Failed to load background: %s" % bg_path)

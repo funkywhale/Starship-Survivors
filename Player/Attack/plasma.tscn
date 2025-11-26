@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://cr4wh8k8gaysv"]
+[gd_scene load_steps=10 format=3 uid="uid://cr4wh8k8gaysv"]
 
 [ext_resource type="Script" uid="uid://x7h3ikaaej7b" path="res://Player/Attack/plasma.gd" id="1_4u3ks"]
 [ext_resource type="Texture2D" uid="uid://dv8wmrt2un4nf" path="res://Textures/Items/Weapons/plasma.png" id="2_8igbe"]
@@ -6,6 +6,78 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hit"]
 size = Vector2(13.391386, 4.5454545)
+
+[sub_resource type="Gradient" id="Gradient_trail"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 0.3, 0.3, 1, 1, 0, 0, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_trail"]
+gradient = SubResource("Gradient_trail")
+
+[sub_resource type="Gradient" id="Gradient_particle"]
+offsets = PackedFloat32Array(0, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_particle"]
+gradient = SubResource("Gradient_particle")
+width = 32
+height = 32
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_trail"]
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 3.0
+direction = Vector3(0, 0, 0)
+spread = 180.0
+initial_velocity_min = 10.0
+initial_velocity_max = 30.0
+angular_velocity_min = -360.0
+angular_velocity_max = 360.0
+orbit_velocity_min = 0.0
+orbit_velocity_max = 0.0
+gravity = Vector3(0, 0, 0)
+linear_accel_min = -20.0
+linear_accel_max = -40.0
+scale_min = 0.36
+scale_max = 0.9
+color_ramp = SubResource("GradientTexture1D_trail")
+
+[sub_resource type="Animation" id="Animation_pulse"]
+resource_name = "pulse"
+length = 0.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PointLight2D:energy")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.8, 1.2, 0.8]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("PointLight2D:texture_scale")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.8, 1.0, 0.8]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_plasma"]
+_data = {
+"pulse": SubResource("Animation_pulse")
+}
 
 [node name="PlasmaBlast" type="Area2D" groups=["attack"]]
 top_level = true
@@ -17,6 +89,30 @@ script = ExtResource("1_4u3ks")
 scale = Vector2(0.146, 0.236)
 texture = ExtResource("2_8igbe")
 
+[node name="PointLight2D" type="PointLight2D" parent="."]
+color = Color(1, 0.3, 0.3, 1)
+energy = 1.0
+blend_mode = 2
+texture_scale = 0.8
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+modulate = Color(1, 0.3, 0.3, 1)
+amount = 48
+process_material = SubResource("ParticleProcessMaterial_trail")
+texture = SubResource("GradientTexture2D_particle")
+lifetime = 0.6
+preprocess = 0.1
+explosiveness = 0.0
+randomness = 0.4
+local_coords = false
+draw_order = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_plasma")
+}
+autoplay = "pulse"
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-0.81789786, 0)
 scale = Vector2(1.765, 1.765)
@@ -27,9 +123,13 @@ wait_time = 3.0
 one_shot = true
 autostart = true
 
+[node name="TrailSpawnTimer" type="Timer" parent="."]
+wait_time = 0.1
+autostart = true
+
 [node name="snd_play" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("3_bsr3t")
 volume_db = -20.221
-autoplay = true
 
-[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="TrailSpawnTimer" to="." method="_on_trail_spawn_timer_timeout"]

@@ -1,7 +1,9 @@
 extends Node2D
 
 var rock_small = preload("res://Objects/rock_small.tscn")
+var rock_small2 = preload("res://Objects/rock_small2.tscn")
 var rock_medium = preload("res://Objects/rock_medium.tscn")
+var rock_medium2 = preload("res://Objects/rock_medium2.tscn")
 var rock_large = preload("res://Objects/rock_large.tscn")
 
 var grid_cell_size = 100.0
@@ -242,8 +244,8 @@ func _generate_chunk(chunk_coord: Vector2i) -> void:
 func _instantiate_rock(rock_type: String, pos: Vector2) -> Node2D:
 	var rock_scene
 	match rock_type:
-		"small": rock_scene = rock_small
-		"medium": rock_scene = rock_medium
+		"small": rock_scene = rock_small if randf() < 0.5 else rock_small2
+		"medium": rock_scene = rock_medium if randf() < 0.5 else rock_medium2
 		"large": rock_scene = rock_large
 	var rock = rock_scene.instantiate()
 	rock.position = pos
