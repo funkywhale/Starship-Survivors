@@ -3,15 +3,16 @@ extends AudioStreamPlayer
 # Playlist - add or remove battle theme songs here
 var playlist = [
 	preload("res://Audio/Music/battleThemeA.mp3"),
-	preload("res://Audio/Music/battleThemeB.mp3"),
+	preload("res://Audio/Music/battlethemeB.mp3"),
 	preload("res://Audio/Music/battleThemeC.mp3"),
 	preload("res://Audio/Music/battleThemeD.mp3"),
+	preload("res://Audio/Music/battleThemeE.mp3"),
 ]
 
 var last_track_index = -1
 
 func _ready():
-	randomize() # Seed the RNG for proper randomization in web builds
+	randomize()
 	if playlist.size() > 0:
 		_play_random_track()
 		
