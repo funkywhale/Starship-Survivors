@@ -1,4 +1,4 @@
-res://addons/talo/samples/authentication/assets/theme.tres::765a9754bcfcd2bcfc460e7455b3c5e2::1764161075::res://.godot/exported/133200997/export-d353f539ca82d56096549c0f19429425-theme.res
+res://addons/talo/samples/authentication/assets/theme.tres::765a9754bcfcd2bcfc460e7455b3c5e2::1764161404::res://.godot/exported/133200997/export-d353f539ca82d56096549c0f19429425-theme.res
 res://addons/talo/samples/authentication/states/change_email.tscn::6bb93f0d78480322ff9a7faaefa654a4::1763624734::res://.godot/exported/133200997/export-123c38d625a9de0deaedf09ef2ddbabe-change_email.scn
 res://addons/talo/samples/authentication/states/change_password.tscn::3df0deba98449928a2570ff968ec33a7::1763624734::res://.godot/exported/133200997/export-e66d79f2d6a2b0fa464004cdf3f55ca6-change_password.scn
 res://addons/talo/samples/authentication/states/delete_account.tscn::d71bbe44671f7bb16e090c0ebd4bbaeb::1763624734::res://.godot/exported/133200997/export-5cbbf856a822c26ecdbd22c5b0d9e590-delete_account.scn
@@ -25,7 +25,7 @@ res://Audio/Music/title_music_player.tscn::fcd8b144a2e23ed9417e4243e8b240c3::176
 res://Enemy/enemy_battleship.tscn::398fbf2a62bcff15a784fa997e963552::1764135108::res://.godot/exported/133200997/export-cd0d56276b0a3a8fc3df7413898949d6-enemy_battleship.scn
 res://Enemy/enemy_boss.tscn::b3f1b6cb5265342f64bef07ddab6eb27::1764135030::res://.godot/exported/133200997/export-d382ff4a14d60756fc8696e8a18d3f61-enemy_boss.scn
 res://Enemy/enemy_drone.tscn::e709be5de8951d917e4007f947043384::1764135030::res://.godot/exported/133200997/export-e927f24e0b2d18b4db00ffed350ae37c-enemy_drone.scn
-res://Enemy/enemy_drone_strong.tscn::2c50eedf8be37bd00e884782d4bbfe17::1764161309::res://.godot/exported/133200997/export-b57d51b94ff6533ef3b398163ca924b2-enemy_drone_strong.scn
+res://Enemy/enemy_drone_strong.tscn::2c50eedf8be37bd00e884782d4bbfe17::1764161625::res://.godot/exported/133200997/export-b57d51b94ff6533ef3b398163ca924b2-enemy_drone_strong.scn
 res://Enemy/enemy_drone_stronger.tscn::0290d5de88b683e9facd9360d7fbd56c::1764147826::res://.godot/exported/133200997/export-9e0a8521bd24369858f622e2be5b0011-enemy_drone_stronger.scn
 res://Enemy/explosion.tscn::c245193e0e49f1b6679e79c88aa54907::1759284504::res://.godot/exported/133200997/export-1f6c10fbb05585bbe950672868bd380f-explosion.scn
 res://Leaderboard/Leaderboard.tscn::d7737e8b7e8a9d4e0f70ed236682f5fe::1763940903::res://.godot/exported/133200997/export-db7e27f0718002827a0a758bfc885b51-Leaderboard.scn

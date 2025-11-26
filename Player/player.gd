@@ -128,13 +128,20 @@ signal playerdeath
 
 func _ready() -> void:
 	_apply_skin()
+	_prewarm_weapon_resources()
 	var starting_weapon = skin_manager.get_starting_weapon()
 	upgrade_character(starting_weapon)
 	set_expbar(experience, calculate_experiencecap())
 	_on_hurt_box_hurt(0.0, Vector2.ZERO, 0.0)
 	difficulty_manager = get_tree().get_first_node_in_group("difficulty_manager")
-	dashCooldownBar.visible = false # Hide dash bar at start
+	dashCooldownBar.visible = false
 	start_camera_intro()
+
+func _prewarm_weapon_resources() -> void:
+	var warmup_trail = plasma_trail.instantiate()
+	warmup_trail.position = Vector2(-10000, -10000)
+	add_child(warmup_trail)
+	warmup_trail.queue_free()
 
 func _apply_skin() -> void:
 	if skin_manager == null:
