@@ -3,3 +3,13 @@ res://Utility/enemy_spawner.gd
 res://addons/talo/samples/authentication/assets/theme.tres
 res://Audio/Music/snd_Music.gd
 res://Player/Attack/plasma.gd
+res://Objects/experience_orb.tscn
+res://Objects/experience_orb.gd
+res://Utility/experience_orb_manager.gd
+res://Objects/grab.tscn
+res://Objects/grab.gd
+res://Enemy/enemy.gd
+res://Player/player.gd
+res://Utility/upgrade_db.gd
+res://Leaderboard/Leaderboard.gd
+res://Leaderboard/Leaderboard.tscn

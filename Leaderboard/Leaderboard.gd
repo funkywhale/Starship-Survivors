@@ -4,7 +4,7 @@ extends Control
 @onready var loading_label = $MarginContainer/VBoxContainer/LoadingLabel
 @onready var back_button = $MarginContainer/VBoxContainer/BackButton
 
-const LEADERBOARD_NAME = "survival_time" # Change this to match your Talo leaderboard internal name
+const LEADERBOARD_NAME = "survival_time" 
 
 func _ready():
 	back_button.pressed.connect(_on_back_button_pressed)
@@ -64,18 +64,17 @@ func _create_entry_row(rank: int, entry):
 	score_label.add_theme_font_size_override("font_size", 10)
 	hbox.add_child(score_label)
 
-	# Level
-	var level_label = Label.new()
-	level_label.text = "Lvl " + str(entry.get("level", 1))
-	level_label.custom_minimum_size = Vector2(50, 0)
-	level_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	level_label.add_theme_font_size_override("font_size", 10)
-	hbox.add_child(level_label)
+	# Enemies killed
+	var kills_label = Label.new()
+	kills_label.text = str(entry.get("kills", 0))
+	kills_label.custom_minimum_size = Vector2(70, 0)
+	kills_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	kills_label.add_theme_font_size_override("font_size", 10)
+	hbox.add_child(kills_label)
 
 	entries_container.add_child(hbox)
 
 func _on_back_button_pressed():
-	# If embedded inside menu, call its close method; else fallback to scene change.
 	var parent = get_parent()
 	if parent and parent.has_method("_close_leaderboard"):
 		parent._close_leaderboard()

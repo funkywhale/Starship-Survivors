@@ -116,13 +116,14 @@ func _cull_offscreen_orbs() -> void:
 func _spawn_new_mega_orb(cam_pos: Vector2, viewport_size: Vector2) -> void:
 	_mega_orb = mega_orb_scene.instantiate()
 	_mega_orb.experience = _pending_experience
+	_mega_orb.scale = Vector2(1.3, 1.3)
 	
 	var spawn_pos: Vector2 = _edge_spawn_position(cam_pos, viewport_size)
 	_mega_orb.global_position = spawn_pos
 	
 	var sprite_node = _mega_orb.get_node_or_null("Sprite2D")
 	if sprite_node and typeof(sprite_node) != TYPE_NIL:
-		var red_tex: Texture2D = preload("res://Textures/Items/Gems/Gem_red.png")
+		var red_tex: Texture2D = preload("res://Textures/Items/Gems/exp_3.png")
 		if red_tex:
 			sprite_node.texture = red_tex
 	

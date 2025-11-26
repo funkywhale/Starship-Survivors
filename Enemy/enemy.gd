@@ -28,12 +28,12 @@ var side_check_fraction: float = 0.7
 
 var death_anim: PackedScene = preload("res://Enemy/explosion.tscn")
 var exp_gem: PackedScene = preload("res://Objects/experience_orb.tscn")
+var grab_collectible: PackedScene = preload("res://Objects/grab.tscn")
 
 signal remove_from_array(object)
 
 
 func _ready():
-	# Add to enemy group for tracking
 	add_to_group("enemy")
 	
 	var total_frames = 1
@@ -45,36 +45,30 @@ func _ready():
 	else:
 		_set_sprite_frame_safe(0)
 
-	# Connect to difficulty manager and store base speed
 	difficulty_manager = get_tree().get_first_node_in_group("difficulty_manager")
 	base_movement_speed = movement_speed
 	
-	# Connect player collision signal
 	if player_collision_area:
 		player_collision_area.body_entered.connect(_on_player_collision)
 
-	# Allow non-boss enemies to collide with rocks while letting the boss ignore them
 	var boss_unit := is_in_group("boss")
 	set_collision_mask_value(2, not boss_unit)
 	set_collision_layer_value(2, not boss_unit)
 	
-	# Setup obstacle detection raycast
+
 	obstacle_raycast = RayCast2D.new()
 	add_child(obstacle_raycast)
 	obstacle_raycast.enabled = true
-	obstacle_raycast.collision_mask = 2 # Layer 2 = rocks
+	obstacle_raycast.collision_mask = 2
 	obstacle_raycast.hit_from_inside = false
 
 func _on_player_collision(body: Node2D) -> void:
-	# Simple collision detection - if enemy touches player, explode and damage them
 	if body.is_in_group("player") and not has_collided_with_player:
 		has_collided_with_player = true
 		
-		# Damage the player directly
 		if body.has_method("take_enemy_damage"):
 			body.take_enemy_damage(enemy_damage)
 		
-		# Enemy explodes immediately
 		death()
 
 func _set_sprite_frame_safe(frame_index: int) -> void:
@@ -94,26 +88,21 @@ func _set_sprite_frame_safe(frame_index: int) -> void:
 		sprite.set_frame(safe)
 
 func _physics_process(_delta: float) -> void:
-	# Skip processing if already dead
 	if not sprite or not sprite.visible or has_collided_with_player:
 		return
 
 	knockback = knockback.move_toward(Vector2.ZERO, knockback_recovery)
 
-	# Apply difficulty speed multiplier (cached in _ready)
+
 	if difficulty_manager:
 		var difficulty = difficulty_manager.get_difficulty_level()
-		# Direct proportional scaling - no hard limits
-		# At 1.0 difficulty = 1.0x speed (normal)
-		# At 0.5 difficulty = 0.5x speed (half speed)
-		# At 2.0 difficulty = 2.0x speed (double speed)
-		# Can scale infinitely based on difficulty
+
 		current_speed_multiplier = difficulty
 		movement_speed = base_movement_speed * current_speed_multiplier
 
 	var direction = global_position.direction_to(player.global_position)
 
-	# Steering to avoid rocks while still colliding with them
+
 	if obstacle_raycast and Engine.get_frames_drawn() % 2 == 0:
 		obstacle_raycast.global_position = global_position
 		obstacle_raycast.target_position = direction * obstacle_check_distance
@@ -151,7 +140,7 @@ func _physics_process(_delta: float) -> void:
 
 	move_and_slide()
 
-	# Only update sprite flip occasionally to reduce overhead
+
 	if Engine.get_frames_drawn() % 5 == 0:
 		if direction.x > 0.1:
 			sprite.flip_h = true
@@ -161,7 +150,6 @@ func _physics_process(_delta: float) -> void:
 func death() -> void:
 	emit_signal("remove_from_array", self)
 
-	# Track kill for difficulty adjustment
 	if difficulty_manager:
 		difficulty_manager.record_kill()
 
@@ -169,15 +157,21 @@ func death() -> void:
 	enemy_death.scale = sprite.scale
 	enemy_death.global_position = global_position
 	get_parent().call_deferred("add_child", enemy_death)
-	var new_gem = exp_gem.instantiate()
-	new_gem.global_position = global_position
-	new_gem.experience = experience
-	loot_base.call_deferred("add_child", new_gem)
+	
+	if randf() < 0.02:
+		var new_grab = grab_collectible.instantiate()
+		new_grab.global_position = global_position
+		loot_base.call_deferred("add_child", new_grab)
+	else:
+		var new_gem = exp_gem.instantiate()
+		new_gem.global_position = global_position
+		new_gem.experience = experience
+		loot_base.call_deferred("add_child", new_gem)
+	
 	queue_free()
 
 
 func _on_hurt_box_hurt(damage, angle, knockback_amount):
-	# Handles damage from player weapons (not player collision)
 	hp -= damage
 	knockback = angle * knockback_amount
 	if hp <= 0:

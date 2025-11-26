@@ -52,6 +52,14 @@ var spell_size: float = 0.0
 var additional_attacks: int = 0
 var damage_bonus: int = 0
 
+# Pickup Range
+var pickup_range_level: int = 0
+var pickup_range_multiplier: float = 1.0
+var _base_grab_radius: float = 0.0
+var _base_collect_radius: float = 0.0
+@onready var _grab_shape: CollisionShape2D = $GrabArea/CollisionShape2D
+@onready var _collect_shape: CollisionShape2D = $CollectArea/CollisionShape2D
+
 #PulseLaser
 var pulselaser_ammo: int = 0
 var pulselaser_baseammo: int = 0
@@ -124,11 +132,20 @@ var difficulty_manager: Node = null
 var intro_playing: bool = true
 var move_anim_time: float = 0.0
 
+# Grab magnetize effect state
+var magnetize_active: bool = false
+var magnetized_orbs: Array = []
+
 signal playerdeath
 
 func _ready() -> void:
 	_apply_skin()
 	_prewarm_weapon_resources()
+	# Cache base pickup radii
+	if _grab_shape and _grab_shape.shape is CircleShape2D:
+		_base_grab_radius = (_grab_shape.shape as CircleShape2D).radius
+	if _collect_shape and _collect_shape.shape is CircleShape2D:
+		_base_collect_radius = (_collect_shape.shape as CircleShape2D).radius
 	var starting_weapon = skin_manager.get_starting_weapon()
 	upgrade_character(starting_weapon)
 	set_expbar(experience, calculate_experiencecap())
@@ -175,6 +192,9 @@ func _physics_process(_delta: float) -> void:
 			dashCooldownBar.value = int(100.0 * (1.0 - dash_cooldown_left / dash_cooldown))
 		else:
 			dashCooldownBar.visible = false
+
+	# Process magnetize effect from grab collectible
+	_process_magnetize_effect(_delta)
 
 	var cleanup_frequency = 60
 	if enemy_close.size() > 30 or active_projectile_count > 150:
@@ -494,49 +514,44 @@ func _on_ion_laser_attack_timer_timeout():
 				targeted_enemies.clear()
 
 func get_different_target():
-	for i in enemy_close.duplicate():
-		if not is_instance_valid(i):
-			enemy_close.erase(i)
-
-	if enemy_close.size() == 0:
-		return Vector2.UP
-
-	var untargeted = []
-	for e in enemy_close:
+	# Build a fresh list of valid enemies from group to avoid
+	# missing high-tier enemies due to collision masks on detection areas.
+	var all_enemies = get_tree().get_nodes_in_group("enemy")
+	var candidates = []
+	for e in all_enemies:
 		if not is_instance_valid(e):
 			continue
 		if not targeted_enemies.has(e):
 			var d = global_position.distance_to(e.global_position)
-			untargeted.append({"enemy": e, "distance": d})
+			candidates.append({"enemy": e, "distance": d})
 
-	if untargeted.size() == 0:
+	if candidates.size() == 0:
+		# If all have been targeted, reset and consider all again
 		targeted_enemies.clear()
-		for e in enemy_close:
+		for e in all_enemies:
 			if not is_instance_valid(e):
 				continue
 			var d = global_position.distance_to(e.global_position)
-			untargeted.append({"enemy": e, "distance": d})
+			candidates.append({"enemy": e, "distance": d})
 
-	if untargeted.size() == 0:
+	if candidates.size() == 0:
 		return Vector2.UP
 
-	untargeted.sort_custom(func(a, b): return a.distance < b.distance)
-	var target = untargeted[0].enemy
+	candidates.sort_custom(func(a, b): return a.distance < b.distance)
+	var target = candidates[0].enemy
 	targeted_enemies.append(target)
-
 	return target.global_position
 
 func get_closest_target():
-	for i in enemy_close.duplicate():
-		if not is_instance_valid(i):
-			enemy_close.erase(i)
-
-	if enemy_close.size() == 0:
+	# Use group lookup to ensure we consider all enemies,
+	# including bosses or high-tier units possibly excluded from detection areas.
+	var all_enemies = get_tree().get_nodes_in_group("enemy")
+	if all_enemies.size() == 0:
 		return Vector2.UP
 
 	var closest = null
 	var closest_dist = INF
-	for e in enemy_close:
+	for e in all_enemies:
 		if not is_instance_valid(e):
 			continue
 		var d = global_position.distance_to(e.global_position)
@@ -546,8 +561,7 @@ func get_closest_target():
 
 	if closest:
 		return closest.global_position
-	else:
-		return Vector2.UP
+	return Vector2.UP
 
 func fire_scatter_shot() -> void:
 	var base_angle = sprite.rotation
@@ -672,11 +686,13 @@ func _on_enemy_detection_area_body_exited(body):
 
 
 func _on_grab_area_area_entered(area):
-	if area.is_in_group("loot"):
+	if area.is_in_group("loot") or area.is_in_group("grab_collectible"):
 		area.target = self
 
 func _on_collect_area_area_entered(area: Area2D) -> void:
-	if area.is_in_group("loot"):
+	if area.is_in_group("grab_collectible"):
+		area.collect()
+	elif area.is_in_group("loot"):
 		var gem_exp = area.collect()
 		calculate_experience(gem_exp)
 
@@ -694,6 +710,47 @@ func calculate_experience(gem_exp: int) -> void:
 		collected_experience = 0
 	
 	set_expbar(experience, exp_required)
+
+func trigger_grab_magnetize() -> void:
+	if magnetize_active:
+		return
+
+	magnetize_active = true
+	magnetized_orbs.clear()
+	
+
+	var all_loot = get_tree().get_nodes_in_group("loot")
+	
+	for item in all_loot:
+		if not is_instance_valid(item):
+			continue
+
+		if item.has_method("collect") and "experience" in item and not item.is_in_group("grab_collectible"):
+			magnetized_orbs.append(item)
+
+			item.target = self
+
+			if "speed" in item:
+				item.speed = 0.0
+
+			if "ACCELERATION" in item:
+				item.set("ACCELERATION", 10.0)
+
+
+func _process_magnetize_effect(_delta: float) -> void:
+	if not magnetize_active:
+		return
+	
+
+	var valid_orbs = []
+	for orb in magnetized_orbs:
+		if is_instance_valid(orb):
+			valid_orbs.append(orb)
+	
+	magnetized_orbs = valid_orbs
+	
+	if magnetized_orbs.is_empty():
+		magnetize_active = false
 
 func calculate_experiencecap() -> int:
 	var exp_cap = experience_level
@@ -832,6 +889,26 @@ func upgrade_character(upgrade: String) -> void:
 			spell_cooldown += 0.1
 		"weapon1", "weapon2":
 			additional_attacks += 1
+		"pickup1":
+			pickup_range_level = 1
+			pickup_range_multiplier = 1.25
+			_update_pickup_radii()
+		"pickup2":
+			pickup_range_level = 2
+			pickup_range_multiplier = 1.50
+			_update_pickup_radii()
+		"pickup3":
+			pickup_range_level = 3
+			pickup_range_multiplier = 1.75
+			_update_pickup_radii()
+		"pickup4":
+			pickup_range_level = 4
+			pickup_range_multiplier = 2.00
+			_update_pickup_radii()
+		"pickup5":
+			pickup_range_level = 5
+			pickup_range_multiplier = 2.50
+			_update_pickup_radii()
 		"heal":
 			hp += 20
 			hp = clamp(hp, 0, maxhp)
@@ -846,6 +923,15 @@ func upgrade_character(upgrade: String) -> void:
 	levelPanel.position = Vector2(800, 50)
 	get_tree().paused = false
 	calculate_experience(0)
+
+func _update_pickup_radii() -> void:
+
+	if _grab_shape and _grab_shape.shape is CircleShape2D and _base_grab_radius > 0.0:
+		var s: CircleShape2D = _grab_shape.shape
+		s.radius = _base_grab_radius * pickup_range_multiplier
+	if _collect_shape and _collect_shape.shape is CircleShape2D and _base_collect_radius > 0.0:
+		var c: CircleShape2D = _collect_shape.shape
+		c.radius = _base_collect_radius * pickup_range_multiplier
 	
 func get_random_item() -> String:
 	var dblist: Array = []

@@ -28,14 +28,14 @@ res://Enemy/enemy_drone.tscn::e709be5de8951d917e4007f947043384::1764135030::res:
 res://Enemy/enemy_drone_strong.tscn::2c50eedf8be37bd00e884782d4bbfe17::1764162910::res://.godot/exported/133200997/export-b57d51b94ff6533ef3b398163ca924b2-enemy_drone_strong.scn
 res://Enemy/enemy_drone_stronger.tscn::0290d5de88b683e9facd9360d7fbd56c::1764147826::res://.godot/exported/133200997/export-9e0a8521bd24369858f622e2be5b0011-enemy_drone_stronger.scn
 res://Enemy/explosion.tscn::c245193e0e49f1b6679e79c88aa54907::1759284504::res://.godot/exported/133200997/export-1f6c10fbb05585bbe950672868bd380f-explosion.scn
-res://Leaderboard/Leaderboard.tscn::d7737e8b7e8a9d4e0f70ed236682f5fe::1763940903::res://.godot/exported/133200997/export-db7e27f0718002827a0a758bfc885b51-Leaderboard.scn
-res://Objects/experience_orb.tscn::19457f826f11ed5e0efd38cdfdc60cee::1759012700::res://.godot/exported/133200997/export-47fd5095729ea6299c83f4eb6cc9d944-experience_orb.scn
+res://Leaderboard/Leaderboard.tscn::b236f2268340cc764bbb453fac98b40d::1764199766::res://.godot/exported/133200997/export-db7e27f0718002827a0a758bfc885b51-Leaderboard.scn
+res://Objects/experience_orb.tscn::32bdaeaef03ba5f53efa49585e6cc653::1764197199::res://.godot/exported/133200997/export-47fd5095729ea6299c83f4eb6cc9d944-experience_orb.scn
 res://Objects/rock_large.tscn::34ad6e16b5d925c88c2100ffb21878ce::1763954959::res://.godot/exported/133200997/export-90444be461cd8a1fbb3f111033aacc97-rock_large.scn
 res://Objects/rock_medium.tscn::ff57fc304493ab17f35957b3f47726a3::1763954370::res://.godot/exported/133200997/export-8cc59b39e82eb19c4976f4582be18bfe-rock_medium.scn
 res://Objects/rock_small.tscn::1baee2092fb6da5bba542a259fcfb59b::1764033234::res://.godot/exported/133200997/export-6f63e3dc59cf453d62d1cf6d6b3e6d26-rock_small.scn
 res://Player/Attack/explosion_area.tscn::3e14c8748baae2437f68d203257a2d0e::1764153804::res://.godot/exported/133200997/export-d523c4ea17c72d6a03c15053f9c3e399-explosion_area.scn
 res://Player/Attack/ion_laser_beam.tscn::35baba8e4b189713e1baf0fd2d1e317e::1764033033::res://.godot/exported/133200997/export-6fd001179592c6d5c129e4f28bef534d-ion_laser_beam.scn
-res://Player/Attack/plasma.tscn::f00832b11e615eabc439839a20cdf5dd::1764195792::res://.godot/exported/133200997/export-6e9e0c93c6467d3687815ebd7d80ba03-plasma.scn
+res://Player/Attack/plasma.tscn::f00832b11e615eabc439839a20cdf5dd::1764196921::res://.godot/exported/133200997/export-6e9e0c93c6467d3687815ebd7d80ba03-plasma.scn
 res://Player/Attack/pulse_laser.tscn::513198b76511ba3c0cc1adf3fc94b8a4::1764033234::res://.godot/exported/133200997/export-6aebfd4d47250050721e2dc95acc3ede-pulse_laser.scn
 res://Player/Attack/rocket.tscn::aa7bb5494aee963a68cd6071b30e2d41::1764148101::res://.godot/exported/133200997/export-b01c8b115de1f3a0be813a4c1fd7d046-rocket.scn
 res://Player/Attack/scatter_shot.tscn::d52cfd5a070cc5e6307a7e0ab04d3590::1764033743::res://.godot/exported/133200997/export-2d10217599e21821ca39fe477217079a-scatter_shot.scn
@@ -56,3 +56,4 @@ res://Objects/rock_large2.tscn::db824c745d67fb649ceeddf4c25d55ca::1764159149::re
 res://Objects/rock_medium2.tscn::891693a8a7d41dc582c93cf11ee6782b::1764159149::res://.godot/exported/133200997/export-7f90d7202b2f034157b728b308f31790-rock_medium2.scn
 res://Objects/rock_small2.tscn::fcd021306b80ad501e6d4c73082124fe::1764159149::res://.godot/exported/133200997/export-31e68d6cee62c3e33bfe07ef7d80fc6d-rock_small2.scn
 res://Player/Attack/plasma_trail.tscn::c93c3cb2bd716884c727387c0bb769ec::1764159149::res://.godot/exported/133200997/export-616d1f15e1ce385bcb2995169563660f-plasma_trail.scn
+res://Objects/grab.tscn::9eff127a32517f33aae6f0a6d125bfe8::1764200193::res://.godot/exported/133200997/export-b9a238f3846af63abf2518f1e3ebbc3d-grab.scn

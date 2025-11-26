@@ -77,6 +77,13 @@ theme_override_font_sizes/font_size = 10
 text = "Time"
 horizontal_alignment = 2
 
+[node name="KillsHeader" type="Label" parent="MarginContainer/VBoxContainer/HeaderContainer"]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "Kills"
+horizontal_alignment = 2
+
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 240)
 layout_mode = 2

@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://bpm8x6tape114"]
+
+[ext_resource type="Texture2D" uid="uid://cfoxjhknx76ry" path="res://Textures/Items/Gems/grab.png" id="1_63ku7"]
+[ext_resource type="Script" uid="uid://dftjo5w65ebb7" path="res://Objects/grab.gd" id="1_grab"]
+[ext_resource type="AudioStream" uid="uid://bnm8cttqwefdx" path="res://Audio/SoundEffect/collectgem.mp3" id="3_3a45k"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wytta"]
+size = Vector2(28, 30)
+
+[node name="GrabCollectible" type="Area2D" groups=["loot"]]
+scale = Vector2(0.5, 0.5)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("1_grab")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("1_63ku7")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -1)
+shape = SubResource("RectangleShape2D_wytta")
+
+[node name="snd_collected" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_3a45k")
+volume_db = -10.0
+
+[connection signal="finished" from="snd_collected" to="." method="_on_snd_collected_finished"]

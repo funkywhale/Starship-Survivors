@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://d20r3gqas2kms"]
 
-[ext_resource type="Texture2D" uid="uid://c5i20ijiifej" path="res://Textures/Items/Gems/Gem_green.png" id="1_glkr3"]
 [ext_resource type="Script" uid="uid://we7j4kwhncf0" path="res://Objects/experience_orb.gd" id="1_k4pfj"]
+[ext_resource type="Texture2D" uid="uid://b1hxk7ik3wklf" path="res://Textures/Items/Gems/exp_1.png" id="2_4rryj"]
 [ext_resource type="AudioStream" uid="uid://bnm8cttqwefdx" path="res://Audio/SoundEffect/collectgem.mp3" id="3_g1t57"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wytta"]
@@ -14,10 +14,10 @@ collision_mask = 0
 script = ExtResource("1_k4pfj")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("1_glkr3")
+scale = Vector2(2, 2)
+texture = ExtResource("2_4rryj")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -1)
 shape = SubResource("RectangleShape2D_wytta")
 
 [node name="snd_collected" type="AudioStreamPlayer" parent="."]

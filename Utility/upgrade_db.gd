@@ -348,4 +348,44 @@ const UPGRADES = {
 		"prerequisite": [],
 		"type": "item"
 	},
+	"pickup1": {
+		"icon": ICON_PATH + "pickup.png",
+		"displayname": "Pickup Range",
+		"details": "Increases pickup radius by 25%",
+		"level": "Level: 1",
+		"prerequisite": [],
+		"type": "upgrade"
+	},
+	"pickup2": {
+		"icon": ICON_PATH + "pickup.png",
+		"displayname": "Pickup Range",
+		"details": "Increases pickup radius by 50%",
+		"level": "Level: 2",
+		"prerequisite": ["pickup1"],
+		"type": "upgrade"
+	},
+	"pickup3": {
+		"icon": ICON_PATH + "pickup.png",
+		"displayname": "Pickup Range",
+		"details": "Increases pickup radius by 75%",
+		"level": "Level: 3",
+		"prerequisite": ["pickup2"],
+		"type": "upgrade"
+	},
+	"pickup4": {
+		"icon": ICON_PATH + "pickup.png",
+		"displayname": "Pickup Range",
+		"details": "Increases pickup radius by 100%",
+		"level": "Level: 4",
+		"prerequisite": ["pickup3"],
+		"type": "upgrade"
+	},
+	"pickup5": {
+		"icon": ICON_PATH + "pickup.png",
+		"displayname": "Pickup Range",
+		"details": "Increases pickup radius by 150%",
+		"level": "Level: 5",
+		"prerequisite": ["pickup4"],
+		"type": "upgrade"
+	},
 }
