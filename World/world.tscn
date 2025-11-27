@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://du6qbgqucaqov"]
+[gd_scene load_steps=31 format=3 uid="uid://du6qbgqucaqov"]
 
 [ext_resource type="Script" uid="uid://c741ym6flkffr" path="res://World/world.gd" id="1_h2aik"]
 [ext_resource type="Texture2D" uid="uid://cy8avdpgoxae8" path="res://Textures/space_background3.png" id="1_lo5ox"]
@@ -12,7 +12,6 @@
 [ext_resource type="PackedScene" uid="uid://btf7clk4jja87" path="res://Enemy/enemy_boss.tscn" id="9_xs42h"]
 [ext_resource type="AudioStream" uid="uid://d1w53vpr4y07b" path="res://Audio/Music/battleThemeA.mp3" id="10_rk3we"]
 [ext_resource type="Script" uid="uid://buvlo8c3trfoy" path="res://Audio/Music/snd_Music.gd" id="11_ovtx6"]
-[ext_resource type="Texture2D" uid="uid://bc6n2t75h2gjv" path="res://Textures/Enemy/enemy_drone_strong.png" id="12_f23eu"]
 [ext_resource type="Script" uid="uid://cnyhv7p560kkj" path="res://Utility/rock_manager.gd" id="12_rockmgr"]
 [ext_resource type="PackedScene" uid="uid://cge5pu20boj0q" path="res://Utility/experience_orb_manager.tscn" id="13_orbmgr"]
 [ext_resource type="PackedScene" uid="uid://b7c7gsdx2rkjm" path="res://Utility/basic_button.tscn" id="14_basic_button"]
@@ -94,7 +93,7 @@ metadata/_custom_type_script = "uid://dmq4cx6tw4emm"
 script = ExtResource("5_jj7s8")
 time_start = 360
 time_end = 480
-enemy = ExtResource("12_f23eu")
+enemy = ExtResource("6_rumbx")
 enemy_num = 8
 enemy_spawn_delay = 3
 metadata/_custom_type_script = "uid://dmq4cx6tw4emm"

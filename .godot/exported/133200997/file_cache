@@ -1,4 +1,4 @@
-res://addons/talo/samples/authentication/assets/theme.tres::765a9754bcfcd2bcfc460e7455b3c5e2::1764207317::res://.godot/exported/133200997/export-d353f539ca82d56096549c0f19429425-theme.res
+res://addons/talo/samples/authentication/assets/theme.tres::765a9754bcfcd2bcfc460e7455b3c5e2::1764221437::res://.godot/exported/133200997/export-d353f539ca82d56096549c0f19429425-theme.res
 res://addons/talo/samples/authentication/states/change_email.tscn::6bb93f0d78480322ff9a7faaefa654a4::1763624734::res://.godot/exported/133200997/export-123c38d625a9de0deaedf09ef2ddbabe-change_email.scn
 res://addons/talo/samples/authentication/states/change_password.tscn::3df0deba98449928a2570ff968ec33a7::1763624734::res://.godot/exported/133200997/export-e66d79f2d6a2b0fa464004cdf3f55ca6-change_password.scn
 res://addons/talo/samples/authentication/states/delete_account.tscn::d71bbe44671f7bb16e090c0ebd4bbaeb::1763624734::res://.godot/exported/133200997/export-5cbbf856a822c26ecdbd22c5b0d9e590-delete_account.scn
@@ -50,7 +50,7 @@ res://Utility/hit_box.tscn::d3ceedfbe905cc39d8141f7dd1140929::1717904380::res://
 res://Utility/hurt_box.tscn::d2cfe249dc2ada2529560ab038ea880d::1758955372::res://.godot/exported/133200997/export-a60fe6600d20ea02ad9949a92024b18d-hurt_box.scn
 res://Utility/item_option.tscn::741b4bfd4cc9aa469f71fa548b263267::1764159149::res://.godot/exported/133200997/export-4cd66e9d2ef6bda90c064d5e204f02d5-item_option.scn
 res://Utility/upgrade_db.tscn::8b3d42047cac59a9fd9f926416959154::1764155918::res://.godot/exported/133200997/export-9b6981a41d3fab107a2d9e7cf0c27c8d-upgrade_db.scn
-res://World/world.tscn::b5eb2d6b28afa6032b05afd7ac8b0f6c::1764215206::res://.godot/exported/133200997/export-89647171d5d7bdb8a088d65cc9aa3a3a-world.scn
+res://World/world.tscn::8de4bd8ebb5f157732fbaffe351e8246::1764221580::res://.godot/exported/133200997/export-89647171d5d7bdb8a088d65cc9aa3a3a-world.scn
 res://LoginScreen.tscn::fa7e7c05aaae2b26b50ede15d6de2a6e::1764159149::res://.godot/exported/133200997/export-aef34a00c7d74a6c6c98ecd0040d3a2a-LoginScreen.scn
 res://Objects/rock_large2.tscn::db824c745d67fb649ceeddf4c25d55ca::1764159149::res://.godot/exported/133200997/export-465e593955c3afae8ddf4fcf5486214e-rock_large2.scn
 res://Objects/rock_medium2.tscn::891693a8a7d41dc582c93cf11ee6782b::1764159149::res://.godot/exported/133200997/export-7f90d7202b2f034157b728b308f31790-rock_medium2.scn
