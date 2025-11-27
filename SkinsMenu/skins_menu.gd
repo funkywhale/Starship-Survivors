@@ -60,8 +60,8 @@ func _update_ui() -> void:
 	
 	# Update weapon display
 	var weapon_id: String = skin_manager.get_starting_weapon(skin_id)
-	if UpgradeDb.UPGRADES.has(weapon_id):
-		var weapon_data: Dictionary = UpgradeDb.UPGRADES[weapon_id]
+	var weapon_data: Dictionary = UpgradeDb.get_upgrade_data(weapon_id)
+	if not weapon_data.is_empty():
 		var weapon_texture: Texture2D = load(weapon_data["icon"])
 		weapon_icon.texture = weapon_texture
 		weapon_name.text = weapon_data["displayname"]

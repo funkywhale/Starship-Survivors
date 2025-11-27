@@ -58,7 +58,7 @@ radius = 54.589375
 
 [node name="enemy_super" type="CharacterBody2D" groups=["boss"]]
 collision_layer = 4
-collision_mask = 5
+collision_mask = 0
 motion_mode = 1
 script = ExtResource("1_544l3")
 movement_speed = 80.0

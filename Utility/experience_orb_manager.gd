@@ -123,7 +123,7 @@ func _spawn_new_mega_orb(cam_pos: Vector2, viewport_size: Vector2) -> void:
 	
 	var sprite_node = _mega_orb.get_node_or_null("Sprite2D")
 	if sprite_node and typeof(sprite_node) != TYPE_NIL:
-		var red_tex: Texture2D = preload("res://Textures/Items/Gems/exp_mega.png")
+		var red_tex: Texture2D = preload("res://Textures/Items/Gems/exp_3.png")
 		if red_tex:
 			sprite_node.texture = red_tex
 	

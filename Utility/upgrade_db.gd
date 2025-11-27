@@ -1,201 +1,24 @@
 extends Node
 
-
 const ICON_PATH = "res://Textures/Items/Upgrades/"
 const WEAPON_PATH = "res://Textures/Items/Weapons/"
+
+const UPGRADE_EFFECTS = {
+	"armor": {"stat": "armor", "value": 1, "max_level": 5},
+	"damage": {"stat": "damage_bonus", "values": [3, 3, 3, 3, 3]},
+	"speed": {"stat": "max_speed", "value": 10.0, "extra": {"accel": 1.0, "decel": 10.0, "damping": 10.0}, "max_level": 5},
+	"thick": {"stat": "spell_size", "value": 0.20, "max_level": 5},
+	"firerate": {"stat": "spell_cooldown", "value": 0.1, "max_level": 5},
+	"weapon": {"stat": "additional_attacks", "value": 1, "max_level": 3},
+	"pickup": {"stat": "pickup_range_multiplier", "values": [1.25, 1.50, 1.75, 2.00, 2.50], "levels": [1, 2, 3, 4, 5]},
+	"knockback": {"stat": "knockback_multiplier", "value": 0.10, "max_level": 5},
+	"projectilespeed": {"stat": "projectile_speed_multiplier", "value": 0.10, "max_level": 5},
+	"critical": {"stat": "critical_chance", "value": 0.05, "max_level": 5},
+	"knowledge": {"stat": "experience_multiplier", "value": 0.10, "max_level": 5},
+	"heal": {"stat": "hp", "value": 20}
+}
+
 const UPGRADES = {
-	"pulselaser1": {
-		"icon": WEAPON_PATH + "pulse_laser.png",
-		"displayname": "Pulse Laser",
-		"details": "A pulse laser fires at a random enemy",
-		"level": "Level: 1",
-		"prerequisite": [],
-		"type": "weapon"
-	},
-	"pulselaser2": {
-		"icon": WEAPON_PATH + "pulse_laser.png",
-		"displayname": "Pulse Laser",
-		"details": "+1 additional pulse laser is fired",
-		"level": "Level: 2",
-		"prerequisite": ["pulselaser1"],
-		"type": "weapon"
-	},
-	"pulselaser3": {
-		"icon": WEAPON_PATH + "pulse_laser.png",
-		"displayname": "Pulse Laser",
-		"details": "Pulse laser pierces. +1 additional pulse laser is fired and +5 damage",
-		"level": "Level: 3",
-		"prerequisite": ["pulselaser2"],
-		"type": "weapon"
-	},
-	"pulselaser4": {
-		"icon": WEAPON_PATH + "pulse_laser.png",
-		"displayname": "Pulse Laser",
-		"details": "+1 additional pulse laser is fired",
-		"level": "Level: 4",
-		"prerequisite": ["pulselaser3"],
-		"type": "weapon"
-	},
-	"pulselaser5": {
-		"icon": WEAPON_PATH + "pulse_laser.png",
-		"displayname": "Pulse Laser",
-		"details": "+1 additional pulse laser is fired. +5 damage",
-		"level": "Level: 5",
-		"prerequisite": ["pulselaser4"],
-		"type": "weapon"
-	},
-	"pulselaser6": {
-		"icon": WEAPON_PATH + "pulse_laser.png",
-		"displayname": "Pulse Laser",
-		"details": "+1 additional pulse laser is fired. +5 damage",
-		"level": "Level: 6",
-		"prerequisite": ["pulselaser5"],
-		"type": "weapon"
-	},
-	"pulselaser7": {
-		"icon": WEAPON_PATH + "pulse_laser.png",
-		"displayname": "Pulse Laser",
-		"details": "+1 additional pulse laser is fired. Can pierce through 5 enemies",
-		"level": "Level: 7",
-		"prerequisite": ["pulselaser6"],
-		"type": "weapon"
-	},
-	"pulselaser8": {
-		"icon": WEAPON_PATH + "pulse_laser.png",
-		"displayname": "Pulse Laser",
-		"details": "+2 additional pulse lasers are fired. +10 damage and can pierce through 6 enemies",
-		"level": "Level: 8",
-		"prerequisite": ["pulselaser7"],
-		"type": "weapon"
-	},
-	"plasma1": {
-		"icon": WEAPON_PATH + "plasma_icon.png",
-		"displayname": "Plasma Blast",
-		"details": "A plasma blast that pierces enemies",
-		"level": "Level: 1",
-		"prerequisite": [],
-		"type": "weapon"
-	},
-	"plasma2": {
-		"icon": WEAPON_PATH + "plasma_icon.png",
-		"displayname": "Plasma Blast",
-		"details": "+1 additional plasma blast is fired",
-		"level": "Level: 2",
-		"prerequisite": ["plasma1"],
-		"type": "weapon"
-	},
-	"plasma3": {
-		"icon": WEAPON_PATH + "plasma_icon.png",
-		"displayname": "Plasma Blast",
-		"details": "+1 additional plasma blast is fired",
-		"level": "Level: 3",
-		"prerequisite": ["plasma2"],
-		"type": "weapon"
-	},
-	"plasma4": {
-		"icon": WEAPON_PATH + "plasma_icon.png",
-		"displayname": "Plasma Blast",
-		"details": "+1 additional plasma blast is fired",
-		"level": "Level: 4",
-		"prerequisite": ["plasma3"],
-		"type": "weapon"
-	},
-	"plasma5": {
-		"icon": WEAPON_PATH + "plasma_icon.png",
-		"displayname": "Plasma Blast",
-		"details": "+1 additional plasma blast is fired. +5 damage",
-		"level": "Level: 5",
-		"prerequisite": ["plasma4"],
-		"type": "weapon"
-	},
-	"plasma6": {
-		"icon": WEAPON_PATH + "plasma_icon.png",
-		"displayname": "Plasma Blast",
-		"details": "+1 additional plasma blast is fired. +5 damage",
-		"level": "Level: 6",
-		"prerequisite": ["plasma5"],
-		"type": "weapon"
-	},
-	"plasma7": {
-		"icon": WEAPON_PATH + "plasma_icon.png",
-		"displayname": "Plasma Blast",
-		"details": "+1 additional plasma blast is fired. +10 damage",
-		"level": "Level: 7",
-		"prerequisite": ["plasma6"],
-		"type": "weapon"
-	},
-	"plasma8": {
-		"icon": WEAPON_PATH + "plasma_icon.png",
-		"displayname": "Plasma Blast",
-		"details": "+1 additional plasma blast is fired. +15 damage and increased speed",
-		"level": "Level: 8",
-		"prerequisite": ["plasma7"],
-		"type": "weapon"
-	},
-	"rocket1": {
-		"icon": WEAPON_PATH + "storm_shadow.png",
-		"displayname": "Rocket",
-		"details": "A rocket is launched and heads somewhere in the player's direction",
-		"level": "Level: 1",
-		"prerequisite": [],
-		"type": "weapon"
-	},
-	"rocket2": {
-		"icon": WEAPON_PATH + "storm_shadow.png",
-		"displayname": "Rocket",
-		"details": "An additional Rocket is created. +5 damage",
-		"level": "Level: 2",
-		"prerequisite": ["rocket1"],
-		"type": "weapon"
-	},
-	"rocket3": {
-		"icon": WEAPON_PATH + "storm_shadow.png",
-		"displayname": "Rocket",
-		"details": "The Rocket cooldown is reduced by 0.5 seconds. +5 damage",
-		"level": "Level: 3",
-		"prerequisite": ["rocket2"],
-		"type": "weapon"
-	},
-	"rocket4": {
-		"icon": WEAPON_PATH + "storm_shadow.png",
-		"displayname": "Rocket",
-		"details": "+1 additional rocket is fired. +5 damage",
-		"level": "Level: 4",
-		"prerequisite": ["rocket3"],
-		"type": "weapon"
-	},
-	"rocket5": {
-		"icon": WEAPON_PATH + "storm_shadow.png",
-		"displayname": "Rocket",
-		"details": "The Rocket cooldown is reduced by 0.25 seconds. +5 damage",
-		"level": "Level: 5",
-		"prerequisite": ["rocket4"],
-		"type": "weapon"
-	},
-	"rocket6": {
-		"icon": WEAPON_PATH + "storm_shadow.png",
-		"displayname": "Rocket",
-		"details": "+1 additional rocket is fired. +10 damage",
-		"level": "Level: 6",
-		"prerequisite": ["rocket5"],
-		"type": "weapon"
-	},
-	"rocket7": {
-		"icon": WEAPON_PATH + "storm_shadow.png",
-		"displayname": "Rocket",
-		"details": "The Rocket cooldown is reduced by 0.25 seconds. +10 damage",
-		"level": "Level: 7",
-		"prerequisite": ["rocket6"],
-		"type": "weapon"
-	},
-	"rocket8": {
-		"icon": WEAPON_PATH + "storm_shadow.png",
-		"displayname": "Rocket",
-		"details": "+1 additional rocket is fired. +15 damage and +50% knockback",
-		"level": "Level: 8",
-		"prerequisite": ["rocket7"],
-		"type": "weapon"
-	},
 	"armor1": {
 		"icon": ICON_PATH + "armor.png",
 		"displayname": "Armor Plating",
@@ -203,70 +26,6 @@ const UPGRADES = {
 		"level": "Level: 1",
 		"prerequisite": [],
 		"type": "upgrade"
-	},
-	"ionlaser1": {
-		"icon": WEAPON_PATH + "ion_laser.png",
-		"displayname": "Ion Laser",
-		"details": "Fires a growing beam of plasma energy that pierces enemies",
-		"level": "Level: 1",
-		"prerequisite": [],
-		"type": "weapon"
-	},
-	"ionlaser2": {
-		"icon": WEAPON_PATH + "ion_laser.png",
-		"displayname": "Ion Laser",
-		"details": "+5 damage, +25% range, and 12% faster firing rate",
-		"level": "Level: 2",
-		"prerequisite": ["ionlaser1"],
-		"type": "weapon"
-	},
-	"ionlaser3": {
-		"icon": WEAPON_PATH + "ion_laser.png",
-		"displayname": "Ion Laser",
-		"details": "+10 damage, +50% range, and 24% faster firing rate",
-		"level": "Level: 3",
-		"prerequisite": ["ionlaser2"],
-		"type": "weapon"
-	},
-	"ionlaser4": {
-		"icon": WEAPON_PATH + "ion_laser.png",
-		"displayname": "Ion Laser",
-		"details": "+5 damage, +12.5% range, and 4% faster firing rate",
-		"level": "Level: 4",
-		"prerequisite": ["ionlaser3"],
-		"type": "weapon"
-	},
-	"ionlaser5": {
-		"icon": WEAPON_PATH + "ion_laser.png",
-		"displayname": "Ion Laser",
-		"details": "+5 damage, +25% range, and 4% faster firing rate",
-		"level": "Level: 5",
-		"prerequisite": ["ionlaser4"],
-		"type": "weapon"
-	},
-	"ionlaser6": {
-		"icon": WEAPON_PATH + "ion_laser.png",
-		"displayname": "Ion Laser",
-		"details": "+10 damage, +50% range, and 5% faster firing rate",
-		"level": "Level: 6",
-		"prerequisite": ["ionlaser5"],
-		"type": "weapon"
-	},
-	"ionlaser7": {
-		"icon": WEAPON_PATH + "ion_laser.png",
-		"displayname": "Ion Laser",
-		"details": "+10 damage, +75% range, and 10% faster firing rate",
-		"level": "Level: 7",
-		"prerequisite": ["ionlaser6"],
-		"type": "weapon"
-	},
-	"ionlaser8": {
-		"icon": WEAPON_PATH + "ion_laser.png",
-		"displayname": "Ion Laser",
-		"details": "+15 damage, +125% range, and 11% faster firing rate",
-		"level": "Level: 8",
-		"prerequisite": ["ionlaser7"],
-		"type": "weapon"
 	},
 	"armor2": {
 		"icon": ICON_PATH + "armor.png",
@@ -484,70 +243,6 @@ const UPGRADES = {
 		"prerequisite": ["weapon2"],
 		"type": "upgrade"
 	},
-	"scattershot1": {
-		"icon": WEAPON_PATH + "scattershot_icon.png",
-		"displayname": "Scatter Shot",
-		"details": "Fires 3 pellets in a cone. Shotgun-style weapon.",
-		"level": "Level: 1",
-		"prerequisite": [],
-		"type": "weapon"
-	},
-	"scattershot2": {
-		"icon": WEAPON_PATH + "scattershot_icon.png",
-		"displayname": "Scatter Shot",
-		"details": "Fires 5 pellets. Damage increased to 7 and can penetrate 2 enemies",
-		"level": "Level: 2",
-		"prerequisite": ["scattershot1"],
-		"type": "weapon"
-	},
-	"scattershot3": {
-		"icon": WEAPON_PATH + "scattershot_icon.png",
-		"displayname": "Scatter Shot",
-		"details": "Fires 7 pellets. Damage increased to 9 and can penetrate 3 enemies",
-		"level": "Level: 3",
-		"prerequisite": ["scattershot2"],
-		"type": "weapon"
-	},
-	"scattershot4": {
-		"icon": WEAPON_PATH + "scattershot_icon.png",
-		"displayname": "Scatter Shot",
-		"details": "Fires 6 pellets. Damage increased to 8 and can penetrate 2 enemies. Fires 5% faster",
-		"level": "Level: 4",
-		"prerequisite": ["scattershot3"],
-		"type": "weapon"
-	},
-	"scattershot5": {
-		"icon": WEAPON_PATH + "scattershot_icon.png",
-		"displayname": "Scatter Shot",
-		"details": "Fires 7 pellets. Damage increased to 9 and can penetrate 3 enemies. Fires 8% faster",
-		"level": "Level: 5",
-		"prerequisite": ["scattershot4"],
-		"type": "weapon"
-	},
-	"scattershot6": {
-		"icon": WEAPON_PATH + "scattershot_icon.png",
-		"displayname": "Scatter Shot",
-		"details": "Fires 8 pellets. Damage increased to 10 and can penetrate 3 enemies. Fires 10% faster",
-		"level": "Level: 6",
-		"prerequisite": ["scattershot5"],
-		"type": "weapon"
-	},
-	"scattershot7": {
-		"icon": WEAPON_PATH + "scattershot_icon.png",
-		"displayname": "Scatter Shot",
-		"details": "Fires 9 pellets. Damage increased to 11 and can penetrate 4 enemies. Fires 12% faster",
-		"level": "Level: 7",
-		"prerequisite": ["scattershot6"],
-		"type": "weapon"
-	},
-	"scattershot8": {
-		"icon": WEAPON_PATH + "scattershot_icon.png",
-		"displayname": "Scatter Shot",
-		"details": "Fires 10 pellets. Damage increased to 13 and can penetrate 5 enemies. Fires 16% faster",
-		"level": "Level: 8",
-		"prerequisite": ["scattershot7"],
-		"type": "weapon"
-	},
 	"heal": {
 		"icon": ICON_PATH + "chunk.png",
 		"displayname": "Heal",
@@ -596,4 +291,261 @@ const UPGRADES = {
 		"prerequisite": ["pickup4"],
 		"type": "upgrade"
 	},
+	"knockback1": {
+		"icon": ICON_PATH + "knockback.png",
+		"displayname": "Knockback",
+		"details": "Increases weapon knockback by 10%",
+		"level": "Level: 1",
+		"prerequisite": [],
+		"type": "upgrade"
+	},
+	"knockback2": {
+		"icon": ICON_PATH + "knockback.png",
+		"displayname": "Knockback",
+		"details": "Increases weapon knockback by an additional 10%",
+		"level": "Level: 2",
+		"prerequisite": ["knockback1"],
+		"type": "upgrade"
+	},
+	"knockback3": {
+		"icon": ICON_PATH + "knockback.png",
+		"displayname": "Knockback",
+		"details": "Increases weapon knockback by an additional 10%",
+		"level": "Level: 3",
+		"prerequisite": ["knockback2"],
+		"type": "upgrade"
+	},
+	"knockback4": {
+		"icon": ICON_PATH + "knockback.png",
+		"displayname": "Knockback",
+		"details": "Increases weapon knockback by an additional 10%",
+		"level": "Level: 4",
+		"prerequisite": ["knockback3"],
+		"type": "upgrade"
+	},
+	"knockback5": {
+		"icon": ICON_PATH + "knockback.png",
+		"displayname": "Knockback",
+		"details": "Increases weapon knockback by an additional 10%",
+		"level": "Level: 5",
+		"prerequisite": ["knockback4"],
+		"type": "upgrade"
+	},
+	"projectilespeed1": {
+		"icon": ICON_PATH + "projectilespeed.png",
+		"displayname": "Projectile Speed",
+		"details": "Increases projectile speed by 10%",
+		"level": "Level: 1",
+		"prerequisite": [],
+		"type": "upgrade"
+	},
+	"projectilespeed2": {
+		"icon": ICON_PATH + "projectilespeed.png",
+		"displayname": "Projectile Speed",
+		"details": "Increases projectile speed by an additional 10%",
+		"level": "Level: 2",
+		"prerequisite": ["projectilespeed1"],
+		"type": "upgrade"
+	},
+	"projectilespeed3": {
+		"icon": ICON_PATH + "projectilespeed.png",
+		"displayname": "Projectile Speed",
+		"details": "Increases projectile speed by an additional 10%",
+		"level": "Level: 3",
+		"prerequisite": ["projectilespeed2"],
+		"type": "upgrade"
+	},
+	"projectilespeed4": {
+		"icon": ICON_PATH + "projectilespeed.png",
+		"displayname": "Projectile Speed",
+		"details": "Increases projectile speed by an additional 10%",
+		"level": "Level: 4",
+		"prerequisite": ["projectilespeed3"],
+		"type": "upgrade"
+	},
+	"projectilespeed5": {
+		"icon": ICON_PATH + "projectilespeed.png",
+		"displayname": "Projectile Speed",
+		"details": "Increases projectile speed by an additional 10%",
+		"level": "Level: 5",
+		"prerequisite": ["projectilespeed4"],
+		"type": "upgrade"
+	},
+	"critical1": {
+		"icon": ICON_PATH + "critical.png",
+		"displayname": "Critical Strike",
+		"details": "5% chance to deal double damage",
+		"level": "Level: 1",
+		"prerequisite": [],
+		"type": "upgrade"
+	},
+	"critical2": {
+		"icon": ICON_PATH + "critical.png",
+		"displayname": "Critical Strike",
+		"details": "10% chance to deal double damage",
+		"level": "Level: 2",
+		"prerequisite": ["critical1"],
+		"type": "upgrade"
+	},
+	"critical3": {
+		"icon": ICON_PATH + "critical.png",
+		"displayname": "Critical Strike",
+		"details": "15% chance to deal double damage",
+		"level": "Level: 3",
+		"prerequisite": ["critical2"],
+		"type": "upgrade"
+	},
+	"critical4": {
+		"icon": ICON_PATH + "critical.png",
+		"displayname": "Critical Strike",
+		"details": "20% chance to deal double damage",
+		"level": "Level: 4",
+		"prerequisite": ["critical3"],
+		"type": "upgrade"
+	},
+	"critical5": {
+		"icon": ICON_PATH + "critical.png",
+		"displayname": "Critical Strike",
+		"details": "25% chance to deal double damage",
+		"level": "Level: 5",
+		"prerequisite": ["critical4"],
+		"type": "upgrade"
+	},
+	"knowledge1": {
+		"icon": ICON_PATH + "knowledge.png",
+		"displayname": "Knowledge",
+		"details": "Increases experience gain by 10%",
+		"level": "Level: 1",
+		"prerequisite": [],
+		"type": "upgrade"
+	},
+	"knowledge2": {
+		"icon": ICON_PATH + "knowledge.png",
+		"displayname": "Knowledge",
+		"details": "Increases experience gain by an additional 10%",
+		"level": "Level: 2",
+		"prerequisite": ["knowledge1"],
+		"type": "upgrade"
+	},
+	"knowledge3": {
+		"icon": ICON_PATH + "knowledge.png",
+		"displayname": "Knowledge",
+		"details": "Increases experience gain by an additional 10%",
+		"level": "Level: 3",
+		"prerequisite": ["knowledge2"],
+		"type": "upgrade"
+	},
+	"knowledge4": {
+		"icon": ICON_PATH + "knowledge.png",
+		"displayname": "Knowledge",
+		"details": "Increases experience gain by an additional 10%",
+		"level": "Level: 4",
+		"prerequisite": ["knowledge3"],
+		"type": "upgrade"
+	},
+	"knowledge5": {
+		"icon": ICON_PATH + "knowledge.png",
+		"displayname": "Knowledge",
+		"details": "Increases experience gain by an additional 10%",
+		"level": "Level: 5",
+		"prerequisite": ["knowledge4"],
+		"type": "upgrade"
+	},
 }
+
+func get_upgrade_data(upgrade_id: String) -> Dictionary:
+	if WeaponRegistry.is_weapon_upgrade(upgrade_id):
+		return WeaponRegistry.get_weapon_upgrade_data(upgrade_id)
+	
+	if upgrade_id in UPGRADES:
+		return UPGRADES[upgrade_id]
+	
+	return {}
+
+func get_all_upgrade_ids() -> Array:
+	var all_ids: Array = []
+	
+	for weapon_id in WeaponRegistry.WEAPONS.keys():
+		for level in range(1, 9):
+			all_ids.append(weapon_id + str(level))
+	
+	for upgrade_id in UPGRADES.keys():
+		all_ids.append(upgrade_id)
+	
+	return all_ids
+
+func get_upgrade_effect(upgrade_id: String) -> Dictionary:
+	var base_type = ""
+	var level = 0
+	
+	if upgrade_id == "heal":
+		return UPGRADE_EFFECTS["heal"]
+	
+	for upgrade_type in UPGRADE_EFFECTS.keys():
+		if upgrade_id.begins_with(upgrade_type):
+			base_type = upgrade_type
+			var num_str = upgrade_id.substr(upgrade_type.length())
+			if num_str.is_valid_int():
+				level = int(num_str)
+			break
+	
+	if base_type.is_empty():
+		return {}
+	
+	var effect = UPGRADE_EFFECTS[base_type].duplicate()
+	effect["level"] = level
+	effect["base_type"] = base_type
+	
+	if effect.has("values"):
+		if level > 0 and level <= effect.values.size():
+			effect["value"] = effect.values[level - 1]
+	
+	return effect
+
+func apply_upgrade_to_player(player: Node, upgrade_id: String) -> void:
+	var effect = get_upgrade_effect(upgrade_id)
+	if effect.is_empty():
+		return
+	
+	var stat = effect.get("stat", "")
+	var value = effect.get("value", 0)
+	
+	if stat.is_empty():
+		return
+	
+	match stat:
+		"armor":
+			player.armor += value
+		"damage_bonus":
+			player.damage_bonus += value
+		"max_speed":
+			player.max_speed += value
+			if effect.has("extra"):
+				for extra_stat in effect.extra:
+					player.set(extra_stat, player.get(extra_stat) + effect.extra[extra_stat])
+		"spell_size":
+			player.spell_size += value
+		"spell_cooldown":
+			player.spell_cooldown += value
+		"additional_attacks":
+			player.additional_attacks += value
+		"pickup_range_multiplier":
+			player.pickup_range_level = effect.level
+			player.pickup_range_multiplier = value
+			if player.has_method("_update_pickup_radii"):
+				player._update_pickup_radii()
+		"knockback_multiplier":
+			player.knockback_multiplier += value
+		"projectile_speed_multiplier":
+			player.projectile_speed_multiplier += value
+		"critical_chance":
+			player.critical_chance += value
+		"experience_multiplier":
+			player.experience_multiplier += value
+		"hp":
+			player.hp += value
+			player.hp = clamp(player.hp, 0, player.maxhp)
+			if player.has_node("%HealthBar"):
+				var health_bar = player.get_node("%HealthBar")
+				health_bar.max_value = player.maxhp
+				health_bar.value = player.hp

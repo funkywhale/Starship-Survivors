@@ -56,6 +56,10 @@ var weapons_equipped: int = 0
 var max_weapons: int = 2
 var pickup_range_level: int = 0
 var pickup_range_multiplier: float = 1.0
+var knockback_multiplier: float = 0.0
+var projectile_speed_multiplier: float = 0.0
+var critical_chance: float = 0.0
+var experience_multiplier: float = 0.0
 var _base_grab_radius: float = 0.0
 var _base_collect_radius: float = 0.0
 @onready var _grab_shape: CollisionShape2D = $GrabArea/CollisionShape2D
@@ -215,7 +219,7 @@ func _physics_process(_delta: float) -> void:
 		scattershot_timer -= _delta
 		if scattershot_timer <= 0:
 			fire_scatter_shot()
-			scattershot_timer = scattershot_attackspeed * (1 - spell_cooldown)
+			scattershot_timer = WeaponRegistry.get_effective_cooldown("scattershot", scattershot_level, spell_cooldown)
 
 func movement(delta: float) -> void:
 	if intro_playing:
@@ -311,21 +315,21 @@ func movement(delta: float) -> void:
 
 func attack() -> void:
 	if pulselaser_level > 0:
-		pulseLaserTimer.wait_time = pulselaser_attackspeed * (1 - spell_cooldown)
+		pulseLaserTimer.wait_time = WeaponRegistry.get_effective_cooldown("pulselaser", pulselaser_level, spell_cooldown)
 		if pulseLaserTimer.is_stopped():
 			pulseLaserTimer.start()
 	if rocket_level > 0:
-		rocketTimer.wait_time = rocket_attackspeed * (1 - spell_cooldown)
+		rocketTimer.wait_time = WeaponRegistry.get_effective_cooldown("rocket", rocket_level, spell_cooldown)
 		if rocketTimer.is_stopped():
 			rocketTimer.start()
 	if plasma_level > 0:
-		plasmaTimer.wait_time = float(plasma_attackspeed) * (1 - spell_cooldown)
+		plasmaTimer.wait_time = WeaponRegistry.get_effective_cooldown("plasma", plasma_level, spell_cooldown)
 		if plasmaTimer.is_stopped():
 			plasmaTimer.start()
 		if plasma_ammo > 0 and plasmaAttackTimer.is_stopped():
 			plasmaAttackTimer.start()
 	if ionlaser_level > 0:
-		ionLaserTimer.wait_time = ionlaser_attackspeed * (1 - spell_cooldown)
+		ionLaserTimer.wait_time = WeaponRegistry.get_effective_cooldown("ionlaser", ionlaser_level, spell_cooldown)
 		if ionLaserTimer.is_stopped():
 			ionLaserTimer.start()
 		if ionlaser_ammo > 0 and ionLaserAttackTimer.is_stopped():
@@ -340,8 +344,7 @@ func take_enemy_damage(damage: int) -> void:
 	if difficulty_manager:
 		difficulty_manager.record_damage(actual_damage)
 	
-	var health_loss = actual_damage * 2.0
-	hp -= health_loss
+	hp -= actual_damage
 	healthBar.max_value = maxhp
 	healthBar.value = hp
 	
@@ -357,8 +360,7 @@ func _on_hurt_box_hurt(damage: float, _angle: Vector2, _knockback: float) -> voi
 	if difficulty_manager and damage > 0:
 		difficulty_manager.record_damage(actual_damage)
 
-	var health_loss = actual_damage * 2.0
-	hp -= health_loss
+	hp -= actual_damage
 	healthBar.max_value = maxhp
 	healthBar.value = hp
 
@@ -564,14 +566,26 @@ func get_closest_target():
 	return Vector2.UP
 
 func fire_scatter_shot() -> void:
+	var stats = WeaponRegistry.get_weapon_stats("scattershot", scattershot_level)
 	var base_angle = sprite.rotation
 	var cone_angle = deg_to_rad(30.0)
-	var pellet_count = scattershot_pellets + additional_attacks
-	var pellet_damage = scattershot_damage + damage_bonus
-	var pellet_hp = scattershot_penetration
-	var pellet_speed = 200.0
-	var pellet_size = 1.0 * (1 + spell_size)
 	
+	# Check for critical strike once for the entire scatter shot
+	var is_critical = roll_critical()
+	
+	var pellet_count = stats.pellets + additional_attacks
+	var pellet_damage = stats.damage + damage_bonus
+	var pellet_hp = stats.hp
+	var pellet_speed = stats.speed
+	var pellet_size = stats.size * (1 + spell_size)
+	
+	# Apply player multipliers
+	pellet_speed *= (1.0 + projectile_speed_multiplier)
+	
+	# Apply critical strike bonuses
+	if is_critical:
+		pellet_damage *= 2
+		pellet_hp *= 2
 
 	var sound_player = get_node_or_null("ScatterShotAudio")
 	if sound_player == null:
@@ -597,6 +611,12 @@ func fire_scatter_shot() -> void:
 		pellet.position = Vector2.UP.rotated(base_angle) * 8
 		pellet.level = scattershot_level
 		pellet.attack_size = pellet_size
+		
+		# Calculate knockback with multiplier
+		var base_knockback = 50
+		var knockback = int(base_knockback * (1.0 + knockback_multiplier))
+		pellet.knockback_amount = knockback
+		
 		pellet.setup(direction, pellet_speed, pellet_damage, pellet_hp)
 		add_child(pellet)
 		active_projectile_count += 1
@@ -700,7 +720,9 @@ func _on_collect_area_area_entered(area: Area2D) -> void:
 
 func calculate_experience(gem_exp: int) -> void:
 	var exp_required = calculate_experiencecap()
-	collected_experience += gem_exp
+	# Apply experience multiplier
+	var modified_exp = int(gem_exp * (1.0 + experience_multiplier))
+	collected_experience += modified_exp
 	if experience + collected_experience >= exp_required:
 		collected_experience -= exp_required - experience
 		experience_level += 1
@@ -729,7 +751,6 @@ func trigger_grab_magnetize() -> void:
 			continue
 
 		if item.has_method("collect") and "experience" in item and not item.is_in_group("grab_collectible"):
-
 			if not already_magnetized.has(item):
 				magnetized_orbs.append(item)
 
@@ -800,206 +821,53 @@ func levelup() -> void:
 	get_tree().paused = true
 
 func upgrade_character(upgrade: String) -> void:
-	match upgrade:
-		"pulselaser1":
-			pulselaser_level = 1
-			pulselaser_baseammo += 1
+	# Parse weapon upgrades using registry
+	if upgrade.begins_with("pulselaser"):
+		var level = int(upgrade.substr(10)) # Extract number after "pulselaser"
+		pulselaser_level = level
+		var stats = WeaponRegistry.get_weapon_stats("pulselaser", level)
+		pulselaser_baseammo = stats.ammo
+		pulselaser_attackspeed = WeaponRegistry.get_effective_cooldown("pulselaser", level, 0.0)
+		if level == 1:
 			weapons_equipped += 1
-		"pulselaser2":
-			pulselaser_level = 2
-			pulselaser_baseammo += 1
-		"pulselaser3":
-			pulselaser_level = 3
-			pulselaser_baseammo += 1
-		"pulselaser4":
-			pulselaser_level = 4
-			pulselaser_baseammo += 1
-		"pulselaser5":
-			pulselaser_level = 5
-			pulselaser_baseammo += 1
-		"pulselaser6":
-			pulselaser_level = 6
-			pulselaser_baseammo += 1
-		"pulselaser7":
-			pulselaser_level = 7
-			pulselaser_baseammo += 1
-		"pulselaser8":
-			pulselaser_level = 8
-			pulselaser_baseammo += 2
-		"rocket1":
-			rocket_level = 1
-			rocket_baseammo += 1
+	elif upgrade.begins_with("rocket"):
+		var level = int(upgrade.substr(6))
+		rocket_level = level
+		var stats = WeaponRegistry.get_weapon_stats("rocket", level)
+		rocket_baseammo = stats.ammo
+		rocket_attackspeed = WeaponRegistry.get_effective_cooldown("rocket", level, 0.0)
+		if level == 1:
 			weapons_equipped += 1
-		"rocket2":
-			rocket_level = 2
-			rocket_baseammo += 1
-		"rocket3":
-			rocket_level = 3
-			rocket_attackspeed -= 0.25
-		"rocket4":
-			rocket_level = 4
-			rocket_baseammo += 1
-		"rocket5":
-			rocket_level = 5
-			rocket_attackspeed -= 0.25
-		"rocket6":
-			rocket_level = 6
-			rocket_baseammo += 1
-		"rocket7":
-			rocket_level = 7
-			rocket_attackspeed -= 0.25
-		"rocket8":
-			rocket_level = 8
-			rocket_baseammo += 1
-		"plasma1":
-			plasma_level = 1
-			plasma_baseammo += 1
-			plasma_ammo = plasma_baseammo
+	elif upgrade.begins_with("plasma"):
+		var level = int(upgrade.substr(6))
+		plasma_level = level
+		var stats = WeaponRegistry.get_weapon_stats("plasma", level)
+		plasma_baseammo = stats.ammo
+		plasma_ammo = plasma_baseammo
+		plasma_attackspeed = WeaponRegistry.get_effective_cooldown("plasma", level, 0.0)
+		if level == 1:
 			weapons_equipped += 1
-		"plasma2":
-			plasma_level = 2
-			plasma_baseammo += 1
-		"plasma3":
-			plasma_level = 3
-			plasma_baseammo += 1
-		"plasma4":
-			plasma_level = 4
-			plasma_baseammo += 1
-		"plasma5":
-			plasma_level = 5
-			plasma_baseammo += 1
-		"plasma6":
-			plasma_level = 6
-			plasma_baseammo += 1
-		"plasma7":
-			plasma_level = 7
-			plasma_baseammo += 1
-		"plasma8":
-			plasma_level = 8
-			plasma_baseammo += 1
-		"scattershot1":
-			scattershot_level = 1
-			scattershot_pellets = 3
-			scattershot_damage = 5
-			scattershot_penetration = 1
-			scattershot_attackspeed = 2.0
+	elif upgrade.begins_with("scattershot"):
+		var level = int(upgrade.substr(11))
+		scattershot_level = level
+		var stats = WeaponRegistry.get_weapon_stats("scattershot", level)
+		scattershot_pellets = stats.pellets
+		scattershot_damage = stats.damage
+		scattershot_penetration = stats.hp
+		scattershot_attackspeed = WeaponRegistry.get_effective_cooldown("scattershot", level, 0.0)
+		if level == 1:
 			weapons_equipped += 1
-		"scattershot2":
-			scattershot_level = 2
-			scattershot_pellets = 4
-			scattershot_damage = 6
-			scattershot_penetration = 1
-			scattershot_attackspeed = 1.9
-		"scattershot3":
-			scattershot_level = 3
-			scattershot_pellets = 5
-			scattershot_damage = 7
-			scattershot_penetration = 2
-			scattershot_attackspeed = 1.8
-		"scattershot4":
-			scattershot_level = 4
-			scattershot_pellets = 6
-			scattershot_damage = 8
-			scattershot_penetration = 2
-			scattershot_attackspeed = 1.65
-		"scattershot5":
-			scattershot_level = 5
-			scattershot_pellets = 7
-			scattershot_damage = 9
-			scattershot_penetration = 3
-			scattershot_attackspeed = 1.5
-		"scattershot6":
-			scattershot_level = 6
-			scattershot_pellets = 8
-			scattershot_damage = 10
-			scattershot_penetration = 3
-			scattershot_attackspeed = 1.35
-		"scattershot7":
-			scattershot_level = 7
-			scattershot_pellets = 9
-			scattershot_damage = 11
-			scattershot_penetration = 4
-			scattershot_attackspeed = 1.2
-		"scattershot8":
-			scattershot_level = 8
-			scattershot_pellets = 10
-			scattershot_damage = 13
-			scattershot_penetration = 5
-			scattershot_attackspeed = 1.0
-		"ionlaser1":
-			ionlaser_level = 1
-			ionlaser_baseammo = 1
-			ionlaser_attackspeed = 2.5
+	elif upgrade.begins_with("ionlaser"):
+		var level = int(upgrade.substr(8))
+		ionlaser_level = level
+		var stats = WeaponRegistry.get_weapon_stats("ionlaser", level)
+		ionlaser_baseammo = stats.ammo
+		ionlaser_attackspeed = WeaponRegistry.get_effective_cooldown("ionlaser", level, 0.0)
+		if level == 1:
 			weapons_equipped += 1
-		"ionlaser2":
-			ionlaser_level = 2
-			ionlaser_attackspeed = 2.4
-		"ionlaser3":
-			ionlaser_level = 3
-			ionlaser_attackspeed = 2.3
-		"ionlaser4":
-			ionlaser_level = 4
-			ionlaser_attackspeed = 2.2
-		"ionlaser5":
-			ionlaser_level = 5
-			ionlaser_attackspeed = 2.1
-		"ionlaser6":
-			ionlaser_level = 6
-			ionlaser_attackspeed = 2.0
-		"ionlaser7":
-			ionlaser_level = 7
-			ionlaser_attackspeed = 1.8
-		"ionlaser8":
-			ionlaser_level = 8
-			ionlaser_attackspeed = 1.6
-		"damage1":
-			damage_bonus += 2
-		"damage2":
-			damage_bonus += 2
-		"damage3":
-			damage_bonus += 2
-		"damage4":
-			damage_bonus += 3
-		"damage5":
-			damage_bonus += 3
-		"armor1", "armor2", "armor3", "armor4", "armor5":
-			armor += 1
-		"speed1", "speed2", "speed3", "speed4", "speed5":
-			max_speed += 10.0
-			accel += 1.0
-			decel += 10.0
-			damping += 10.0
-		"thick1", "thick2", "thick3", "thick4", "thick5":
-			spell_size += 0.20
-		"firerate1", "firerate2", "firerate3", "firerate4", "firerate5":
-			spell_cooldown += 0.1
-		"weapon1", "weapon2", "weapon3":
-			additional_attacks += 1
-		"pickup1":
-			pickup_range_level = 1
-			pickup_range_multiplier = 1.25
-			_update_pickup_radii()
-		"pickup2":
-			pickup_range_level = 2
-			pickup_range_multiplier = 1.50
-			_update_pickup_radii()
-		"pickup3":
-			pickup_range_level = 3
-			pickup_range_multiplier = 1.75
-			_update_pickup_radii()
-		"pickup4":
-			pickup_range_level = 4
-			pickup_range_multiplier = 2.00
-			_update_pickup_radii()
-		"pickup5":
-			pickup_range_level = 5
-			pickup_range_multiplier = 2.50
-			_update_pickup_radii()
-		"heal":
-			hp += 20
-			hp = clamp(hp, 0, maxhp)
-			healthBar.max_value = maxhp
-			healthBar.value = hp
+	# Non-weapon upgrades
+	else:
+		UpgradeDb.apply_upgrade_to_player(self, upgrade)
 	adjust_gui_collection(upgrade)
 	attack()
 	var option_children = upgradeOptions.get_children()
@@ -1017,40 +885,50 @@ func _update_pickup_radii() -> void:
 		var s: CircleShape2D = _grab_shape.shape
 		s.radius = _base_grab_radius * pickup_range_multiplier
 	# Keep collect area at base size - only grab area increases
+
+func roll_critical() -> bool:
+	if critical_chance <= 0.0:
+		return false
+	return randf() < critical_chance
 	
 func get_random_item() -> String:
 	var dblist: Array = []
-	for i in UpgradeDb.UPGRADES:
+	for i in UpgradeDb.get_all_upgrade_ids():
 		if i in collected_upgrades:
 			pass
 		elif i in upgrade_options:
 			pass
-		elif UpgradeDb.UPGRADES[i]["type"] == "item":
-			pass
-		elif UpgradeDb.UPGRADES[i]["type"] == "weapon":
-			# Check if this is a level 1 weapon (new weapon acquisition)
-			var is_level_1_weapon = UpgradeDb.UPGRADES[i]["prerequisite"].size() == 0
-			if is_level_1_weapon and weapons_equipped >= max_weapons:
-				# Skip level 1 weapons if at weapon limit
+		else:
+			var upgrade_data = UpgradeDb.get_upgrade_data(i)
+			if upgrade_data.is_empty():
+				continue
+			
+			if upgrade_data["type"] == "item":
 				pass
-			elif UpgradeDb.UPGRADES[i]["prerequisite"].size() > 0:
+			elif upgrade_data["type"] == "weapon":
+				# Check if this is a level 1 weapon (new weapon acquisition)
+				var is_level_1_weapon = upgrade_data["prerequisite"].size() == 0
+				if is_level_1_weapon and weapons_equipped >= max_weapons:
+					# Skip level 1 weapons if at weapon limit
+					pass
+				elif upgrade_data["prerequisite"].size() > 0:
+					var to_add = true
+					for n in upgrade_data["prerequisite"]:
+						if not n in collected_upgrades:
+							to_add = false
+					if to_add:
+						dblist.append(i)
+				else:
+					dblist.append(i)
+			elif upgrade_data["prerequisite"].size() > 0:
 				var to_add = true
-				for n in UpgradeDb.UPGRADES[i]["prerequisite"]:
+				for n in upgrade_data["prerequisite"]:
 					if not n in collected_upgrades:
 						to_add = false
 				if to_add:
 					dblist.append(i)
 			else:
 				dblist.append(i)
-		elif UpgradeDb.UPGRADES[i]["prerequisite"].size() > 0:
-			var to_add = true
-			for n in UpgradeDb.UPGRADES[i]["prerequisite"]:
-				if not n in collected_upgrades:
-					to_add = false
-			if to_add:
-				dblist.append(i)
-		else:
-			dblist.append(i)
 	if dblist.size() > 0:
 		var randomitem = dblist.pick_random()
 		upgrade_options.append(randomitem)
@@ -1084,12 +962,18 @@ func _on_difficulty_kill_recorded(new_total: int) -> void:
 	update_kill_count()
 
 func adjust_gui_collection(upgrade: String) -> void:
-	var get_upgraded_displayname = UpgradeDb.UPGRADES[upgrade]["displayname"]
-	var get_type = UpgradeDb.UPGRADES[upgrade]["type"]
+	var upgrade_data = UpgradeDb.get_upgrade_data(upgrade)
+	if upgrade_data.is_empty():
+		return
+	
+	var get_upgraded_displayname = upgrade_data["displayname"]
+	var get_type = upgrade_data["type"]
 	if get_type != "item":
 		var get_collected_displaynames = []
 		for i in collected_upgrades:
-			get_collected_displaynames.append(UpgradeDb.UPGRADES[i]["displayname"])
+			var collected_data = UpgradeDb.get_upgrade_data(i)
+			if not collected_data.is_empty():
+				get_collected_displaynames.append(collected_data["displayname"])
 		if not get_upgraded_displayname in get_collected_displaynames:
 			var new_item = itemContainer.instantiate()
 			new_item.upgrade = upgrade

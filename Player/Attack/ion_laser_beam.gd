@@ -1,6 +1,4 @@
 extends RayCast2D
-
-# Upgrade-scaled properties
 var level: int = 1
 var damage: int = 15
 var knockback_amount: int = 50
@@ -9,13 +7,13 @@ var max_length: float = 300.0
 var grow_speed: float = 700.0
 var sustain_time: float = 0.25
 var fade_time: float = 0.15
-
-# State
+var weapon_id: String = "ionlaser"
 var lifetime: float = 0.0
 var appearing: bool = true
 var disappearing: bool = false
 var beam_tween: Tween
 var hit_enemies: Array = []
+var is_critical: bool = false
 
 @onready var player: CharacterBody2D = get_tree().get_first_node_in_group("player")
 @onready var beam_line: Line2D = $BeamLine
@@ -28,6 +26,11 @@ signal remove_from_array(object)
 
 func _ready() -> void:
 	add_to_group("attack")
+	
+	# Check for critical strike
+	if player and player.has_method("roll_critical"):
+		is_critical = player.roll_critical()
+	
 	if player:
 		_update_from_level()
 
@@ -56,50 +59,21 @@ func _ready() -> void:
 
 func _update_from_level() -> void:
 	level = player.ionlaser_level
-	var base_damage = 10
-	var base_length = 100.0
-	var base_speed = 100.0
-	match level:
-		1:
-			damage = base_damage + player.damage_bonus
-			max_length = base_length * (1 + player.spell_size)
-			attack_size = 1.0 * (1 + player.spell_size)
-			grow_speed = base_speed
-		2:
-			damage = base_damage + 3 + player.damage_bonus
-			max_length = (base_length + 25) * (1 + player.spell_size)
-			attack_size = 1.05 * (1 + player.spell_size)
-			grow_speed = base_speed + 100
-		3:
-			damage = base_damage + 5 + player.damage_bonus
-			max_length = (base_length + 50) * (1 + player.spell_size)
-			attack_size = 1.1 * (1 + player.spell_size)
-			grow_speed = base_speed + 150
-		4:
-			damage = base_damage + 7 + player.damage_bonus
-			max_length = (base_length + 100) * (1 + player.spell_size)
-			attack_size = 1.15 * (1 + player.spell_size)
-			grow_speed = base_speed + 200
-		5:
-			damage = base_damage + 9 + player.damage_bonus
-			max_length = (base_length + 125) * (1 + player.spell_size)
-			attack_size = 1.2 * (1 + player.spell_size)
-			grow_speed = base_speed + 225
-		6:
-			damage = base_damage + 11 + player.damage_bonus
-			max_length = (base_length + 150) * (1 + player.spell_size)
-			attack_size = 1.25 * (1 + player.spell_size)
-			grow_speed = base_speed + 250
-		7:
-			damage = base_damage + 13 + player.damage_bonus
-			max_length = (base_length + 175) * (1 + player.spell_size)
-			attack_size = 1.3 * (1 + player.spell_size)
-			grow_speed = base_speed + 275
-		8:
-			damage = base_damage + 16 + player.damage_bonus
-			max_length = (base_length + 200) * (1 + player.spell_size)
-			attack_size = 1.35 * (1 + player.spell_size)
-			grow_speed = base_speed + 300
+	var stats = WeaponRegistry.get_weapon_stats(weapon_id, level)
+	
+	if stats.is_empty():
+		push_error("IonLaser: Failed to get stats for level %d" % level)
+		return
+	
+	damage = stats.get("damage", 10) + player.damage_bonus
+	max_length = stats.get("max_length", 100.0) * (1 + player.spell_size)
+	attack_size = stats.get("attack_size", 1.0) * (1 + player.spell_size)
+	grow_speed = stats.get("grow_speed", 100.0)
+	knockback_amount = int(50 * (1.0 + player.knockback_multiplier))
+	
+	if is_critical:
+		damage *= 2
+	
 	# Adjust widths if already initialized
 	if beam_line:
 		beam_line.width = 3.0 * attack_size

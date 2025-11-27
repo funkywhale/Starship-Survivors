@@ -1,11 +1,5 @@
-extends Area2D
+extends BaseWeaponProjectile
 
-var level: int = 1
-var hp: int = 3
-var speed: float = 140.0
-var damage: int = 10
-var knockback_amount: int = 100
-var attack_size: float = 1.0
 var attack_speed: float = 3.0
 var trail_damage: int = 3
 var trail_size: float = 1.0
@@ -14,22 +8,34 @@ var play_sound: bool = true
 var target: Vector2 = Vector2.ZERO
 var angle: Vector2 = Vector2.ZERO
 
-@onready var player: CharacterBody2D = get_tree().get_first_node_in_group("player")
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var particles: GPUParticles2D = $GPUParticles2D
 
 var plasma_trail_scene: PackedScene = preload("res://Player/Attack/plasma_trail.tscn")
 
-signal remove_from_array(object)
+func _init():
+	weapon_id = "plasma"
 
-func _ready() -> void:
+func _apply_critical_strike() -> void:
+	damage *= 2
+	trail_damage *= 2
+	hp *= 2
+
+func _load_additional_stats(stats: Dictionary) -> void:
+	trail_damage = stats.get("trail_damage", 5)
 	if player:
-		update_plasma()
+		trail_damage += player.damage_bonus
+
+func _apply_weapon_specific_setup() -> void:
+	if player:
+		level = int(player.plasma_level)
+		attack_speed = float(player.pulselaser_attackspeed) * 2.0
+		trail_size = 1.0 * (1 + player.spell_size)
+	
 	if target == Vector2.ZERO and player:
 		target = player.get_closest_target()
 	angle = global_position.direction_to(target)
 	rotation = angle.angle()
-
 
 	if not body_entered.is_connected(_on_body_entered):
 		body_entered.connect(_on_body_entered)
@@ -37,72 +43,10 @@ func _ready() -> void:
 	if play_sound:
 		$snd_play.play()
 
-	scale = Vector2(1, 1) * attack_size
-
-func update_plasma() -> void:
-	if player:
-		level = int(player.plasma_level)
-	else:
-		level = int(level)
-
-	var base_hp = 3
-	var base_damage = 15
-	var base_speed = 140.0
-	var base_trail_damage = 5
-
-	match level:
-		1:
-			hp = base_hp
-			damage = base_damage + (player.damage_bonus if player else 0)
-			speed = base_speed
-			attack_size = 1.0 * (1 + player.spell_size)
-			trail_damage = base_trail_damage + (player.damage_bonus if player else 0)
-		2:
-			hp = base_hp + 1
-			damage = base_damage + 10 + (player.damage_bonus if player else 0)
-			speed = base_speed + 10.0
-			attack_size = 1.0 * (1 + player.spell_size)
-			trail_damage = base_trail_damage + 5 + (player.damage_bonus if player else 0)
-		3:
-			hp = base_hp + 2
-			damage = base_damage + 20 + (player.damage_bonus if player else 0)
-			speed = base_speed + 20.0
-			attack_size = 1.0 * (1 + player.spell_size)
-			trail_damage = base_trail_damage + 10 + (player.damage_bonus if player else 0)
-		4:
-			hp = base_hp + 3
-			damage = base_damage + 30 + (player.damage_bonus if player else 0)
-			speed = base_speed + 30.0
-			attack_size = 1.0 * (1 + player.spell_size)
-			trail_damage = base_trail_damage + 15 + (player.damage_bonus if player else 0)
-		5:
-			hp = base_hp + 4
-			damage = base_damage + 35 + (player.damage_bonus if player else 0)
-			speed = base_speed + 35.0
-			attack_size = 1.05 * (1 + player.spell_size)
-			trail_damage = base_trail_damage + 17 + (player.damage_bonus if player else 0)
-		6:
-			hp = base_hp + 5
-			damage = base_damage + 40 + (player.damage_bonus if player else 0)
-			speed = base_speed + 40.0
-			attack_size = 1.1 * (1 + player.spell_size)
-			trail_damage = base_trail_damage + 19 + (player.damage_bonus if player else 0)
-		7:
-			hp = base_hp + 6
-			damage = base_damage + 45 + (player.damage_bonus if player else 0)
-			speed = base_speed + 45.0
-			attack_size = 1.15 * (1 + player.spell_size)
-			trail_damage = base_trail_damage + 21 + (player.damage_bonus if player else 0)
-		8:
-			hp = base_hp + 8
-			damage = base_damage + 52 + (player.damage_bonus if player else 0)
-			speed = base_speed + 50.0
-			attack_size = 1.2 * (1 + player.spell_size)
-			trail_damage = base_trail_damage + 24 + (player.damage_bonus if player else 0)
-
-	if player:
-		attack_speed = float(player.pulselaser_attackspeed) * 2.0
-		trail_size = 1.0 * (1 + player.spell_size)
+func _ready() -> void:
+	if not _initialize_weapon():
+		return
+	_apply_weapon_specific_setup()
 
 
 func _physics_process(delta: float) -> void:
@@ -111,11 +55,9 @@ func _physics_process(delta: float) -> void:
 func enemy_hit(charge: int = 1) -> void:
 	hp -= charge
 	if hp <= 0:
-		emit_signal("remove_from_array", self)
 		cleanup_and_remove()
 
 func _on_timer_timeout() -> void:
-	emit_signal("remove_from_array", self)
 	cleanup_and_remove()
 
 func cleanup_and_remove() -> void:
@@ -148,7 +90,6 @@ func _on_body_entered(body: Node2D) -> void:
 	if not is_rock and body.is_in_group("rock"):
 		is_rock = true
 	if is_rock:
-		emit_signal("remove_from_array", self)
 		cleanup_and_remove()
 
 func _on_trail_spawn_timer_timeout() -> void:
@@ -158,13 +99,13 @@ func _on_trail_spawn_timer_timeout() -> void:
 		trail.knockback_amount = int(knockback_amount / 5.0)
 		trail.scale = Vector2(trail_size, trail_size)
 		
-		# Set position BEFORE adding to tree to avoid position glitches
+
 		trail.global_position = global_position
 		
-		# Add to proper parent (world scene) instead of root
+
 		var world = get_tree().current_scene
 		if world:
 			world.call_deferred("add_child", trail)
 		else:
-			# Fallback: add to root
+
 			get_tree().root.call_deferred("add_child", trail)

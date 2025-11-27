@@ -122,7 +122,7 @@ autostart = true
 
 [node name="snd_play" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("3_4u3ks")
-volume_db = -20.221
+volume_db = -25.032
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
 [connection signal="timeout" from="TrailSpawnTimer" to="." method="_on_trail_spawn_timer_timeout"]

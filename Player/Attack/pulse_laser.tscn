@@ -33,7 +33,7 @@ autostart = true
 
 [node name="snd_play" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("3_tsewf")
-volume_db = -20.733
+volume_db = -25.174
 pitch_scale = 3.05
 autoplay = true
 
