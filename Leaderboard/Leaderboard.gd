@@ -102,7 +102,7 @@ func _create_entry_row(rank: int, entry):
 
 	# Enemies killed
 	var kills_label = Label.new()
-	kills_label.text = str(entry.get("kills", 0))
+	kills_label.text = str(int(entry.get("kills", 0)))
 	kills_label.custom_minimum_size = Vector2(60, 0)
 	kills_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	kills_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT

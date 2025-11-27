@@ -1,2 +1,10 @@
 res://World/world.tscn
+res://Leaderboard/Leaderboard.gd
 res://addons/talo/samples/authentication/assets/theme.tres
+res://Enemy/enemy_battleship.tscn
+res://Player/Attack/plasma_trail.tscn
+res://Player/Attack/plasma.gd
+res://Enemy/enemy_drone_strong.tscn
+res://Enemy/enemy_drone_stronger.tscn
+res://Player/player.gd
+res://LoginScreen.tscn

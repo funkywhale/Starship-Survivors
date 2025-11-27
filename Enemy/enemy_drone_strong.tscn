@@ -59,7 +59,7 @@ collision_mask = 5
 motion_mode = 1
 script = ExtResource("1_ww036")
 movement_speed = 22.0
-hp = 20
+hp = 25
 experience = 3
 enemy_damage = 3
 

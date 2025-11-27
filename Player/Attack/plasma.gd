@@ -158,15 +158,13 @@ func _on_trail_spawn_timer_timeout() -> void:
 		trail.knockback_amount = int(knockback_amount / 5.0)
 		trail.scale = Vector2(trail_size, trail_size)
 		
-		# Store position to set after adding to tree
-		var spawn_position = global_position
+		# Set position BEFORE adding to tree to avoid position glitches
+		trail.global_position = global_position
 		
 		# Add to proper parent (world scene) instead of root
 		var world = get_tree().current_scene
 		if world:
 			world.call_deferred("add_child", trail)
-			trail.call_deferred("set_global_position", spawn_position)
 		else:
-			# Fallback: add to root but defer position setting too
+			# Fallback: add to root
 			get_tree().root.call_deferred("add_child", trail)
-			trail.call_deferred("set_global_position", spawn_position)

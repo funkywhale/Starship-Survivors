@@ -147,7 +147,6 @@ func update_kill_count() -> void:
 func _ready() -> void:
 	_apply_skin()
 	_prewarm_weapon_resources()
-	# Cache base pickup radii
 	if _grab_shape and _grab_shape.shape is CircleShape2D:
 		_base_grab_radius = (_grab_shape.shape as CircleShape2D).radius
 	if _collect_shape and _collect_shape.shape is CircleShape2D:
@@ -202,7 +201,6 @@ func _physics_process(_delta: float) -> void:
 		else:
 			dashCooldownBar.visible = false
 
-	# Process magnetize effect from grab collectible
 	_process_magnetize_effect(_delta)
 
 	var cleanup_frequency = 60
@@ -369,7 +367,6 @@ func _on_hurt_box_hurt(damage: float, _angle: Vector2, _knockback: float) -> voi
 
 func _on_pulse_laser_timer_timeout():
 	pulselaser_ammo += pulselaser_baseammo + additional_attacks
-	# Clear targeted enemies if firing multiple shots
 	var use_different_targets = (pulselaser_baseammo + additional_attacks) > 1
 	if use_different_targets:
 		targeted_enemies.clear()
@@ -404,7 +401,6 @@ func _on_pulse_laser_attack_timer_timeout():
 			pulseLaserAttackTimer.start()
 		else:
 			pulseLaserAttackTimer.stop()
-			# Clear targeted enemies after firing all shots
 			if use_different_targets:
 				targeted_enemies.clear()
 
@@ -523,8 +519,6 @@ func _on_ion_laser_attack_timer_timeout():
 				targeted_enemies.clear()
 
 func get_different_target():
-	# Build a fresh list of valid enemies from group to avoid
-	# missing high-tier enemies due to collision masks on detection areas.
 	var all_enemies = get_tree().get_nodes_in_group("enemy")
 	var candidates = []
 	for e in all_enemies:
@@ -535,7 +529,6 @@ func get_different_target():
 			candidates.append({"enemy": e, "distance": d})
 
 	if candidates.size() == 0:
-		# If all have been targeted, reset and consider all again
 		targeted_enemies.clear()
 		for e in all_enemies:
 			if not is_instance_valid(e):
@@ -552,8 +545,6 @@ func get_different_target():
 	return target.global_position
 
 func get_closest_target():
-	# Use group lookup to ensure we consider all enemies,
-	# including bosses or high-tier units possibly excluded from detection areas.
 	var all_enemies = get_tree().get_nodes_in_group("enemy")
 	if all_enemies.size() == 0:
 		return Vector2.UP
@@ -700,7 +691,6 @@ func _on_grab_area_area_entered(area):
 
 func _on_collect_area_area_entered(area: Area2D) -> void:
 	if area.is_in_group("grab_collectible"):
-		# Ensure target is set even if it enters collect area before grab area
 		if area.target == null:
 			area.target = self
 		area.collect()
@@ -726,7 +716,6 @@ func calculate_experience(gem_exp: int) -> void:
 func trigger_grab_magnetize() -> void:
 	magnetize_active = true
 	
-	# Don't clear existing magnetized orbs, just add new ones
 	var already_magnetized = {}
 	for orb in magnetized_orbs:
 		if is_instance_valid(orb):
@@ -740,7 +729,7 @@ func trigger_grab_magnetize() -> void:
 			continue
 
 		if item.has_method("collect") and "experience" in item and not item.is_in_group("grab_collectible"):
-			# Only add if not already in the list
+
 			if not already_magnetized.has(item):
 				magnetized_orbs.append(item)
 
@@ -771,11 +760,13 @@ func _process_magnetize_effect(_delta: float) -> void:
 func calculate_experiencecap() -> int:
 	var exp_cap = experience_level
 	if experience_level < 20:
-		exp_cap = experience_level * 5
+		exp_cap = int(5 * experience_level * pow(1.04, experience_level - 1))
 	elif experience_level < 40:
-		exp_cap = 95 + (experience_level - 19) * 8
+		var base_exp = int(5 * 20 * pow(1.04, 19))
+		exp_cap = int(base_exp * pow(1.06, experience_level - 20))
 	else:
-		exp_cap = 255 + (experience_level - 39) * 12
+		var base_exp = int(5 * 20 * pow(1.04, 19) * pow(1.06, 20))
+		exp_cap = int(base_exp * pow(1.08, experience_level - 40))
 		
 	return exp_cap
 		
@@ -1007,6 +998,8 @@ func upgrade_character(upgrade: String) -> void:
 		"heal":
 			hp += 20
 			hp = clamp(hp, 0, maxhp)
+			healthBar.max_value = maxhp
+			healthBar.value = hp
 	adjust_gui_collection(upgrade)
 	attack()
 	var option_children = upgradeOptions.get_children()
