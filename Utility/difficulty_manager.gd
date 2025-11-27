@@ -38,7 +38,12 @@ var last_check_time: float = 0.0
 var damage_this_interval: float = 0.0
 var kills_this_interval: int = 0
 
+signal kill_recorded(new_total: int)
+
 func _ready() -> void:
+	# Register in group so player/enemies can find us
+	if not is_in_group("difficulty_manager"):
+		add_to_group("difficulty_manager")
 	reset_stats()
 
 func _process(delta: float) -> void:
@@ -81,6 +86,10 @@ func record_damage(amount: float) -> void:
 func record_kill():
 	enemies_killed += 1
 	kills_this_interval += 1
+	emit_signal("kill_recorded", enemies_killed)
+
+func get_kill_count() -> int:
+	return enemies_killed
 
 func _evaluate_performance():
 	# Calculate performance score based on multiple factors

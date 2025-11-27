@@ -24,6 +24,7 @@ var post_dash_duration: float = 0.5
 var experience: int = 0
 var experience_level: int = 1
 var collected_experience: int = 0
+var kill_count: int = 0
 
 var pulseLaser: PackedScene = preload("res://Player/Attack/pulse_laser.tscn")
 var rocket: PackedScene = preload("res://Player/Attack/rocket.tscn")
@@ -51,8 +52,8 @@ var spell_cooldown: float = 0.0
 var spell_size: float = 0.0
 var additional_attacks: int = 0
 var damage_bonus: int = 0
-
-# Pickup Range
+var weapons_equipped: int = 0
+var max_weapons: int = 2
 var pickup_range_level: int = 0
 var pickup_range_multiplier: float = 1.0
 var _base_grab_radius: float = 0.0
@@ -114,6 +115,7 @@ const MAX_PROJECTILES: int = 200
 @onready var sndLevelUp = get_node("%snd_levelup")
 @onready var healthBar = get_node("%HealthBar")
 @onready var lblTimer = get_node("%lblTimer")
+@onready var lblKills = get_node("%lblKills")
 @onready var lblDifficulty = get_node_or_null("%lblDifficulty")
 @onready var collectedWeapons = get_node("%CollectedWeapons")
 @onready var collectedUpgrades = get_node("%CollectedUpgrades")
@@ -138,6 +140,10 @@ var magnetized_orbs: Array = []
 
 signal playerdeath
 
+func update_kill_count() -> void:
+	if lblKills:
+		lblKills.text = "Kills: " + str(kill_count)
+
 func _ready() -> void:
 	_apply_skin()
 	_prewarm_weapon_resources()
@@ -151,7 +157,10 @@ func _ready() -> void:
 	set_expbar(experience, calculate_experiencecap())
 	_on_hurt_box_hurt(0.0, Vector2.ZERO, 0.0)
 	difficulty_manager = get_tree().get_first_node_in_group("difficulty_manager")
+	if difficulty_manager and difficulty_manager.has_signal("kill_recorded"):
+		difficulty_manager.connect("kill_recorded", Callable(self, "_on_difficulty_kill_recorded"))
 	dashCooldownBar.visible = false
+	update_kill_count()
 	start_camera_intro()
 
 func _prewarm_weapon_resources() -> void:
@@ -691,6 +700,9 @@ func _on_grab_area_area_entered(area):
 
 func _on_collect_area_area_entered(area: Area2D) -> void:
 	if area.is_in_group("grab_collectible"):
+		# Ensure target is set even if it enters collect area before grab area
+		if area.target == null:
+			area.target = self
 		area.collect()
 	elif area.is_in_group("loot"):
 		var gem_exp = area.collect()
@@ -712,11 +724,13 @@ func calculate_experience(gem_exp: int) -> void:
 	set_expbar(experience, exp_required)
 
 func trigger_grab_magnetize() -> void:
-	if magnetize_active:
-		return
-
 	magnetize_active = true
-	magnetized_orbs.clear()
+	
+	# Don't clear existing magnetized orbs, just add new ones
+	var already_magnetized = {}
+	for orb in magnetized_orbs:
+		if is_instance_valid(orb):
+			already_magnetized[orb] = true
 	
 
 	var all_loot = get_tree().get_nodes_in_group("loot")
@@ -726,15 +740,17 @@ func trigger_grab_magnetize() -> void:
 			continue
 
 		if item.has_method("collect") and "experience" in item and not item.is_in_group("grab_collectible"):
-			magnetized_orbs.append(item)
+			# Only add if not already in the list
+			if not already_magnetized.has(item):
+				magnetized_orbs.append(item)
 
 			item.target = self
 
 			if "speed" in item:
-				item.speed = 0.0
+				item.speed = 20.0
 
 			if "ACCELERATION" in item:
-				item.set("ACCELERATION", 10.0)
+				item.set("ACCELERATION", 200.0)
 
 
 func _process_magnetize_effect(_delta: float) -> void:
@@ -797,6 +813,7 @@ func upgrade_character(upgrade: String) -> void:
 		"pulselaser1":
 			pulselaser_level = 1
 			pulselaser_baseammo += 1
+			weapons_equipped += 1
 		"pulselaser2":
 			pulselaser_level = 2
 			pulselaser_baseammo += 1
@@ -805,23 +822,49 @@ func upgrade_character(upgrade: String) -> void:
 			pulselaser_baseammo += 1
 		"pulselaser4":
 			pulselaser_level = 4
-			pulselaser_baseammo += 3
+			pulselaser_baseammo += 1
+		"pulselaser5":
+			pulselaser_level = 5
+			pulselaser_baseammo += 1
+		"pulselaser6":
+			pulselaser_level = 6
+			pulselaser_baseammo += 1
+		"pulselaser7":
+			pulselaser_level = 7
+			pulselaser_baseammo += 1
+		"pulselaser8":
+			pulselaser_level = 8
+			pulselaser_baseammo += 2
 		"rocket1":
 			rocket_level = 1
 			rocket_baseammo += 1
+			weapons_equipped += 1
 		"rocket2":
 			rocket_level = 2
 			rocket_baseammo += 1
 		"rocket3":
 			rocket_level = 3
-			rocket_attackspeed -= 0.5
+			rocket_attackspeed -= 0.25
 		"rocket4":
 			rocket_level = 4
+			rocket_baseammo += 1
+		"rocket5":
+			rocket_level = 5
+			rocket_attackspeed -= 0.25
+		"rocket6":
+			rocket_level = 6
+			rocket_baseammo += 1
+		"rocket7":
+			rocket_level = 7
+			rocket_attackspeed -= 0.25
+		"rocket8":
+			rocket_level = 8
 			rocket_baseammo += 1
 		"plasma1":
 			plasma_level = 1
 			plasma_baseammo += 1
 			plasma_ammo = plasma_baseammo
+			weapons_equipped += 1
 		"plasma2":
 			plasma_level = 2
 			plasma_baseammo += 1
@@ -831,63 +874,115 @@ func upgrade_character(upgrade: String) -> void:
 		"plasma4":
 			plasma_level = 4
 			plasma_baseammo += 1
+		"plasma5":
+			plasma_level = 5
+			plasma_baseammo += 1
+		"plasma6":
+			plasma_level = 6
+			plasma_baseammo += 1
+		"plasma7":
+			plasma_level = 7
+			plasma_baseammo += 1
+		"plasma8":
+			plasma_level = 8
+			plasma_baseammo += 1
 		"scattershot1":
 			scattershot_level = 1
 			scattershot_pellets = 3
 			scattershot_damage = 5
 			scattershot_penetration = 1
 			scattershot_attackspeed = 2.0
+			weapons_equipped += 1
 		"scattershot2":
 			scattershot_level = 2
+			scattershot_pellets = 4
+			scattershot_damage = 6
+			scattershot_penetration = 1
+			scattershot_attackspeed = 1.9
+		"scattershot3":
+			scattershot_level = 3
 			scattershot_pellets = 5
 			scattershot_damage = 7
 			scattershot_penetration = 2
 			scattershot_attackspeed = 1.8
-		"scattershot3":
-			scattershot_level = 3
+		"scattershot4":
+			scattershot_level = 4
+			scattershot_pellets = 6
+			scattershot_damage = 8
+			scattershot_penetration = 2
+			scattershot_attackspeed = 1.65
+		"scattershot5":
+			scattershot_level = 5
 			scattershot_pellets = 7
 			scattershot_damage = 9
 			scattershot_penetration = 3
 			scattershot_attackspeed = 1.5
-		"scattershot4":
-			scattershot_level = 4
+		"scattershot6":
+			scattershot_level = 6
+			scattershot_pellets = 8
+			scattershot_damage = 10
+			scattershot_penetration = 3
+			scattershot_attackspeed = 1.35
+		"scattershot7":
+			scattershot_level = 7
 			scattershot_pellets = 9
-			scattershot_damage = 12
+			scattershot_damage = 11
 			scattershot_penetration = 4
 			scattershot_attackspeed = 1.2
+		"scattershot8":
+			scattershot_level = 8
+			scattershot_pellets = 10
+			scattershot_damage = 13
+			scattershot_penetration = 5
+			scattershot_attackspeed = 1.0
 		"ionlaser1":
 			ionlaser_level = 1
 			ionlaser_baseammo = 1
 			ionlaser_attackspeed = 2.5
+			weapons_equipped += 1
 		"ionlaser2":
 			ionlaser_level = 2
-			ionlaser_attackspeed = 2.2
+			ionlaser_attackspeed = 2.4
 		"ionlaser3":
 			ionlaser_level = 3
-			ionlaser_attackspeed = 1.9
+			ionlaser_attackspeed = 2.3
 		"ionlaser4":
 			ionlaser_level = 4
+			ionlaser_attackspeed = 2.2
+		"ionlaser5":
+			ionlaser_level = 5
+			ionlaser_attackspeed = 2.1
+		"ionlaser6":
+			ionlaser_level = 6
+			ionlaser_attackspeed = 2.0
+		"ionlaser7":
+			ionlaser_level = 7
+			ionlaser_attackspeed = 1.8
+		"ionlaser8":
+			ionlaser_level = 8
 			ionlaser_attackspeed = 1.6
 		"damage1":
-			damage_bonus += 3
+			damage_bonus += 2
 		"damage2":
-			damage_bonus += 3
+			damage_bonus += 2
 		"damage3":
-			damage_bonus += 3
+			damage_bonus += 2
 		"damage4":
 			damage_bonus += 3
-		"armor1", "armor2", "armor3", "armor4":
+		"damage5":
+			damage_bonus += 3
+		"armor1", "armor2", "armor3", "armor4", "armor5":
 			armor += 1
-		"speed1", "speed2", "speed3", "speed4":
+		"speed1", "speed2", "speed3", "speed4", "speed5":
 			max_speed += 10.0
 			accel += 1.0
 			decel += 10.0
 			damping += 10.0
-		"thick1", "thick2", "thick3", "thick4":
+		"thick1", "thick2", "thick3", "thick4", "thick5":
 			spell_size += 0.20
-		"firerate1", "firerate2", "firerate3", "firerate4":
+		"firerate1", "firerate2", "firerate3", "firerate4", "firerate5":
 			spell_cooldown += 0.1
-		"weapon1", "weapon2":
+		"weapon1", "weapon2", "weapon3":
 			additional_attacks += 1
 		"pickup1":
 			pickup_range_level = 1
@@ -925,13 +1020,10 @@ func upgrade_character(upgrade: String) -> void:
 	calculate_experience(0)
 
 func _update_pickup_radii() -> void:
-
 	if _grab_shape and _grab_shape.shape is CircleShape2D and _base_grab_radius > 0.0:
 		var s: CircleShape2D = _grab_shape.shape
 		s.radius = _base_grab_radius * pickup_range_multiplier
-	if _collect_shape and _collect_shape.shape is CircleShape2D and _base_collect_radius > 0.0:
-		var c: CircleShape2D = _collect_shape.shape
-		c.radius = _base_collect_radius * pickup_range_multiplier
+	# Keep collect area at base size - only grab area increases
 	
 func get_random_item() -> String:
 	var dblist: Array = []
@@ -942,6 +1034,21 @@ func get_random_item() -> String:
 			pass
 		elif UpgradeDb.UPGRADES[i]["type"] == "item":
 			pass
+		elif UpgradeDb.UPGRADES[i]["type"] == "weapon":
+			# Check if this is a level 1 weapon (new weapon acquisition)
+			var is_level_1_weapon = UpgradeDb.UPGRADES[i]["prerequisite"].size() == 0
+			if is_level_1_weapon and weapons_equipped >= max_weapons:
+				# Skip level 1 weapons if at weapon limit
+				pass
+			elif UpgradeDb.UPGRADES[i]["prerequisite"].size() > 0:
+				var to_add = true
+				for n in UpgradeDb.UPGRADES[i]["prerequisite"]:
+					if not n in collected_upgrades:
+						to_add = false
+				if to_add:
+					dblist.append(i)
+			else:
+				dblist.append(i)
 		elif UpgradeDb.UPGRADES[i]["prerequisite"].size() > 0:
 			var to_add = true
 			for n in UpgradeDb.UPGRADES[i]["prerequisite"]:
@@ -971,6 +1078,17 @@ func change_time(argtime: int = 0) -> void:
 	if lblDifficulty and difficulty_manager:
 		var diff_text = difficulty_manager.get_difficulty_description()
 		lblDifficulty.text = "Difficulty: " + diff_text
+	
+	# Update kill count from difficulty manager
+	if difficulty_manager and difficulty_manager.has_method("get_kill_count"):
+		var current_kills = difficulty_manager.get_kill_count()
+		if current_kills != kill_count:
+			kill_count = current_kills
+			update_kill_count()
+
+func _on_difficulty_kill_recorded(new_total: int) -> void:
+	kill_count = new_total
+	update_kill_count()
 
 func adjust_gui_collection(upgrade: String) -> void:
 	var get_upgraded_displayname = UpgradeDb.UPGRADES[upgrade]["displayname"]
@@ -995,7 +1113,13 @@ func _submit_score_to_leaderboard() -> void:
 		return
 
 	var score = time
-	LocalProfile.submit_score(profile_name, score, experience_level)
+	# Get final kill count from difficulty manager
+	if difficulty_manager and difficulty_manager.has_method("get_kill_count"):
+		kill_count = difficulty_manager.get_kill_count()
+	
+	# Get current ship ID
+	var ship_id = skin_manager.equipped if skin_manager else "ship_1"
+	LocalProfile.submit_score(profile_name, score, experience_level, kill_count, ship_id)
 
 func death() -> void:
 	deathPanel.visible = true

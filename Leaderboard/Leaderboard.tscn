@@ -35,8 +35,12 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 30.0
+offset_right = 30.0
+offset_bottom = 49.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(0.91, 0.91)
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
@@ -58,28 +62,42 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="RankHeader" type="Label" parent="MarginContainer/VBoxContainer/HeaderContainer"]
-custom_minimum_size = Vector2(30, 0)
+custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 10
-text = "Rank"
+text = "#"
 
 [node name="NameHeader" type="Label" parent="MarginContainer/VBoxContainer/HeaderContainer"]
-custom_minimum_size = Vector2(150, 0)
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 10
 text = "Player"
 
+[node name="ShipIconHeader" type="Control" parent="MarginContainer/VBoxContainer/HeaderContainer"]
+custom_minimum_size = Vector2(20, 16)
+layout_mode = 2
+
+[node name="ShipHeader" type="Label" parent="MarginContainer/VBoxContainer/HeaderContainer"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 10
+text = "Ship"
+
 [node name="TimeHeader" type="Label" parent="MarginContainer/VBoxContainer/HeaderContainer"]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 10
 text = "Time"
 horizontal_alignment = 2
 
 [node name="KillsHeader" type="Label" parent="MarginContainer/VBoxContainer/HeaderContainer"]
-custom_minimum_size = Vector2(70, 0)
+custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 10
 text = "Kills"
 horizontal_alignment = 2

@@ -5,7 +5,6 @@
 [ext_resource type="AudioStream" uid="uid://bnm8cttqwefdx" path="res://Audio/SoundEffect/collectgem.mp3" id="3_g1t57"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wytta"]
-size = Vector2(20, 22)
 
 [node name="ExperienceGem" type="Area2D" groups=["loot"]]
 scale = Vector2(0.5, 0.5)

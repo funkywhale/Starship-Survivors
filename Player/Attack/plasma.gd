@@ -75,6 +75,30 @@ func update_plasma() -> void:
 			speed = base_speed + 30.0
 			attack_size = 1.0 * (1 + player.spell_size)
 			trail_damage = base_trail_damage + 15 + (player.damage_bonus if player else 0)
+		5:
+			hp = base_hp + 4
+			damage = base_damage + 35 + (player.damage_bonus if player else 0)
+			speed = base_speed + 35.0
+			attack_size = 1.05 * (1 + player.spell_size)
+			trail_damage = base_trail_damage + 17 + (player.damage_bonus if player else 0)
+		6:
+			hp = base_hp + 5
+			damage = base_damage + 40 + (player.damage_bonus if player else 0)
+			speed = base_speed + 40.0
+			attack_size = 1.1 * (1 + player.spell_size)
+			trail_damage = base_trail_damage + 19 + (player.damage_bonus if player else 0)
+		7:
+			hp = base_hp + 6
+			damage = base_damage + 45 + (player.damage_bonus if player else 0)
+			speed = base_speed + 45.0
+			attack_size = 1.15 * (1 + player.spell_size)
+			trail_damage = base_trail_damage + 21 + (player.damage_bonus if player else 0)
+		8:
+			hp = base_hp + 8
+			damage = base_damage + 52 + (player.damage_bonus if player else 0)
+			speed = base_speed + 50.0
+			attack_size = 1.2 * (1 + player.spell_size)
+			trail_damage = base_trail_damage + 24 + (player.damage_bonus if player else 0)
 
 	if player:
 		attack_speed = float(player.pulselaser_attackspeed) * 2.0

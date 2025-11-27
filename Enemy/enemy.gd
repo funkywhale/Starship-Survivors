@@ -158,7 +158,7 @@ func death() -> void:
 	enemy_death.global_position = global_position
 	get_parent().call_deferred("add_child", enemy_death)
 	
-	if randf() < 0.02:
+	if randf() < 0.01:
 		var new_grab = grab_collectible.instantiate()
 		new_grab.global_position = global_position
 		loot_base.call_deferred("add_child", new_grab)
@@ -176,5 +176,3 @@ func _on_hurt_box_hurt(damage, angle, knockback_amount):
 	knockback = angle * knockback_amount
 	if hp <= 0:
 		death()
-	else:
-		snd_hit.play()

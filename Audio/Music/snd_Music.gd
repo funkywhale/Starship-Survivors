@@ -1,12 +1,15 @@
 extends AudioStreamPlayer
 
-# Playlist - add or remove battle theme songs here
+# Playlist - add or remove songs here
 var playlist = [
 	preload("res://Audio/Music/battleThemeA.mp3"),
 	preload("res://Audio/Music/battlethemeB.mp3"),
 	preload("res://Audio/Music/battleThemeC.mp3"),
 	preload("res://Audio/Music/battleThemeD.mp3"),
 	preload("res://Audio/Music/battleThemeE.mp3"),
+	preload("res://Audio/Music/battleThemeF.mp3"),
+	preload("res://Audio/Music/battleThemeG.mp3"),
+	preload("res://Audio/Music/battleThemeH.mp3"),
 ]
 
 var last_track_index = -1
@@ -20,7 +23,7 @@ func _ready():
 		play()
 		
 		var tween = create_tween()
-		tween.tween_property(self, "volume_db", -10, 1.5)
+		tween.tween_property(self, "volume_db", -15, 1.5)
 
 func _play_random_track() -> void:
 	var random_index = randi() % playlist.size()

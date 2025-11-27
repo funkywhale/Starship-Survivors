@@ -56,7 +56,7 @@ func _ready() -> void:
 
 func _update_from_level() -> void:
 	level = player.ionlaser_level
-	var base_damage = 15
+	var base_damage = 10
 	var base_length = 100.0
 	var base_speed = 100.0
 	match level:
@@ -66,20 +66,40 @@ func _update_from_level() -> void:
 			attack_size = 1.0 * (1 + player.spell_size)
 			grow_speed = base_speed
 		2:
-			damage = base_damage + 5 + player.damage_bonus
+			damage = base_damage + 3 + player.damage_bonus
 			max_length = (base_length + 25) * (1 + player.spell_size)
 			attack_size = 1.05 * (1 + player.spell_size)
 			grow_speed = base_speed + 100
 		3:
-			damage = base_damage + 10 + player.damage_bonus
+			damage = base_damage + 5 + player.damage_bonus
 			max_length = (base_length + 50) * (1 + player.spell_size)
 			attack_size = 1.1 * (1 + player.spell_size)
 			grow_speed = base_speed + 150
 		4:
-			damage = base_damage + 15 + player.damage_bonus
+			damage = base_damage + 7 + player.damage_bonus
 			max_length = (base_length + 100) * (1 + player.spell_size)
 			attack_size = 1.15 * (1 + player.spell_size)
 			grow_speed = base_speed + 200
+		5:
+			damage = base_damage + 9 + player.damage_bonus
+			max_length = (base_length + 125) * (1 + player.spell_size)
+			attack_size = 1.2 * (1 + player.spell_size)
+			grow_speed = base_speed + 225
+		6:
+			damage = base_damage + 11 + player.damage_bonus
+			max_length = (base_length + 150) * (1 + player.spell_size)
+			attack_size = 1.25 * (1 + player.spell_size)
+			grow_speed = base_speed + 250
+		7:
+			damage = base_damage + 13 + player.damage_bonus
+			max_length = (base_length + 175) * (1 + player.spell_size)
+			attack_size = 1.3 * (1 + player.spell_size)
+			grow_speed = base_speed + 275
+		8:
+			damage = base_damage + 16 + player.damage_bonus
+			max_length = (base_length + 200) * (1 + player.spell_size)
+			attack_size = 1.35 * (1 + player.spell_size)
+			grow_speed = base_speed + 300
 	# Adjust widths if already initialized
 	if beam_line:
 		beam_line.width = 3.0 * attack_size

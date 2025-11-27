@@ -45,6 +45,30 @@ func _ready():
 			damage = 15 + (player.damage_bonus if player else 0)
 			knockback_amount = 50
 			attack_size = 1.0 * (1 + player.spell_size)
+		5:
+			hp = 5
+			speed = 105
+			damage = 17 + (player.damage_bonus if player else 0)
+			knockback_amount = 55
+			attack_size = 1.05 * (1 + player.spell_size)
+		6:
+			hp = 6
+			speed = 110
+			damage = 19 + (player.damage_bonus if player else 0)
+			knockback_amount = 60
+			attack_size = 1.1 * (1 + player.spell_size)
+		7:
+			hp = 7
+			speed = 115
+			damage = 21 + (player.damage_bonus if player else 0)
+			knockback_amount = 65
+			attack_size = 1.15 * (1 + player.spell_size)
+		8:
+			hp = 8
+			speed = 120
+			damage = 24 + (player.damage_bonus if player else 0)
+			knockback_amount = 70
+			attack_size = 1.2 * (1 + player.spell_size)
 
 
 	scale = Vector2(1, 1) * attack_size

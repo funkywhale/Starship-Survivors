@@ -11,6 +11,18 @@ const ACCELERATION: float = 100.0
 @onready var collision = $CollisionShape2D
 @onready var sound = $snd_collected
 
+const COLLECT_SFX_COOLDOWN_MS: int = 100
+
+func _should_play_collect_sfx() -> bool:
+	var now_ms: int = Time.get_ticks_msec()
+	var last_ms: int = 0
+	if get_tree().has_meta("collect_sfx_last_ms"):
+		last_ms = int(get_tree().get_meta("collect_sfx_last_ms"))
+	if now_ms - last_ms < COLLECT_SFX_COOLDOWN_MS:
+		return false
+	get_tree().set_meta("collect_sfx_last_ms", now_ms)
+	return true
+
 func _ready():
 	add_to_group("grab_collectible")
 
@@ -21,7 +33,8 @@ func _physics_process(delta: float) -> void:
 
 func collect() -> void:
 	"""Called when player collects this grab item"""
-	sound.play()
+	if _should_play_collect_sfx():
+		sound.play()
 	collision.call_deferred("set", "disabled", true)
 	sprite.visible = false
 	

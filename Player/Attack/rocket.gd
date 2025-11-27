@@ -61,6 +61,30 @@ func _ready():
 			damage = 25 + (player.damage_bonus if player else 0)
 			knockback_amount = 125
 			attack_size = 1.0 * (1 + player.spell_size)
+		5:
+			hp = 1
+			speed = 155.0
+			damage = 27 + (player.damage_bonus if player else 0)
+			knockback_amount = 125
+			attack_size = 1.05 * (1 + player.spell_size)
+		6:
+			hp = 1
+			speed = 160.0
+			damage = 29 + (player.damage_bonus if player else 0)
+			knockback_amount = 130
+			attack_size = 1.1 * (1 + player.spell_size)
+		7:
+			hp = 1
+			speed = 165.0
+			damage = 31 + (player.damage_bonus if player else 0)
+			knockback_amount = 135
+			attack_size = 1.15 * (1 + player.spell_size)
+		8:
+			hp = 1
+			speed = 170.0
+			damage = 34 + (player.damage_bonus if player else 0)
+			knockback_amount = 140
+			attack_size = 1.2 * (1 + player.spell_size)
 
 
 	var forward := Vector2.UP

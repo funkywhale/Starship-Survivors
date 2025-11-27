@@ -31,9 +31,41 @@ const UPGRADES = {
 	"pulselaser4": {
 		"icon": WEAPON_PATH + "pulse_laser.png",
 		"displayname": "Pulse Laser",
-		"details": "Can pierce through 4 enemies. +3 additional pulse lasers are fired",
+		"details": "+1 additional pulse laser is fired",
 		"level": "Level: 4",
 		"prerequisite": ["pulselaser3"],
+		"type": "weapon"
+	},
+	"pulselaser5": {
+		"icon": WEAPON_PATH + "pulse_laser.png",
+		"displayname": "Pulse Laser",
+		"details": "+1 additional pulse laser is fired. +5 damage",
+		"level": "Level: 5",
+		"prerequisite": ["pulselaser4"],
+		"type": "weapon"
+	},
+	"pulselaser6": {
+		"icon": WEAPON_PATH + "pulse_laser.png",
+		"displayname": "Pulse Laser",
+		"details": "+1 additional pulse laser is fired. +5 damage",
+		"level": "Level: 6",
+		"prerequisite": ["pulselaser5"],
+		"type": "weapon"
+	},
+	"pulselaser7": {
+		"icon": WEAPON_PATH + "pulse_laser.png",
+		"displayname": "Pulse Laser",
+		"details": "+1 additional pulse laser is fired. Can pierce through 5 enemies",
+		"level": "Level: 7",
+		"prerequisite": ["pulselaser6"],
+		"type": "weapon"
+	},
+	"pulselaser8": {
+		"icon": WEAPON_PATH + "pulse_laser.png",
+		"displayname": "Pulse Laser",
+		"details": "+2 additional pulse lasers are fired. +10 damage and can pierce through 6 enemies",
+		"level": "Level: 8",
+		"prerequisite": ["pulselaser7"],
 		"type": "weapon"
 	},
 	"plasma1": {
@@ -68,6 +100,38 @@ const UPGRADES = {
 		"prerequisite": ["plasma3"],
 		"type": "weapon"
 	},
+	"plasma5": {
+		"icon": WEAPON_PATH + "plasma_icon.png",
+		"displayname": "Plasma Blast",
+		"details": "+1 additional plasma blast is fired. +5 damage",
+		"level": "Level: 5",
+		"prerequisite": ["plasma4"],
+		"type": "weapon"
+	},
+	"plasma6": {
+		"icon": WEAPON_PATH + "plasma_icon.png",
+		"displayname": "Plasma Blast",
+		"details": "+1 additional plasma blast is fired. +5 damage",
+		"level": "Level: 6",
+		"prerequisite": ["plasma5"],
+		"type": "weapon"
+	},
+	"plasma7": {
+		"icon": WEAPON_PATH + "plasma_icon.png",
+		"displayname": "Plasma Blast",
+		"details": "+1 additional plasma blast is fired. +10 damage",
+		"level": "Level: 7",
+		"prerequisite": ["plasma6"],
+		"type": "weapon"
+	},
+	"plasma8": {
+		"icon": WEAPON_PATH + "plasma_icon.png",
+		"displayname": "Plasma Blast",
+		"details": "+1 additional plasma blast is fired. +15 damage and increased speed",
+		"level": "Level: 8",
+		"prerequisite": ["plasma7"],
+		"type": "weapon"
+	},
 	"rocket1": {
 		"icon": WEAPON_PATH + "storm_shadow.png",
 		"displayname": "Rocket",
@@ -95,9 +159,41 @@ const UPGRADES = {
 	"rocket4": {
 		"icon": WEAPON_PATH + "storm_shadow.png",
 		"displayname": "Rocket",
-		"details": "An additional Rocket is created. +5 damage and +25% knockback",
+		"details": "+1 additional rocket is fired. +5 damage",
 		"level": "Level: 4",
 		"prerequisite": ["rocket3"],
+		"type": "weapon"
+	},
+	"rocket5": {
+		"icon": WEAPON_PATH + "storm_shadow.png",
+		"displayname": "Rocket",
+		"details": "The Rocket cooldown is reduced by 0.25 seconds. +5 damage",
+		"level": "Level: 5",
+		"prerequisite": ["rocket4"],
+		"type": "weapon"
+	},
+	"rocket6": {
+		"icon": WEAPON_PATH + "storm_shadow.png",
+		"displayname": "Rocket",
+		"details": "+1 additional rocket is fired. +10 damage",
+		"level": "Level: 6",
+		"prerequisite": ["rocket5"],
+		"type": "weapon"
+	},
+	"rocket7": {
+		"icon": WEAPON_PATH + "storm_shadow.png",
+		"displayname": "Rocket",
+		"details": "The Rocket cooldown is reduced by 0.25 seconds. +10 damage",
+		"level": "Level: 7",
+		"prerequisite": ["rocket6"],
+		"type": "weapon"
+	},
+	"rocket8": {
+		"icon": WEAPON_PATH + "storm_shadow.png",
+		"displayname": "Rocket",
+		"details": "+1 additional rocket is fired. +15 damage and +50% knockback",
+		"level": "Level: 8",
+		"prerequisite": ["rocket7"],
 		"type": "weapon"
 	},
 	"armor1": {
@@ -135,9 +231,41 @@ const UPGRADES = {
 	"ionlaser4": {
 		"icon": WEAPON_PATH + "ion_laser.png",
 		"displayname": "Ion Laser",
-		"details": "+15 damage, +100% range, and 36% faster firing rate",
+		"details": "+5 damage, +12.5% range, and 4% faster firing rate",
 		"level": "Level: 4",
 		"prerequisite": ["ionlaser3"],
+		"type": "weapon"
+	},
+	"ionlaser5": {
+		"icon": WEAPON_PATH + "ion_laser.png",
+		"displayname": "Ion Laser",
+		"details": "+5 damage, +25% range, and 4% faster firing rate",
+		"level": "Level: 5",
+		"prerequisite": ["ionlaser4"],
+		"type": "weapon"
+	},
+	"ionlaser6": {
+		"icon": WEAPON_PATH + "ion_laser.png",
+		"displayname": "Ion Laser",
+		"details": "+10 damage, +50% range, and 5% faster firing rate",
+		"level": "Level: 6",
+		"prerequisite": ["ionlaser5"],
+		"type": "weapon"
+	},
+	"ionlaser7": {
+		"icon": WEAPON_PATH + "ion_laser.png",
+		"displayname": "Ion Laser",
+		"details": "+10 damage, +75% range, and 10% faster firing rate",
+		"level": "Level: 7",
+		"prerequisite": ["ionlaser6"],
+		"type": "weapon"
+	},
+	"ionlaser8": {
+		"icon": WEAPON_PATH + "ion_laser.png",
+		"displayname": "Ion Laser",
+		"details": "+15 damage, +125% range, and 11% faster firing rate",
+		"level": "Level: 8",
+		"prerequisite": ["ionlaser7"],
 		"type": "weapon"
 	},
 	"armor2": {
@@ -162,6 +290,14 @@ const UPGRADES = {
 		"details": "Reduces Damage By an additional 1 point",
 		"level": "Level: 4",
 		"prerequisite": ["armor3"],
+		"type": "upgrade"
+	},
+	"armor5": {
+		"icon": ICON_PATH + "armor.png",
+		"displayname": "Armor Plating",
+		"details": "Reduces Damage By an additional 1 point",
+		"level": "Level: 5",
+		"prerequisite": ["armor4"],
 		"type": "upgrade"
 	},
 	"damage1": {
@@ -196,6 +332,14 @@ const UPGRADES = {
 		"prerequisite": ["damage3"],
 		"type": "upgrade"
 	},
+	"damage5": {
+		"icon": ICON_PATH + "damage.png",
+		"displayname": "Damage",
+		"details": "+3 additional damage to all weapons",
+		"level": "Level: 5",
+		"prerequisite": ["damage4"],
+		"type": "upgrade"
+	},
 	"speed1": {
 		"icon": ICON_PATH + "thrusters.png",
 		"displayname": "Thrusters",
@@ -226,6 +370,14 @@ const UPGRADES = {
 		"details": "Movement speed Increased an additional 25%",
 		"level": "Level: 4",
 		"prerequisite": ["speed3"],
+		"type": "upgrade"
+	},
+	"speed5": {
+		"icon": ICON_PATH + "thrusters.png",
+		"displayname": "Thrusters",
+		"details": "Movement speed Increased an additional 25%",
+		"level": "Level: 5",
+		"prerequisite": ["speed4"],
 		"type": "upgrade"
 	},
 	"thick1": {
@@ -260,6 +412,14 @@ const UPGRADES = {
 		"prerequisite": ["thick3"],
 		"type": "upgrade"
 	},
+	"thick5": {
+		"icon": ICON_PATH + "plasma_reactor.png",
+		"displayname": "Reactor",
+		"details": "Increases the size of weapons 20%",
+		"level": "Level: 5",
+		"prerequisite": ["thick4"],
+		"type": "upgrade"
+	},
 	"firerate1": {
 		"icon": ICON_PATH + "firing_rate.png",
 		"displayname": "Firing Rate",
@@ -292,6 +452,14 @@ const UPGRADES = {
 		"prerequisite": ["firerate3"],
 		"type": "upgrade"
 	},
+	"firerate5": {
+		"icon": ICON_PATH + "firing_rate.png",
+		"displayname": "Firing Rate",
+		"details": "Increases fire rate by an additional 10%",
+		"level": "Level: 5",
+		"prerequisite": ["firerate4"],
+		"type": "upgrade"
+	},
 	"weapon1": {
 		"icon": ICON_PATH + "weapon_bay.png",
 		"displayname": "Weapon Bay",
@@ -306,6 +474,14 @@ const UPGRADES = {
 		"details": "Your weapons now spawn 1 more additional attack",
 		"level": "Level: 2",
 		"prerequisite": ["weapon1"],
+		"type": "upgrade"
+	},
+	"weapon3": {
+		"icon": ICON_PATH + "weapon_bay.png",
+		"displayname": "Weapon Bay",
+		"details": "Your weapons now spawn 1 more additional attack",
+		"level": "Level: 3",
+		"prerequisite": ["weapon2"],
 		"type": "upgrade"
 	},
 	"scattershot1": {
@@ -335,9 +511,41 @@ const UPGRADES = {
 	"scattershot4": {
 		"icon": WEAPON_PATH + "scattershot_icon.png",
 		"displayname": "Scatter Shot",
-		"details": "Fires 9 pellets. Damage increased to 12 and can penetrate 4 enemies",
+		"details": "Fires 6 pellets. Damage increased to 8 and can penetrate 2 enemies. Fires 5% faster",
 		"level": "Level: 4",
 		"prerequisite": ["scattershot3"],
+		"type": "weapon"
+	},
+	"scattershot5": {
+		"icon": WEAPON_PATH + "scattershot_icon.png",
+		"displayname": "Scatter Shot",
+		"details": "Fires 7 pellets. Damage increased to 9 and can penetrate 3 enemies. Fires 8% faster",
+		"level": "Level: 5",
+		"prerequisite": ["scattershot4"],
+		"type": "weapon"
+	},
+	"scattershot6": {
+		"icon": WEAPON_PATH + "scattershot_icon.png",
+		"displayname": "Scatter Shot",
+		"details": "Fires 8 pellets. Damage increased to 10 and can penetrate 3 enemies. Fires 10% faster",
+		"level": "Level: 6",
+		"prerequisite": ["scattershot5"],
+		"type": "weapon"
+	},
+	"scattershot7": {
+		"icon": WEAPON_PATH + "scattershot_icon.png",
+		"displayname": "Scatter Shot",
+		"details": "Fires 9 pellets. Damage increased to 11 and can penetrate 4 enemies. Fires 12% faster",
+		"level": "Level: 7",
+		"prerequisite": ["scattershot6"],
+		"type": "weapon"
+	},
+	"scattershot8": {
+		"icon": WEAPON_PATH + "scattershot_icon.png",
+		"displayname": "Scatter Shot",
+		"details": "Fires 10 pellets. Damage increased to 13 and can penetrate 5 enemies. Fires 16% faster",
+		"level": "Level: 8",
+		"prerequisite": ["scattershot7"],
 		"type": "weapon"
 	},
 	"heal": {

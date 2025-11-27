@@ -25,10 +25,10 @@ radius = 12.0
 radius = 370.951
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_p2554"]
-radius = 21.023796
+radius = 39.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_6vwp8"]
-radius = 32.0
+radius = 19.235384
 
 [sub_resource type="Gradient" id="Gradient_gu6f8"]
 offsets = PackedFloat32Array(0, 0.44720498)
@@ -123,7 +123,6 @@ monitorable = false
 shape = SubResource("CircleShape2D_anwqc")
 
 [node name="GrabArea" type="Area2D" parent="."]
-visible = false
 collision_layer = 0
 collision_mask = 8
 
@@ -131,11 +130,11 @@ collision_mask = 8
 shape = SubResource("CircleShape2D_p2554")
 
 [node name="CollectArea" type="Area2D" parent="."]
-visible = false
 collision_layer = 0
 collision_mask = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CollectArea"]
+visible = false
 shape = SubResource("CircleShape2D_6vwp8")
 
 [node name="GUILayer" type="CanvasLayer" parent="."]
@@ -280,12 +279,23 @@ text = "Menu"
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 280.0
-offset_top = 20.0
+offset_top = 3.0
 offset_right = 360.0
-offset_bottom = 46.0
+offset_bottom = 31.0
 theme_override_font_sizes/font_size = 20
 text = "00:00"
 horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="lblKills" type="Label" parent="GUILayer/GUI"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 554.0
+offset_top = 8.0
+offset_right = 637.0
+offset_bottom = 28.0
+theme_override_font_sizes/font_size = 14
+text = "Kills: 0"
 vertical_alignment = 1
 
 [node name="CollectedWeapons" type="GridContainer" parent="GUILayer/GUI"]

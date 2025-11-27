@@ -15,9 +15,9 @@ func _ready() -> void:
 	
 	TitleMusicPlayer.stop_title_music()
 
-	resume_button.pressed.connect(_on_resume_pressed)
-	main_menu_button.pressed.connect(_on_main_menu_pressed)
-	quit_button.pressed.connect(_on_quit_pressed)
+	resume_button.click_end.connect(_on_resume_pressed)
+	main_menu_button.click_end.connect(_on_main_menu_pressed)
+	quit_button.click_end.connect(_on_quit_pressed)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -54,3 +54,16 @@ func _set_random_background() -> void:
 		background_sprite.texture = texture
 	else:
 		push_error("Failed to load background: %s" % bg_path)
+
+# Time / kill counter update driver
+var _elapsed_time: float = 0.0
+var _last_whole_second: int = 0
+
+func _process(delta: float) -> void:
+	_elapsed_time += delta
+	var whole := int(floor(_elapsed_time))
+	if whole != _last_whole_second:
+		_last_whole_second = whole
+		var player := get_tree().get_first_node_in_group("player")
+		if player and player.has_method("change_time"):
+			player.change_time(whole)

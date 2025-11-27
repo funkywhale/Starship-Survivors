@@ -27,35 +27,44 @@ func has_profile() -> bool:
 	return not current_profile_name.is_empty()
 
 # Leaderboard Management
-func submit_score(profile_name: String, time: int, level: int) -> void:
+func submit_score(profile_name: String, time: int, level: int, kills: int = 0, ship_id: String = "ship_1") -> void:
 	# Create new entry
 	var entry = {
 		"profile_name": profile_name,
 		"time": time,
 		"level": level,
+		"kills": kills,
+		"ship_id": ship_id,
 		"timestamp": Time.get_unix_time_from_system()
 	}
 	
-	# Check if this profile already has an entry
+	# Check if this profile + ship combo already has an entry
 	var existing_index = -1
 	for i in range(leaderboard_entries.size()):
-		if leaderboard_entries[i]["profile_name"] == profile_name:
+		if leaderboard_entries[i]["profile_name"] == profile_name and leaderboard_entries[i].get("ship_id", "ship_1") == ship_id:
 			existing_index = i
 			break
 	
-	# Only update if this is a better score (longer survival time)
+	# Only update if this is a better score (more kills)
 	if existing_index >= 0:
-		if time > leaderboard_entries[existing_index]["time"]:
+		var old_kills = leaderboard_entries[existing_index].get("kills", 0)
+		if kills > old_kills:
 			leaderboard_entries[existing_index] = entry
-			print("New personal best! Time: %d seconds" % time)
+			print("New personal best for %s! Kills: %d" % [ship_id, kills])
 		else:
-			print("Score submitted: Time: %d seconds (not a personal best)" % time)
+			print("Score submitted for %s: %d kills (not a personal best)" % [ship_id, kills])
 	else:
 		leaderboard_entries.append(entry)
-		print("First score recorded! Time: %d seconds" % time)
+		print("First score recorded for %s! Kills: %d" % [ship_id, kills])
 	
-	# Sort by time (descending - highest time first)
-	leaderboard_entries.sort_custom(func(a, b): return a["time"] > b["time"])
+	# Sort by kills (descending - highest kills first), then by time as tiebreaker
+	leaderboard_entries.sort_custom(func(a, b):
+		var a_kills = a.get("kills", 0)
+		var b_kills = b.get("kills", 0)
+		if a_kills == b_kills:
+			return a.get("time", 0) > b.get("time", 0)
+		return a_kills > b_kills
+	)
 	
 	# Keep only top entries
 	if leaderboard_entries.size() > MAX_LEADERBOARD_ENTRIES:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://du6qbgqucaqov"]
+[gd_scene load_steps=32 format=3 uid="uid://du6qbgqucaqov"]
 
 [ext_resource type="Script" uid="uid://c741ym6flkffr" path="res://World/world.gd" id="1_h2aik"]
 [ext_resource type="Texture2D" uid="uid://cy8avdpgoxae8" path="res://Textures/space_background3.png" id="1_lo5ox"]
@@ -12,8 +12,11 @@
 [ext_resource type="PackedScene" uid="uid://btf7clk4jja87" path="res://Enemy/enemy_boss.tscn" id="9_xs42h"]
 [ext_resource type="AudioStream" uid="uid://d1w53vpr4y07b" path="res://Audio/Music/battleThemeA.mp3" id="10_rk3we"]
 [ext_resource type="Script" uid="uid://buvlo8c3trfoy" path="res://Audio/Music/snd_Music.gd" id="11_ovtx6"]
+[ext_resource type="Texture2D" uid="uid://bc6n2t75h2gjv" path="res://Textures/Enemy/enemy_drone_strong.png" id="12_f23eu"]
 [ext_resource type="Script" uid="uid://cnyhv7p560kkj" path="res://Utility/rock_manager.gd" id="12_rockmgr"]
 [ext_resource type="PackedScene" uid="uid://cge5pu20boj0q" path="res://Utility/experience_orb_manager.tscn" id="13_orbmgr"]
+[ext_resource type="PackedScene" uid="uid://b7c7gsdx2rkjm" path="res://Utility/basic_button.tscn" id="14_basic_button"]
+[ext_resource type="Script" uid="uid://bwlgtk72fc7mr" path="res://Utility/difficulty_manager.gd" id="15_diffmgr"]
 
 [sub_resource type="Resource" id="Resource_03m25"]
 script = ExtResource("5_jj7s8")
@@ -42,7 +45,7 @@ script = ExtResource("5_jj7s8")
 time_start = 180
 time_end = 240
 enemy = ExtResource("7_unri0")
-enemy_num = 3
+enemy_num = 2
 enemy_spawn_delay = 2
 
 [sub_resource type="Resource" id="Resource_daq1w"]
@@ -58,7 +61,7 @@ script = ExtResource("5_jj7s8")
 time_start = 240
 time_end = 270
 enemy = ExtResource("7_unri0")
-enemy_num = 5
+enemy_num = 4
 enemy_spawn_delay = 2
 
 [sub_resource type="Resource" id="Resource_4teun"]
@@ -66,42 +69,69 @@ script = ExtResource("5_jj7s8")
 time_start = 240
 time_end = 300
 enemy = ExtResource("8_ltymd")
-enemy_num = 2
-enemy_spawn_delay = 2
-
-[sub_resource type="Resource" id="Resource_t2np8"]
-script = ExtResource("5_jj7s8")
-time_start = 300
-time_end = 303
-enemy = ExtResource("9_xs42h")
 enemy_num = 1
-enemy_spawn_delay = 1
+enemy_spawn_delay = 2
 
 [sub_resource type="Resource" id="Resource_lo5ox"]
 script = ExtResource("5_jj7s8")
-time_start = 330
-time_end = 5000
+time_start = 300
+time_end = 360
 enemy = ExtResource("8_ltymd")
-enemy_num = 25
-enemy_spawn_delay = 3
+enemy_num = 2
+enemy_spawn_delay = 2
 metadata/_custom_type_script = "uid://dmq4cx6tw4emm"
 
 [sub_resource type="Resource" id="Resource_h2aik"]
 script = ExtResource("5_jj7s8")
-time_start = 330
-time_end = 5000
+time_start = 300
+time_end = 360
 enemy = ExtResource("7_unri0")
-enemy_num = 25
-enemy_spawn_delay = 3
+enemy_num = 3
+enemy_spawn_delay = 2
 metadata/_custom_type_script = "uid://dmq4cx6tw4emm"
 
 [sub_resource type="Resource" id="Resource_awrha"]
 script = ExtResource("5_jj7s8")
-time_start = 900
-time_end = 960
+time_start = 360
+time_end = 480
+enemy = ExtResource("12_f23eu")
+enemy_num = 8
+enemy_spawn_delay = 3
+metadata/_custom_type_script = "uid://dmq4cx6tw4emm"
+
+[sub_resource type="Resource" id="Resource_oeat8"]
+script = ExtResource("5_jj7s8")
+time_start = 480
+time_end = 600
+enemy = ExtResource("7_unri0")
+enemy_num = 6
+enemy_spawn_delay = 2
+metadata/_custom_type_script = "uid://dmq4cx6tw4emm"
+
+[sub_resource type="Resource" id="Resource_5xkvv"]
+script = ExtResource("5_jj7s8")
+time_start = 480
+time_end = 600
+enemy = ExtResource("8_ltymd")
+enemy_num = 4
+enemy_spawn_delay = 2
+metadata/_custom_type_script = "uid://dmq4cx6tw4emm"
+
+[sub_resource type="Resource" id="Resource_t2np8"]
+script = ExtResource("5_jj7s8")
+time_start = 600
+time_end = 603
 enemy = ExtResource("9_xs42h")
-enemy_num = 3
+enemy_num = 1
 enemy_spawn_delay = 1
+
+[sub_resource type="Resource" id="Resource_kcyjf"]
+script = ExtResource("5_jj7s8")
+time_start = 630
+time_end = 6000
+enemy = ExtResource("8_ltymd")
+enemy_num = 10
+enemy_spawn_delay = 5
 metadata/_custom_type_script = "uid://dmq4cx6tw4emm"
 
 [node name="World" type="Node2D"]
@@ -131,14 +161,17 @@ script = ExtResource("12_rockmgr")
 [node name="Player" parent="." instance=ExtResource("2_40uwv")]
 
 [node name="EnemySpawner" parent="." instance=ExtResource("3_p01g4")]
-spawns = Array[ExtResource("5_jj7s8")]([SubResource("Resource_03m25"), SubResource("Resource_ij20a"), SubResource("Resource_68oxv"), SubResource("Resource_l8y0x"), SubResource("Resource_daq1w"), SubResource("Resource_0gpiy"), SubResource("Resource_4teun"), SubResource("Resource_t2np8"), SubResource("Resource_lo5ox"), SubResource("Resource_h2aik"), SubResource("Resource_awrha")])
+spawns = Array[ExtResource("5_jj7s8")]([SubResource("Resource_03m25"), SubResource("Resource_ij20a"), SubResource("Resource_68oxv"), SubResource("Resource_l8y0x"), SubResource("Resource_daq1w"), SubResource("Resource_0gpiy"), SubResource("Resource_4teun"), SubResource("Resource_lo5ox"), SubResource("Resource_h2aik"), SubResource("Resource_awrha"), SubResource("Resource_oeat8"), SubResource("Resource_5xkvv"), SubResource("Resource_t2np8"), SubResource("Resource_kcyjf")])
 
 [node name="Loot" type="Node2D" parent="." groups=["loot"]]
+
+[node name="DifficultyManager" type="Node" parent="." groups=["difficulty_manager"]]
+script = ExtResource("15_diffmgr")
 
 [node name="snd_Music" type="AudioStreamPlayer" parent="."]
 process_mode = 3
 stream = ExtResource("10_rk3we")
-volume_db = -10.0
+volume_db = -20.043
 autoplay = true
 parameters/looping = false
 script = ExtResource("11_ovtx6")
@@ -165,15 +198,15 @@ offset_left = -58.0
 offset_right = 96.0
 offset_bottom = 101.0
 
-[node name="ResumeButton" type="Button" parent="PauseMenu/Panel/VBoxContainer"]
+[node name="ResumeButton" parent="PauseMenu/Panel/VBoxContainer" instance=ExtResource("14_basic_button")]
 layout_mode = 2
 text = "Resume"
 
-[node name="MainMenuButton" type="Button" parent="PauseMenu/Panel/VBoxContainer"]
+[node name="MainMenuButton" parent="PauseMenu/Panel/VBoxContainer" instance=ExtResource("14_basic_button")]
 layout_mode = 2
 text = "Main Menu"
 
-[node name="QuitButton" type="Button" parent="PauseMenu/Panel/VBoxContainer"]
+[node name="QuitButton" parent="PauseMenu/Panel/VBoxContainer" instance=ExtResource("14_basic_button")]
 layout_mode = 2
 text = "Quit"
 

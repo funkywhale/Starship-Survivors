@@ -58,10 +58,10 @@ collision_layer = 4
 collision_mask = 5
 motion_mode = 1
 script = ExtResource("1_wmgsu")
-movement_speed = 30.0
-hp = 150
+movement_speed = 26.0
+hp = 120
 knockback_recovery = 20.0
-experience = 100
+experience = 10
 enemy_damage = 10
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
