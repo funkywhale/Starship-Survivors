@@ -135,10 +135,10 @@ const MAX_PROJECTILES: int = 200
 
 
 var difficulty_manager: Node = null
+var challenge_manager: Node = null
 var intro_playing: bool = true
 var move_anim_time: float = 0.0
 
-# Grab magnetize effect state
 var magnetize_active: bool = false
 var magnetized_orbs: Array = []
 
@@ -165,6 +165,11 @@ func _ready() -> void:
 	dashCooldownBar.visible = false
 	update_kill_count()
 	start_camera_intro()
+
+	challenge_manager = get_node("/root/challenge_manager")
+	var notif = get_tree().get_root().get_node("ChallengeNotification") if get_tree().get_root().has_node("ChallengeNotification") else null
+	if challenge_manager and notif:
+		challenge_manager.set_notification_callback(notif.show_notification)
 
 func _prewarm_weapon_resources() -> void:
 	var warmup_plasma = plasma.instantiate()
@@ -290,12 +295,15 @@ func movement(delta: float) -> void:
 		if thrust != 0:
 			velocity += forward * accel * thrust * delta
 
-		var speed_len = velocity.length()
-		var max_allowed_speed = max_speed
-		if thrust < 0:
-			max_allowed_speed = max_speed * 0.5
-		if speed_len > max_allowed_speed:
-			velocity = velocity.normalized() * max_allowed_speed
+			var speed_len = velocity.length()
+			var max_allowed_speed = max_speed
+			if thrust != 0:
+				var applied_accel = accel
+				if thrust < 0:
+					applied_accel *= 0.5
+				velocity += forward * applied_accel * thrust * delta
+			if speed_len > max_allowed_speed:
+				velocity = velocity.normalized() * max_allowed_speed
 
 	move_and_slide()
 
@@ -570,7 +578,6 @@ func fire_scatter_shot() -> void:
 	var base_angle = sprite.rotation
 	var cone_angle = deg_to_rad(30.0)
 	
-	# Check for critical strike once for the entire scatter shot
 	var is_critical = roll_critical()
 	
 	var pellet_count = stats.pellets + additional_attacks
@@ -579,10 +586,8 @@ func fire_scatter_shot() -> void:
 	var pellet_speed = stats.speed
 	var pellet_size = stats.size * (1 + spell_size)
 	
-	# Apply player multipliers
 	pellet_speed *= (1.0 + projectile_speed_multiplier)
 	
-	# Apply critical strike bonuses
 	if is_critical:
 		pellet_damage *= 2
 		pellet_hp *= 2
@@ -612,7 +617,6 @@ func fire_scatter_shot() -> void:
 		pellet.level = scattershot_level
 		pellet.attack_size = pellet_size
 		
-		# Calculate knockback with multiplier
 		var base_knockback = 50
 		var knockback = int(base_knockback * (1.0 + knockback_multiplier))
 		pellet.knockback_amount = knockback
@@ -661,40 +665,33 @@ func _cleanup_enemy_arrays() -> void:
 
 func _cleanup_projectiles() -> void:
 	var valid_count = 0
-	var projectiles_to_remove = []
-	
+	var projectiles_to_remove: Array = []
 
-	for child in get_children():
-		if child.is_in_group("attack"):
-			if is_instance_valid(child):
-				valid_count += 1
-			else:
-				projectiles_to_remove.append(child)
-	
-	if plasmaBase:
-		for child in plasmaBase.get_children():
-			if is_instance_valid(child):
-				valid_count += 1
-			else:
-				projectiles_to_remove.append(child)
-	
+	var attacks = get_tree().get_nodes_in_group("attack")
+	for a in attacks:
+		if is_instance_valid(a):
+			valid_count += 1
+		else:
+			projectiles_to_remove.append(a)
 
 	for proj in projectiles_to_remove:
 		if is_instance_valid(proj):
 			proj.queue_free()
 			valid_count -= 1
-	
+
 	active_projectile_count = max(0, valid_count)
-	
+
 
 	if active_projectile_count > MAX_PROJECTILES * 0.9:
 		var to_remove = int((active_projectile_count - MAX_PROJECTILES * 0.8) * 1.5)
 		var removed = 0
-		for child in get_children():
-			if child.is_in_group("attack") and removed < to_remove:
-				child.queue_free()
+		for a in attacks:
+			if removed >= to_remove:
+				break
+			if is_instance_valid(a):
+				a.queue_free()
 				removed += 1
-				active_projectile_count -= 1
+				active_projectile_count = max(0, active_projectile_count - 1)
 
 func _on_enemy_detection_area_body_entered(body):
 	if not enemy_close.has(body):
@@ -720,7 +717,6 @@ func _on_collect_area_area_entered(area: Area2D) -> void:
 
 func calculate_experience(gem_exp: int) -> void:
 	var exp_required = calculate_experiencecap()
-	# Apply experience multiplier
 	var modified_exp = int(gem_exp * (1.0 + experience_multiplier))
 	collected_experience += modified_exp
 	if experience + collected_experience >= exp_required:
@@ -821,15 +817,16 @@ func levelup() -> void:
 	get_tree().paused = true
 
 func upgrade_character(upgrade: String) -> void:
-	# Parse weapon upgrades using registry
 	if upgrade.begins_with("pulselaser"):
-		var level = int(upgrade.substr(10)) # Extract number after "pulselaser"
+		var level = int(upgrade.substr(10))
 		pulselaser_level = level
 		var stats = WeaponRegistry.get_weapon_stats("pulselaser", level)
 		pulselaser_baseammo = stats.ammo
 		pulselaser_attackspeed = WeaponRegistry.get_effective_cooldown("pulselaser", level, 0.0)
 		if level == 1:
 			weapons_equipped += 1
+		if challenge_manager and level >= 8:
+			challenge_manager.set_progress("upgrade_weapon_level_8", level)
 	elif upgrade.begins_with("rocket"):
 		var level = int(upgrade.substr(6))
 		rocket_level = level
@@ -838,6 +835,8 @@ func upgrade_character(upgrade: String) -> void:
 		rocket_attackspeed = WeaponRegistry.get_effective_cooldown("rocket", level, 0.0)
 		if level == 1:
 			weapons_equipped += 1
+		if challenge_manager and level >= 8:
+			challenge_manager.set_progress("upgrade_weapon_level_8", level)
 	elif upgrade.begins_with("plasma"):
 		var level = int(upgrade.substr(6))
 		plasma_level = level
@@ -847,6 +846,8 @@ func upgrade_character(upgrade: String) -> void:
 		plasma_attackspeed = WeaponRegistry.get_effective_cooldown("plasma", level, 0.0)
 		if level == 1:
 			weapons_equipped += 1
+		if challenge_manager and level >= 8:
+			challenge_manager.set_progress("upgrade_weapon_level_8", level)
 	elif upgrade.begins_with("scattershot"):
 		var level = int(upgrade.substr(11))
 		scattershot_level = level
@@ -857,6 +858,8 @@ func upgrade_character(upgrade: String) -> void:
 		scattershot_attackspeed = WeaponRegistry.get_effective_cooldown("scattershot", level, 0.0)
 		if level == 1:
 			weapons_equipped += 1
+		if challenge_manager and level >= 8:
+			challenge_manager.set_progress("upgrade_weapon_level_8", level)
 	elif upgrade.begins_with("ionlaser"):
 		var level = int(upgrade.substr(8))
 		ionlaser_level = level
@@ -865,7 +868,8 @@ func upgrade_character(upgrade: String) -> void:
 		ionlaser_attackspeed = WeaponRegistry.get_effective_cooldown("ionlaser", level, 0.0)
 		if level == 1:
 			weapons_equipped += 1
-	# Non-weapon upgrades
+		if challenge_manager and level >= 8:
+			challenge_manager.set_progress("upgrade_weapon_level_8", level)
 	else:
 		UpgradeDb.apply_upgrade_to_player(self, upgrade)
 	adjust_gui_collection(upgrade)
@@ -884,7 +888,6 @@ func _update_pickup_radii() -> void:
 	if _grab_shape and _grab_shape.shape is CircleShape2D and _base_grab_radius > 0.0:
 		var s: CircleShape2D = _grab_shape.shape
 		s.radius = _base_grab_radius * pickup_range_multiplier
-	# Keep collect area at base size - only grab area increases
 
 func roll_critical() -> bool:
 	if critical_chance <= 0.0:
@@ -893,6 +896,7 @@ func roll_critical() -> bool:
 	
 func get_random_item() -> String:
 	var dblist: Array = []
+	var cmgr = get_node("/root/challenge_manager")
 	for i in UpgradeDb.get_all_upgrade_ids():
 		if i in collected_upgrades:
 			pass
@@ -902,14 +906,22 @@ func get_random_item() -> String:
 			var upgrade_data = UpgradeDb.get_upgrade_data(i)
 			if upgrade_data.is_empty():
 				continue
-			
+
 			if upgrade_data["type"] == "item":
 				pass
 			elif upgrade_data["type"] == "weapon":
-				# Check if this is a level 1 weapon (new weapon acquisition)
+				var weapon_name = i
 				var is_level_1_weapon = upgrade_data["prerequisite"].size() == 0
+				var locked = false
+				if weapon_name.begins_with("plasma") and not cmgr.is_completed("kill_500_enemies"):
+					locked = true
+				elif weapon_name.begins_with("scattershot") and not cmgr.is_completed("survive_5_minutes"):
+					locked = true
+				elif weapon_name.begins_with("ionlaser") and not cmgr.is_completed("upgrade_weapon_level_8"):
+					locked = true
+				if locked:
+					continue
 				if is_level_1_weapon and weapons_equipped >= max_weapons:
-					# Skip level 1 weapons if at weapon limit
 					pass
 				elif upgrade_data["prerequisite"].size() > 0:
 					var to_add = true
@@ -946,11 +958,14 @@ func change_time(argtime: int = 0) -> void:
 		get_s = str(0, get_s)
 	lblTimer.text = str(get_m, ":", get_s)
 
+	# Challenge: survive 5 minutes
+	if challenge_manager:
+		challenge_manager.set_progress("survive_5_minutes", time)
+
 	if lblDifficulty and difficulty_manager:
 		var diff_text = difficulty_manager.get_difficulty_description()
 		lblDifficulty.text = "Difficulty: " + diff_text
 	
-	# Update kill count from difficulty manager
 	if difficulty_manager and difficulty_manager.has_method("get_kill_count"):
 		var current_kills = difficulty_manager.get_kill_count()
 		if current_kills != kill_count:
@@ -960,6 +975,9 @@ func change_time(argtime: int = 0) -> void:
 func _on_difficulty_kill_recorded(new_total: int) -> void:
 	kill_count = new_total
 	update_kill_count()
+	# Challenge: kill 500 enemies
+	if challenge_manager:
+		challenge_manager.set_progress("kill_500_enemies", kill_count)
 
 func adjust_gui_collection(upgrade: String) -> void:
 	var upgrade_data = UpgradeDb.get_upgrade_data(upgrade)
@@ -990,11 +1008,9 @@ func _submit_score_to_leaderboard() -> void:
 		return
 
 	var score = time
-	# Get final kill count from difficulty manager
 	if difficulty_manager and difficulty_manager.has_method("get_kill_count"):
 		kill_count = difficulty_manager.get_kill_count()
 	
-	# Get current ship ID
 	var ship_id = skin_manager.equipped if skin_manager else "ship_1"
 	LocalProfile.submit_score(profile_name, score, experience_level, kill_count, ship_id)
 

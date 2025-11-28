@@ -22,7 +22,7 @@ const UPGRADES = {
 	"armor1": {
 		"icon": ICON_PATH + "armor.png",
 		"displayname": "Armor Plating",
-		"details": "Reduces Damage By 1 point",
+		"details": "Reduces damage taken by 1 point",
 		"level": "Level: 1",
 		"prerequisite": [],
 		"type": "upgrade"
@@ -30,7 +30,7 @@ const UPGRADES = {
 	"armor2": {
 		"icon": ICON_PATH + "armor.png",
 		"displayname": "Armor Plating",
-		"details": "Reduces Damage By an additional 1 point",
+		"details": "Reduces damage taken by an additional 1 point",
 		"level": "Level: 2",
 		"prerequisite": ["armor1"],
 		"type": "upgrade"
@@ -38,7 +38,7 @@ const UPGRADES = {
 	"armor3": {
 		"icon": ICON_PATH + "armor.png",
 		"displayname": "Armor Plating",
-		"details": "Reduces Damage By an additional 1 point",
+		"details": "Reduces damage taken by an additional 1 point",
 		"level": "Level: 3",
 		"prerequisite": ["armor2"],
 		"type": "upgrade"
@@ -46,7 +46,7 @@ const UPGRADES = {
 	"armor4": {
 		"icon": ICON_PATH + "armor.png",
 		"displayname": "Armor Plating",
-		"details": "Reduces Damage By an additional 1 point",
+		"details": "Reduces damage taken by an additional 1 point",
 		"level": "Level: 4",
 		"prerequisite": ["armor3"],
 		"type": "upgrade"
@@ -54,7 +54,7 @@ const UPGRADES = {
 	"armor5": {
 		"icon": ICON_PATH + "armor.png",
 		"displayname": "Armor Plating",
-		"details": "Reduces Damage By an additional 1 point",
+		"details": "Reduces damage taken by an additional 1 point",
 		"level": "Level: 5",
 		"prerequisite": ["armor4"],
 		"type": "upgrade"

@@ -107,7 +107,7 @@ func _physics_process(delta: float) -> void:
 	glow_line.width = (8.0 * attack_size) * pulse
 
 	# Shape query damage (multi-hit across beam span) - reduce frequency for performance
-	if int(lifetime * 60.0) % 2 == 0: # Every other frame
+	if int(lifetime * 30.0) % 4 == 0: # Every 4th frame instead of every other
 		_apply_shape_query_damage(end_point.x)
 	# Sustain then disappear
 	if lifetime >= sustain_time and not disappearing:

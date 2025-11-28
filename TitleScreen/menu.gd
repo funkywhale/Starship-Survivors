@@ -1,17 +1,32 @@
 extends Control
 
 # Embedded menu panels
+
 var skins_menu_instance: Control = null
 var leaderboard_instance: Control = null
+var challenges_instance: Control = null
+
+# Scenes
+
+var challenges_scene: PackedScene = preload("res://GUI/challenges_screen.tscn")
 
 # Scenes
 var skins_menu_scene: PackedScene = preload("res://SkinsMenu/skins_menu.tscn")
 var leaderboard_scene: PackedScene = preload("res://Leaderboard/Leaderboard.tscn")
 
 func _ready() -> void:
+	if has_node("btn_challenges"):
+		$btn_challenges.connect("pressed", Callable(self, "_on_btn_challenges_pressed"))
+	if has_node("btn_play"):
+		$btn_play.connect("pressed", Callable(self, "_on_btn_play_pressed"))
+	if has_node("btn_leaderboard"):
+		$btn_leaderboard.connect("pressed", Callable(self, "_on_btn_leaderboard_pressed"))
+	if has_node("btn_exit"):
+		$btn_exit.connect("pressed", Callable(self, "_on_btn_exit_pressed"))
+	if has_node("btn_skins"):
+		$btn_skins.connect("pressed", Callable(self, "_on_btn_skins_pressed"))
 	# Restart title music when returning to menu
 	TitleMusicPlayer.start_title_music()
-	
 	if has_node("ProfileLabel"):
 		var profile_name = ""
 		if Engine.has_singleton("LocalProfile"):
@@ -19,7 +34,6 @@ func _ready() -> void:
 		elif has_node("/root/LocalProfile"):
 			profile_name = get_node("/root/LocalProfile").get_current_profile()
 		$ProfileLabel.text = "Profile: " + profile_name
-
 	# Wire audio sliders if present
 	# Connect sliders regardless of Settings autoload so they always control audio
 	if has_node("AudioControls"):
@@ -48,7 +62,22 @@ func _ready() -> void:
 			$AudioControls/MusicSlider.value = muval
 			$AudioControls/MusicSlider.connect("value_changed", Callable(self, "_on_music_changed"))
 
-func _on_btn_play_click_end() -> void:
+func _on_btn_challenges_pressed() -> void:
+	_open_challenges_screen()
+
+func _open_challenges_screen() -> void:
+	if challenges_instance: return
+	_set_menu_visible(false)
+	challenges_instance = challenges_scene.instantiate()
+	add_child(challenges_instance)
+
+func _close_challenges_screen() -> void:
+	if not challenges_instance: return
+	challenges_instance.queue_free()
+	challenges_instance = null
+	_set_menu_visible(true)
+
+func _on_btn_play_pressed() -> void:
 	_open_skins_menu()
 
 # --- Skins Menu ---
@@ -79,6 +108,9 @@ func _close_leaderboard() -> void:
 
 func _set_menu_visible(menu_visible: bool) -> void:
 	if has_node("btn_play"): $btn_play.visible = menu_visible
+	if has_node("btn_challenges"): $btn_challenges.visible = menu_visible
+	if has_node("btn_leaderboard"): $btn_leaderboard.visible = menu_visible
+	if has_node("btn_exit"): $btn_exit.visible = menu_visible
 	if has_node("btn_leaderboard"): $btn_leaderboard.visible = menu_visible
 	if has_node("btn_exit"): $btn_exit.visible = menu_visible
 	if has_node("btn_skins"): $btn_skins.visible = menu_visible
@@ -86,13 +118,13 @@ func _set_menu_visible(menu_visible: bool) -> void:
 
 # Removed unused fade callback and animation usage.
 
-func _on_btn_leaderboard_click_end() -> void:
+func _on_btn_leaderboard_pressed() -> void:
 	_open_leaderboard()
 
-func _on_btn_exit_click_end() -> void:
+func _on_btn_exit_pressed() -> void:
 	get_tree().quit()
 
-func _on_btn_skins_click_end() -> void:
+func _on_btn_skins_pressed() -> void:
 	_open_skins_menu()
 
 func _on_master_changed(val: float) -> void:

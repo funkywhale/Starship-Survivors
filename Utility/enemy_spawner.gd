@@ -10,7 +10,7 @@ var cache_update_counter: int = 0
 
 # Enemy count management
 var active_enemy_count: int = 0
-const MAX_ENEMIES: int = 150
+const MAX_ENEMIES: int = 200
 const CLEANUP_CHECK_INTERVAL: int = 30
 var cleanup_timer: int = 0
 

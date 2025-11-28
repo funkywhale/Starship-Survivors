@@ -16,7 +16,9 @@ func _ready():
 
 
 func _on_ContinueButton_pressed():
+	$VBoxContainer/ContinueButton/snd_click.play()
 	_set_profile_name()
+	$VBoxContainer/ContinueButton/snd_click.connect("finished", Callable(self, "_on_continue_click_sound_finished"), Object.CONNECT_ONE_SHOT)
 
 func _on_SkipButton_pressed():
 	get_tree().change_scene_to_file("res://TitleScreen/menu.tscn")
@@ -42,6 +44,10 @@ func _set_profile_name():
 	# Use local profile system
 	if LocalProfile.set_profile(profile_name):
 		status_label.text = "Profile set!"
-		get_tree().change_scene_to_file("res://TitleScreen/menu.tscn")
+		# Scene change now handled by sound finished signal
 	else:
 		status_label.text = "Failed to set profile."
+
+
+func _on_continue_click_sound_finished():
+	get_tree().change_scene_to_file("res://TitleScreen/menu.tscn")

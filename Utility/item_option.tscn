@@ -6,7 +6,7 @@
 [ext_resource type="FontFile" uid="uid://dlth4bsmavf24" path="res://Font/globet_bold.ttf" id="3_jyb5d"]
 
 [node name="ItemOption" type="TextureRect"]
-self_modulate = Color(0, 0, 1, 1)
+self_modulate = Color(0, 0, 1, 0.8117647)
 custom_minimum_size = Vector2(171, 57)
 offset_right = 171.0
 offset_bottom = 57.0
@@ -47,6 +47,7 @@ offset_left = 45.0
 offset_top = 31.0
 offset_right = 168.0
 offset_bottom = 53.0
+theme_override_constants/line_spacing = 1
 theme_override_font_sizes/font_size = 7
 text = "Description of Item"
 autowrap_mode = 3

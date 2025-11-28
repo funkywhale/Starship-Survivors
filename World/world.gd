@@ -20,9 +20,9 @@ func _ready() -> void:
 	
 	TitleMusicPlayer.stop_title_music()
 
-	resume_button.click_end.connect(_on_resume_pressed)
-	main_menu_button.click_end.connect(_on_main_menu_pressed)
-	quit_button.click_end.connect(_on_quit_pressed)
+	resume_button.pressed.connect(_on_resume_pressed)
+	main_menu_button.pressed.connect(_on_main_menu_pressed)
+	quit_button.pressed.connect(_on_quit_pressed)
 
 	# Wire pause audio sliders safely (use get_node_or_null so missing nodes don't crash)
 	var settings := get_node_or_null("/root/Settings")

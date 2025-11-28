@@ -10,6 +10,9 @@ var playlist = [
 	preload("res://Audio/Music/battleThemeF.mp3"),
 	preload("res://Audio/Music/battleThemeG.mp3"),
 	preload("res://Audio/Music/battleThemeH.mp3"),
+	preload("res://Audio/Music/battleThemeI.mp3"),
+	preload("res://Audio/Music/battleThemeJ.mp3"),
+	preload("res://Audio/Music/battleThemeK.mp3"),
 ]
 
 var last_track_index = -1

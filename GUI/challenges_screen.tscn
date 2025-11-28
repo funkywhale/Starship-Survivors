@@ -1,0 +1,99 @@
+[gd_scene load_steps=5 format=3 uid="uid://ba38fckx6wbl4"]
+
+[ext_resource type="Script" uid="uid://mbg2256l2uik" path="res://GUI/challenges_screen.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://dgnvouv20cu6u" path="res://Textures/titlecard_2.png" id="2_l8jof"]
+[ext_resource type="PackedScene" uid="uid://b7c7gsdx2rkjm" path="res://Utility/basic_button.tscn" id="3_68vld"]
+[ext_resource type="FontFile" uid="uid://dlth4bsmavf24" path="res://Font/globet_bold.ttf" id="3_sxtoq"]
+
+[node name="ChallengesScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.1, 0.1, 0.15, 1)
+
+[node name="TextureRect" type="TextureRect" parent="Background"]
+layout_mode = 0
+offset_right = 641.0
+offset_bottom = 361.0
+texture = ExtResource("2_l8jof")
+expand_mode = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_right = 30.0
+offset_bottom = 49.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.91, 0.91)
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TitleLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_sxtoq")
+text = "CHALLENGES"
+horizontal_alignment = 1
+
+[node name="HeaderContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="NumberHeader" type="Label" parent="MarginContainer/VBoxContainer/HeaderContainer"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("3_sxtoq")
+theme_override_font_sizes/font_size = 10
+text = "#"
+
+[node name="DescriptionHeader" type="Label" parent="MarginContainer/VBoxContainer/HeaderContainer"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("3_sxtoq")
+theme_override_font_sizes/font_size = 10
+text = "Description"
+
+[node name="CompletedHeader" type="Label" parent="MarginContainer/VBoxContainer/HeaderContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("3_sxtoq")
+theme_override_font_sizes/font_size = 10
+text = "Completed"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 240)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="EntriesContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 5
+
+[node name="BackButton" parent="MarginContainer/VBoxContainer" instance=ExtResource("3_68vld")]
+layout_mode = 2
+text = "Back to Menu"

@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://bmmwd7ld4llhy"]
+
+[ext_resource type="Script" uid="uid://b0ll1xv2bxeim" path="res://GUI/challenge_notification.gd" id="1"]
+
+[node name="ChallengeNotification" type="Control"]
+visible = false
+layout_mode = 3
+anchors_preset = 10
+anchor_right = 1.0
+script = ExtResource("1")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+anchor_left = 0.5
+anchor_right = 0.5
+text = "Challenge Completed!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 2.5
+one_shot = true

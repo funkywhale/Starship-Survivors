@@ -41,19 +41,48 @@ var skins := {
 	},
 }
 
+
 # currently equipped skin ID
 var equipped: String = "ship_1"
+
+# Challenge requirements for unlocks
+var skin_unlock_challenges := {
+	"ship_3": "kill_500_enemies",
+	"ship_4": "survive_5_minutes",
+	"ship_5": "upgrade_weapon_level_8"
+}
 
 
 func _ready() -> void:
 	load_data()
 
 
+func is_skin_unlocked(id: String) -> bool:
+	if not skin_unlock_challenges.has(id):
+		return true
+	var challenge_id = skin_unlock_challenges[id]
+	var cm = get_node("/root/challenge_manager")
+	return cm.is_completed(challenge_id)
+
+func get_skin_texture_path(id: String) -> String:
+	if is_skin_unlocked(id):
+		return skins[id]["texture_path"]
+	# Show locked asset if not unlocked
+	match id:
+		"ship_3":
+			return "res://Textures/Player/ship_3_locked.png"
+		"ship_4":
+			return "res://Textures/Player/ship_4_locked.png"
+		"ship_5":
+			return "res://Textures/Player/ship_5_locked.png"
+		_:
+			return skins[id]["texture_path"]
+
 func get_equipped_texture() -> Texture2D:
 	if not skins.has(equipped):
 		equipped = "ship_1"
-	var data: Dictionary = skins[equipped]
-	return load(data["texture_path"])
+	var path = get_skin_texture_path(equipped)
+	return load(path)
 
 
 func get_starting_weapon(skin_id: String = "") -> String:
@@ -67,6 +96,9 @@ func get_starting_weapon(skin_id: String = "") -> String:
 func equip_skin(id: String) -> void:
 	if not skins.has(id):
 		push_warning("Tried to equip unknown skin id: %s" % id)
+		return
+	if not is_skin_unlocked(id):
+		push_warning("Skin %s is locked. Complete its challenge to unlock." % id)
 		return
 	equipped = id
 	save_data()

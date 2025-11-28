@@ -47,5 +47,5 @@ func get_music_volume() -> float:
 
 func _linear_to_db(l: float) -> float:
     if l <= 0.0001:
-        return -80.0
-    return lerp(-80.0, 0.0, clamp(l, 0.0, 1.0))
+        return -60.0
+    return lerp(-60.0, 0.0, clamp(l, 0.0, 1.0))

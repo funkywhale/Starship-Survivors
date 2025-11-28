@@ -103,7 +103,7 @@ func _physics_process(_delta: float) -> void:
 	var direction = global_position.direction_to(player.global_position)
 
 
-	if obstacle_raycast and Engine.get_frames_drawn() % 2 == 0:
+	if obstacle_raycast and Engine.get_frames_drawn() % 3 == 0:
 		obstacle_raycast.global_position = global_position
 		obstacle_raycast.target_position = direction * obstacle_check_distance
 		obstacle_raycast.force_raycast_update()

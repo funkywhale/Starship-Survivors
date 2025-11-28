@@ -171,7 +171,7 @@ script = ExtResource("15_diffmgr")
 [node name="snd_Music" type="AudioStreamPlayer" parent="."]
 process_mode = 3
 stream = ExtResource("10_rk3we")
-volume_db = -15.972
+volume_db = -15.0
 autoplay = true
 bus = &"Music"
 parameters/looping = false

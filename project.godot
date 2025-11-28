@@ -22,6 +22,8 @@ WeaponRegistry="*res://Utility/weapon_registry.gd"
 SkinManager="*res://Utility/skin_manager.gd"
 LocalProfile="*res://Utility/local_profile_manager.gd"
 TitleMusicPlayer="*res://Audio/Music/title_music_player.tscn"
+challenges_db="*res://Utility/challenges_db.gd"
+challenge_manager="*res://Utility/challenge_manager.gd"
 
 [display]
 
