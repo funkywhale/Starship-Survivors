@@ -16,3 +16,4 @@ res://World/world.gd
 res://LoginScreen.gd
 res://Audio/Music/snd_Music.gd
 res://export_presets.cfg
+res://Utility/upgrade_db.gd

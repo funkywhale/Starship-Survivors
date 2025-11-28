@@ -15,7 +15,8 @@ func _get_save_path() -> String:
 		profile_name = "default"
 	return "user://profiles/%s_challenges.save" % profile_name
 
-func _ready():
+
+func initialize():
 	load_progress()
 
 func set_notification_callback(cb):

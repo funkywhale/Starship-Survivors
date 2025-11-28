@@ -41,10 +41,12 @@ func _set_profile_name():
 
 	status_label.text = "Setting profile name..."
 	
-	# Use local profile system
 	if LocalProfile.set_profile(profile_name):
 		status_label.text = "Profile set!"
-		# Scene change now handled by sound finished signal
+		if Engine.has_singleton("challenge_manager"):
+			Engine.get_singleton("challenge_manager").initialize()
+		elif has_node("/root/challenge_manager"):
+			get_node("/root/challenge_manager").initialize()
 	else:
 		status_label.text = "Failed to set profile."
 

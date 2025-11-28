@@ -10,11 +10,11 @@ const UPGRADE_EFFECTS = {
 	"thick": {"stat": "spell_size", "value": 0.20, "max_level": 5},
 	"firerate": {"stat": "spell_cooldown", "value": 0.1, "max_level": 5},
 	"weapon": {"stat": "additional_attacks", "value": 1, "max_level": 3},
-	"pickup": {"stat": "pickup_range_multiplier", "values": [1.25, 1.50, 1.75, 2.00, 2.50], "levels": [1, 2, 3, 4, 5]},
+	"pickup": {"stat": "pickup_range_multiplier", "values": [1.25, 1.50, 2.00, 2.50, 3.50], "levels": [1, 2, 3, 4, 5]},
 	"knockback": {"stat": "knockback_multiplier", "value": 0.10, "max_level": 5},
 	"projectilespeed": {"stat": "projectile_speed_multiplier", "value": 0.10, "max_level": 5},
 	"critical": {"stat": "critical_chance", "value": 0.05, "max_level": 5},
-	"knowledge": {"stat": "experience_multiplier", "value": 0.10, "max_level": 5},
+	"knowledge": {"stat": "experience_multiplier", "value": 0.20, "max_level": 5},
 	"heal": {"stat": "hp", "value": 20}
 }
 
@@ -270,7 +270,7 @@ const UPGRADES = {
 	"pickup3": {
 		"icon": ICON_PATH + "pickup.png",
 		"displayname": "Pickup Range",
-		"details": "Increases pickup radius by 75%",
+		"details": "Increases pickup radius by 100%",
 		"level": "Level: 3",
 		"prerequisite": ["pickup2"],
 		"type": "upgrade"
@@ -278,7 +278,7 @@ const UPGRADES = {
 	"pickup4": {
 		"icon": ICON_PATH + "pickup.png",
 		"displayname": "Pickup Range",
-		"details": "Increases pickup radius by 100%",
+		"details": "Increases pickup radius by 150%",
 		"level": "Level: 4",
 		"prerequisite": ["pickup3"],
 		"type": "upgrade"
@@ -286,7 +286,7 @@ const UPGRADES = {
 	"pickup5": {
 		"icon": ICON_PATH + "pickup.png",
 		"displayname": "Pickup Range",
-		"details": "Increases pickup radius by 150%",
+		"details": "Increases pickup radius by 250%",
 		"level": "Level: 5",
 		"prerequisite": ["pickup4"],
 		"type": "upgrade"
@@ -414,7 +414,7 @@ const UPGRADES = {
 	"knowledge1": {
 		"icon": ICON_PATH + "knowledge.png",
 		"displayname": "Knowledge",
-		"details": "Increases experience gain by 10%",
+		"details": "Increases experience gain by 20%",
 		"level": "Level: 1",
 		"prerequisite": [],
 		"type": "upgrade"
@@ -422,7 +422,7 @@ const UPGRADES = {
 	"knowledge2": {
 		"icon": ICON_PATH + "knowledge.png",
 		"displayname": "Knowledge",
-		"details": "Increases experience gain by an additional 10%",
+		"details": "Increases experience gain by an additional 20%",
 		"level": "Level: 2",
 		"prerequisite": ["knowledge1"],
 		"type": "upgrade"
@@ -430,7 +430,7 @@ const UPGRADES = {
 	"knowledge3": {
 		"icon": ICON_PATH + "knowledge.png",
 		"displayname": "Knowledge",
-		"details": "Increases experience gain by an additional 10%",
+		"details": "Increases experience gain by an additional 20%",
 		"level": "Level: 3",
 		"prerequisite": ["knowledge2"],
 		"type": "upgrade"
@@ -438,7 +438,7 @@ const UPGRADES = {
 	"knowledge4": {
 		"icon": ICON_PATH + "knowledge.png",
 		"displayname": "Knowledge",
-		"details": "Increases experience gain by an additional 10%",
+		"details": "Increases experience gain by an additional 20%",
 		"level": "Level: 4",
 		"prerequisite": ["knowledge3"],
 		"type": "upgrade"
@@ -446,7 +446,7 @@ const UPGRADES = {
 	"knowledge5": {
 		"icon": ICON_PATH + "knowledge.png",
 		"displayname": "Knowledge",
-		"details": "Increases experience gain by an additional 10%",
+		"details": "Increases experience gain by an additional 20%",
 		"level": "Level: 5",
 		"prerequisite": ["knowledge4"],
 		"type": "upgrade"
