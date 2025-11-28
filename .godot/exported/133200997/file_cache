@@ -18,7 +18,7 @@ res://Player/Attack/rocket.tscn::021d1a3a7a74199fe6bdead2907ca0a6::1764244600::r
 res://Player/Attack/scatter_shot.tscn::7dc124d65cceedeefa01e86352ecc60c::1764244600::res://.godot/exported/133200997/export-2d10217599e21821ca39fe477217079a-scatter_shot.scn
 res://Player/GUI/item_container.tscn::122ef00a6f19281a28d795b9a926cbec::1764151114::res://.godot/exported/133200997/export-05edbfa53f42d3499031f0b1b250ce32-item_container.scn
 res://Player/player.tscn::934a552b5316c151c42acb1f74d3e6df::1764212728::res://.godot/exported/133200997/export-d267b47f7e81a3258979164d56d0d9c2-player.scn
-res://SkinsMenu/skins_menu.tscn::731f072869cbd247a7e63a19e409a393::1764336901::res://.godot/exported/133200997/export-de2f540595bb88b8fec133d976fcb061-skins_menu.scn
+res://SkinsMenu/skins_menu.tscn::731f072869cbd247a7e63a19e409a393::1764336961::res://.godot/exported/133200997/export-de2f540595bb88b8fec133d976fcb061-skins_menu.scn
 res://TitleScreen/menu.tscn::4b2eabce4d5349bd6af85a667af3f5a2::1764333729::res://.godot/exported/133200997/export-2fcc99cb4d261fcd27c44064a8e599c4-menu.scn
 res://Utility/basic_button.tscn::dd6964006aa253c39f8fd7bc950a71cf::1764318626::res://.godot/exported/133200997/export-f20e3aa69651915552de52fb9f7d007d-basic_button.scn
 res://Utility/enemy_spawner.tscn::9edf947533221c1e2bca7d185b67ac36::1759286357::res://.godot/exported/133200997/export-6538c176aa9d792f5b57f4c211309eaa-enemy_spawner.scn

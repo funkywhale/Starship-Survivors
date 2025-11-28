@@ -290,11 +290,11 @@ vertical_alignment = 1
 [node name="lblKills" type="Label" parent="GUILayer/GUI"]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 554.0
-offset_top = 8.0
-offset_right = 637.0
-offset_bottom = 28.0
-theme_override_font_sizes/font_size = 14
+offset_left = 120.0
+offset_top = 331.0
+offset_right = 202.99994
+offset_bottom = 351.0
+theme_override_font_sizes/font_size = 10
 text = "Kills: 0"
 vertical_alignment = 1
 
