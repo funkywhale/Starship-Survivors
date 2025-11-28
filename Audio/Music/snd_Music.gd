@@ -23,7 +23,7 @@ func _ready():
 		play()
 		
 		var tween = create_tween()
-		tween.tween_property(self, "volume_db", -15, 1.5)
+		tween.tween_property(self, "volume_db", -15, 2.5)
 
 func _play_random_track() -> void:
 	var random_index = randi() % playlist.size()

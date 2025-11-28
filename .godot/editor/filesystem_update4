@@ -1,7 +1,3 @@
-res://Enemy/enemy_drone_strong.tscn
-res://addons/talo/samples/authentication/assets/theme.tres
-res://Audio/Music/snd_Music.gd
 res://World/world.tscn
-res://Utility/enemy_spawner.gd
-res://Enemy/enemy.gd
-res://Enemy/explosion.gd
+res://addons/talo/samples/authentication/assets/theme.tres
+res://export_presets.cfg

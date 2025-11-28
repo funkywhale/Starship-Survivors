@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://du6qbgqucaqov"]
+[gd_scene load_steps=32 format=3 uid="uid://du6qbgqucaqov"]
 
 [ext_resource type="Script" uid="uid://c741ym6flkffr" path="res://World/world.gd" id="1_h2aik"]
 [ext_resource type="Texture2D" uid="uid://cy8avdpgoxae8" path="res://Textures/space_background3.png" id="1_lo5ox"]
@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://cge5pu20boj0q" path="res://Utility/experience_orb_manager.tscn" id="13_orbmgr"]
 [ext_resource type="PackedScene" uid="uid://b7c7gsdx2rkjm" path="res://Utility/basic_button.tscn" id="14_basic_button"]
 [ext_resource type="Script" uid="uid://bwlgtk72fc7mr" path="res://Utility/difficulty_manager.gd" id="15_diffmgr"]
+[ext_resource type="FontFile" uid="uid://dlth4bsmavf24" path="res://Font/globet_bold.ttf" id="17_5xkvv"]
 
 [sub_resource type="Resource" id="Resource_03m25"]
 script = ExtResource("5_jj7s8")
@@ -170,8 +171,9 @@ script = ExtResource("15_diffmgr")
 [node name="snd_Music" type="AudioStreamPlayer" parent="."]
 process_mode = 3
 stream = ExtResource("10_rk3we")
-volume_db = -20.043
+volume_db = -15.972
 autoplay = true
+bus = &"Music"
 parameters/looping = false
 script = ExtResource("11_ovtx6")
 
@@ -208,6 +210,59 @@ text = "Main Menu"
 [node name="QuitButton" parent="PauseMenu/Panel/VBoxContainer" instance=ExtResource("14_basic_button")]
 layout_mode = 2
 text = "Quit"
+
+[node name="PauseAudioControls" type="Control" parent="PauseMenu"]
+layout_mode = 3
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -167.0
+offset_top = -38.0
+offset_right = 137.0
+offset_bottom = 26.0
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(0.515, 0.515)
+
+[node name="PauseAudioControls#MasterLabel" type="Label" parent="PauseMenu/PauseAudioControls"]
+layout_mode = 0
+offset_left = 31.067953
+offset_top = 19.417498
+offset_right = 103.067955
+offset_bottom = 42.417496
+theme_override_fonts/font = ExtResource("17_5xkvv")
+text = "Master"
+
+[node name="PauseAudioControls#MasterSlider" type="HSlider" parent="PauseMenu/PauseAudioControls"]
+layout_mode = 0
+offset_left = 102.0
+offset_top = 21.0
+offset_right = 302.0
+offset_bottom = 41.0
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="PauseAudioControls#MusicLabel" type="Label" parent="PauseMenu/PauseAudioControls"]
+layout_mode = 0
+offset_left = 31.067953
+offset_top = 42.417496
+offset_right = 103.067955
+offset_bottom = 65.417496
+theme_override_fonts/font = ExtResource("17_5xkvv")
+text = "Music"
+
+[node name="PauseAudioControls#MusicSlider" type="HSlider" parent="PauseMenu/PauseAudioControls"]
+layout_mode = 0
+offset_left = 102.0
+offset_top = 45.0
+offset_right = 302.0
+offset_bottom = 67.0
+max_value = 1.0
+step = 0.01
+value = 1.0
 
 [connection signal="playerdeath" from="Player" to="RockManager" method="regenerate_rocks"]
 [connection signal="playerdeath" from="Player" to="snd_Music" method="_on_player_playerdeath"]
