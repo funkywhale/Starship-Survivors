@@ -13,10 +13,10 @@ const WEAPONS = {
 			"+1 ammo, +5 damage",
 			"+1 ammo, pierces 2 enemies",
 			"+1 ammo, +5 damage, pierces 2 enemies",
-			"+1 ammo, +5 damage, pierces 3 enemies, +5% speed",
-			"+1 ammo, +5 damage, +10% speed, 10% knockback",
-			"+1 ammo, +15% speed, 15% knockback",
-			"+2 ammo, +10 damage, +20% speed, pierces 5 enemies, 20% knockback"
+			"+2 ammo, +5 damage, pierces 3 enemies, +5% speed",
+			"+2 ammo, +5 damage, +10% speed, 10% knockback",
+			"+2 ammo, +15% speed, 15% knockback",
+			"+3 ammo, +10 damage, +20% speed, pierces 5 enemies, 20% knockback"
 		],
 		"prerequisites": [
 			[],
@@ -38,13 +38,13 @@ const WEAPONS = {
 			# Level 4
 			{"ammo": 4, "damage": 20, "speed": 100, "hp": 2, "size": 1.0, "knockback": 50},
 			# Level 5
-			{"ammo": 5, "damage": 25, "speed": 105, "hp": 3, "size": 1.05, "knockback": 55},
+			{"ammo": 6, "damage": 25, "speed": 105, "hp": 3, "size": 1.05, "knockback": 55},
 			# Level 6
-			{"ammo": 6, "damage": 30, "speed": 110, "hp": 3, "size": 1.1, "knockback": 60},
+			{"ammo": 8, "damage": 30, "speed": 110, "hp": 3, "size": 1.1, "knockback": 60},
 			# Level 7
-			{"ammo": 7, "damage": 30, "speed": 115, "hp": 3, "size": 1.15, "knockback": 65},
+			{"ammo": 10, "damage": 30, "speed": 115, "hp": 3, "size": 1.15, "knockback": 65},
 			# Level 8
-			{"ammo": 9, "damage": 40, "speed": 120, "hp": 5, "size": 1.2, "knockback": 70},
+			{"ammo": 13, "damage": 40, "speed": 120, "hp": 5, "size": 1.2, "knockback": 70},
 		]
 	},
 	"rocket": {
@@ -104,7 +104,7 @@ const WEAPONS = {
 			"+1 ammo, +10 damage, pierces 7 enemies",
 			"+10 damage, pierces 8 enemies, trail damage 20",
 			"+1 ammo, pierces 9 enemies",
-			"+3 ammo, +5 damage, +40 speed, 20% size, pierces 11 enemies, trail damage 25"
+			"+3 ammo, +15 damage, +40 speed, 20% size, pierces 11 enemies, trail damage 25"
 		],
 		"prerequisites": [
 			[],
@@ -132,7 +132,7 @@ const WEAPONS = {
 			# Level 7
 			{"ammo": 5, "hp": 9, "damage": 45, "speed": 140, "size": 1.0, "trail_damage": 20},
 			# Level 8
-			{"ammo": 8, "hp": 11, "damage": 50, "speed": 180, "size": 1.2, "trail_damage": 25},
+			{"ammo": 8, "hp": 11, "damage": 60, "speed": 180, "size": 1.2, "trail_damage": 25},
 		]
 	},
 	"scattershot": {
@@ -143,12 +143,12 @@ const WEAPONS = {
 		"level_descriptions": [
 			"Fires 3 pellets in a cone. Shotgun-style weapon.",
 			"4 shots, 5% faster cooldown",
-			"5 shots, +4 damage, pierces 2 enemies, 10% faster cooldown",
+			"5 shots, +3 damage, pierces 2 enemies, 10% faster cooldown",
 			"6 shots, pierces 2 enemies, 15% faster cooldown",
-			"7 shots, +2 damage, pierces 3 enemies, 20% faster cooldown",
+			"7 shots, +5 damage, pierces 3 enemies, 20% faster cooldown",
 			"8 shots, pierces 3 enemies, 25% faster cooldown",
-			"9 shots, +3 damage, pierces 4 enemies, 35% faster cooldown",
-			"10 shots, +2 damage, pierces 5 enemies, 50% faster cooldown"
+			"9 shots, +7 damage, pierces 4 enemies, 35% faster cooldown",
+			"10 shots, +10 damage, pierces 5 enemies, 50% faster cooldown"
 		],
 		"prerequisites": [
 			[],
@@ -162,21 +162,21 @@ const WEAPONS = {
 		],
 		"levels": [
 			# Level 1
-			{"pellets": 3, "damage": 9, "hp": 1, "speed": 200, "size": 1.0},
+			{"pellets": 3, "damage": 10, "hp": 1, "speed": 200, "size": 1.0},
 			# Level 2
-			{"pellets": 4, "damage": 9, "hp": 1, "speed": 200, "size": 1.0, "cooldown_modifier": - 0.1},
+			{"pellets": 4, "damage": 10, "hp": 1, "speed": 200, "size": 1.0, "cooldown_modifier": - 0.1},
 			# Level 3
 			{"pellets": 5, "damage": 13, "hp": 2, "speed": 200, "size": 1.0, "cooldown_modifier": - 0.2},
 			# Level 4
 			{"pellets": 6, "damage": 13, "hp": 2, "speed": 200, "size": 1.0, "cooldown_modifier": - 0.3},
 			# Level 5
-			{"pellets": 7, "damage": 15, "hp": 3, "speed": 200, "size": 1.0, "cooldown_modifier": - 0.4},
+			{"pellets": 7, "damage": 18, "hp": 3, "speed": 200, "size": 1.0, "cooldown_modifier": - 0.4},
 			# Level 6
-			{"pellets": 8, "damage": 15, "hp": 3, "speed": 200, "size": 1.0, "cooldown_modifier": - 0.5},
+			{"pellets": 8, "damage": 18, "hp": 3, "speed": 200, "size": 1.0, "cooldown_modifier": - 0.5},
 			# Level 7
-			{"pellets": 9, "damage": 18, "hp": 4, "speed": 200, "size": 1.0, "cooldown_modifier": - 0.7},
+			{"pellets": 9, "damage": 25, "hp": 4, "speed": 200, "size": 1.0, "cooldown_modifier": - 0.7},
 			# Level 8
-			{"pellets": 10, "damage": 20, "hp": 5, "speed": 200, "size": 1.0, "cooldown_modifier": - 1.0},
+			{"pellets": 10, "damage": 35, "hp": 5, "speed": 200, "size": 1.0, "cooldown_modifier": - 1.0},
 		]
 	},
 	"ionlaser": {

@@ -18,20 +18,40 @@ func _get_save_path() -> String:
 
 func initialize():
 	load_progress()
+	# After loading, sync completed challenges from LocalProfile (profile is source of truth)
+	var local_profile = null
+	if Engine.has_singleton("LocalProfile"):
+		local_profile = Engine.get_singleton("LocalProfile")
+	elif has_node("/root/LocalProfile"):
+		local_profile = get_node("/root/LocalProfile")
+	if local_profile:
+		var completed = local_profile.get_completed_challenges()
+		if typeof(completed) == TYPE_DICTIONARY:
+			completed_challenges = completed.duplicate()
 
 func set_notification_callback(cb):
 	notification_callback = cb
 
 func load_progress():
+	# Always reset before loading new profile data
+	challenge_progress = {}
+	completed_challenges = {}
 	var file = FileAccess.open(_get_save_path(), FileAccess.READ)
 	if file:
 		var data = file.get_var()
 		challenge_progress = data.get("progress", {})
 		completed_challenges = data.get("completed", {})
 		file.close()
-	else:
-		challenge_progress = {}
-		completed_challenges = {}
+	# After loading, sync completed challenges from LocalProfile (profile is source of truth)
+	var local_profile = null
+	if Engine.has_singleton("LocalProfile"):
+		local_profile = Engine.get_singleton("LocalProfile")
+	elif has_node("/root/LocalProfile"):
+		local_profile = get_node("/root/LocalProfile")
+	if local_profile:
+		var completed = local_profile.get_completed_challenges()
+		if typeof(completed) == TYPE_DICTIONARY:
+			completed_challenges = completed.duplicate()
 
 func save_progress():
 	var file = FileAccess.open(_get_save_path(), FileAccess.WRITE)
@@ -67,6 +87,14 @@ func check_completion(challenge_id: String):
 		if not completed_challenges.get(challenge_id, false):
 			completed_challenges[challenge_id] = true
 			save_progress()
+			# Always update LocalProfile (profile is source of truth)
+			var local_profile = null
+			if Engine.has_singleton("LocalProfile"):
+				local_profile = Engine.get_singleton("LocalProfile")
+			elif has_node("/root/LocalProfile"):
+				local_profile = get_node("/root/LocalProfile")
+			if local_profile:
+				local_profile.set_completed_challenge(challenge_id)
 			if notification_callback:
 				notification_callback.call(challenge["description"])
 

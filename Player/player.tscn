@@ -224,7 +224,7 @@ offset_bottom = 95.0
 [node name="snd_levelup" type="AudioStreamPlayer" parent="GUILayer/GUI/LevelUp"]
 unique_name_in_owner = true
 stream = ExtResource("7_wl7d2")
-volume_db = -10.0
+volume_db = -20.733
 
 [node name="DeathPanel" type="Panel" parent="GUILayer/GUI"]
 unique_name_in_owner = true

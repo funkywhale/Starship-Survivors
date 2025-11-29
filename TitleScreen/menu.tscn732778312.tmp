@@ -1,0 +1,207 @@
+[gd_scene load_steps=8 format=3 uid="uid://dcyka5e06knff"]
+
+[ext_resource type="Script" uid="uid://ublpf26ovrar" path="res://TitleScreen/menu.gd" id="1_oi0p3"]
+[ext_resource type="Texture2D" uid="uid://bcj6p83xed2sp" path="res://Textures/titlecard.png" id="2_yf0qj"]
+[ext_resource type="PackedScene" uid="uid://b7c7gsdx2rkjm" path="res://Utility/basic_button.tscn" id="3_kwsdd"]
+[ext_resource type="FontFile" uid="uid://dlth4bsmavf24" path="res://Font/globet_bold.ttf" id="5_0eg15"]
+
+[sub_resource type="Animation" id="Animation_0eg15"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Fade:color:a")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_yf0qj"]
+resource_name = "fade_out"
+length = 0.6
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Fade:color:a")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.033333335, 0.56666666),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.0]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.56666666),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"_on_fade_out_finished"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_dsl36"]
+_data = {
+&"RESET": SubResource("Animation_0eg15"),
+&"fade_out": SubResource("Animation_yf0qj")
+}
+
+[node name="Menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_oi0p3")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 641.0
+offset_bottom = 361.0
+texture = ExtResource("2_yf0qj")
+expand_mode = 3
+
+[node name="btn_play" parent="." instance=ExtResource("3_kwsdd")]
+layout_mode = 0
+offset_left = 282.71
+offset_top = 305.0
+offset_right = 362.71005
+offset_bottom = 339.0
+text = "Start"
+
+[node name="btn_create_profile" parent="." instance=ExtResource("3_kwsdd")]
+layout_mode = 0
+offset_left = 9.0
+offset_top = 230.0
+offset_right = 122.0
+offset_bottom = 260.00037
+scale = Vector2(0.695, 0.695)
+theme_override_font_sizes/font_size = 10
+text = "Create New Profile"
+
+[node name="btn_switch_profile" parent="." instance=ExtResource("3_kwsdd")]
+layout_mode = 0
+offset_left = 9.0
+offset_top = 260.0
+offset_right = 109.0
+offset_bottom = 290.0
+scale = Vector2(0.79, 0.79)
+theme_override_font_sizes/font_size = 10
+text = "Switch Profile"
+
+[node name="ProfilePopup" type="Popup" parent="."]
+oversampling_override = 1.0
+
+[node name="ProfileList" type="ItemList" parent="ProfilePopup"]
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 190.0
+offset_bottom = 190.0
+theme_override_fonts/font = ExtResource("5_0eg15")
+
+[node name="btn_challenges" parent="." instance=ExtResource("3_kwsdd")]
+layout_mode = 0
+offset_left = 456.0
+offset_top = 223.0
+offset_right = 613.08
+offset_bottom = 257.0
+text = "Challenges"
+
+[node name="btn_leaderboard" parent="." instance=ExtResource("3_kwsdd")]
+layout_mode = 0
+offset_left = 456.0
+offset_top = 263.0
+offset_right = 613.08
+offset_bottom = 297.0
+text = "Leaderboard"
+
+[node name="btn_exit" parent="." instance=ExtResource("3_kwsdd")]
+layout_mode = 0
+offset_left = 533.585
+offset_top = 305.0
+offset_right = 613.5857
+offset_bottom = 339.0
+text = "Exit"
+
+[node name="Fade" type="ColorRect" parent="."]
+visible = false
+layout_mode = 0
+offset_right = 640.0
+offset_bottom = 360.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_dsl36")
+}
+
+[node name="ProfileLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 316.0
+offset_right = 216.0
+offset_bottom = 339.0
+theme_override_fonts/font = ExtResource("5_0eg15")
+text = "Profile: "
+vertical_alignment = 1
+
+[node name="AudioControls" type="Control" parent="."]
+anchors_preset = 0
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -72.0
+offset_right = 312.0
+offset_bottom = -8.0
+scale = Vector2(0.51, 0.51)
+
+[node name="SFX" type="Label" parent="AudioControls"]
+layout_mode = 0
+offset_right = 72.0
+offset_bottom = 21.0
+theme_override_fonts/font = ExtResource("5_0eg15")
+text = "Master"
+
+[node name="MasterSlider" type="HSlider" parent="AudioControls"]
+layout_mode = 0
+offset_left = 72.549
+offset_top = 1.092
+offset_right = 272.549
+offset_bottom = 21.092
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="MusicLabel" type="Label" parent="AudioControls"]
+layout_mode = 0
+offset_top = 22.0
+offset_right = 72.0
+offset_bottom = 40.0
+theme_override_fonts/font = ExtResource("5_0eg15")
+text = "Music"
+
+[node name="MusicSlider" type="HSlider" parent="AudioControls"]
+layout_mode = 0
+offset_left = 72.549
+offset_top = 23.07
+offset_right = 272.549
+offset_bottom = 45.069992
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[connection signal="click_end" from="btn_play" to="." method="_on_btn_play_click_end"]
+[connection signal="click_end" from="btn_leaderboard" to="." method="_on_btn_leaderboard_click_end"]
+[connection signal="click_end" from="btn_exit" to="." method="_on_btn_exit_click_end"]

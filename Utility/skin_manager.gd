@@ -1,6 +1,15 @@
 extends Node
 
-const SAVE_PATH := "user://skins.save"
+
+func _get_save_path() -> String:
+	var profile_name = "default"
+	if Engine.has_singleton("LocalProfile"):
+		profile_name = Engine.get_singleton("LocalProfile").get_current_profile()
+	elif has_node("/root/LocalProfile"):
+		profile_name = get_node("/root/LocalProfile").get_current_profile()
+	if profile_name.is_empty():
+		profile_name = "default"
+	return "user://profiles/%s_skins.save" % profile_name
 
 # all available skins
 var skins := {
@@ -108,11 +117,11 @@ func equip_skin(id: String) -> void:
 func save_data() -> void:
 	var cf := ConfigFile.new()
 	cf.set_value("skins", "equipped", equipped)
-	cf.save(SAVE_PATH)
+	cf.save(_get_save_path())
 
 
 func load_data() -> void:
 	var cf := ConfigFile.new()
-	var err := cf.load(SAVE_PATH)
+	var err := cf.load(_get_save_path())
 	if err == OK:
 		equipped = cf.get_value("skins", "equipped", equipped)

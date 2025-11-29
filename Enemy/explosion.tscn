@@ -51,7 +51,7 @@ script = ExtResource("2_d6gja")
 
 [node name="snd_explosion" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("3_4j08v")
-volume_db = -13.615
+volume_db = -25.108
 pitch_scale = 0.5
 autoplay = true
 

@@ -1,9 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://dcyka5e06knff"]
+[gd_scene load_steps=10 format=3 uid="uid://dcyka5e06knff"]
 
 [ext_resource type="Script" uid="uid://ublpf26ovrar" path="res://TitleScreen/menu.gd" id="1_oi0p3"]
 [ext_resource type="Texture2D" uid="uid://bcj6p83xed2sp" path="res://Textures/titlecard.png" id="2_yf0qj"]
 [ext_resource type="PackedScene" uid="uid://b7c7gsdx2rkjm" path="res://Utility/basic_button.tscn" id="3_kwsdd"]
 [ext_resource type="FontFile" uid="uid://dlth4bsmavf24" path="res://Font/globet_bold.ttf" id="5_0eg15"]
+
+[sub_resource type="FontVariation" id="FontVariation_yf0qj"]
 
 [sub_resource type="Animation" id="Animation_0eg15"]
 length = 0.001
@@ -56,6 +58,8 @@ _data = {
 &"fade_out": SubResource("Animation_yf0qj")
 }
 
+[sub_resource type="FontVariation" id="FontVariation_cxswi"]
+
 [node name="Menu" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -74,34 +78,78 @@ expand_mode = 3
 
 [node name="btn_play" parent="." instance=ExtResource("3_kwsdd")]
 layout_mode = 0
-offset_left = 282.71
-offset_top = 305.0
-offset_right = 362.71005
-offset_bottom = 339.0
+offset_left = 289.71
+offset_top = 317.0
+offset_right = 369.71005
+offset_bottom = 351.0
 text = "Start"
+
+[node name="btn_create_profile" parent="." instance=ExtResource("3_kwsdd")]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 242.0
+offset_right = 129.0
+offset_bottom = 272.00037
+scale = Vector2(0.695, 0.695)
+theme_override_font_sizes/font_size = 10
+text = "Create New Profile"
+
+[node name="btn_switch_profile" parent="." instance=ExtResource("3_kwsdd")]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 272.0
+offset_right = 116.0
+offset_bottom = 302.0
+scale = Vector2(0.79, 0.79)
+theme_override_font_sizes/font_size = 10
+text = "Switch Profile"
+
+[node name="ProfilePopup" type="Popup" parent="."]
+transparent_bg = true
+oversampling_override = 1.0
+size = Vector2i(191, 191)
+transparent = true
+
+[node name="ProfileList" type="ItemList" parent="ProfilePopup"]
+offset_left = 5.0
+offset_top = 4.0
+offset_right = 185.0
+offset_bottom = 184.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = SubResource("FontVariation_yf0qj")
+theme_override_font_sizes/font_size = 10
+auto_height = true
 
 [node name="btn_challenges" parent="." instance=ExtResource("3_kwsdd")]
 layout_mode = 0
-offset_left = 456.0
-offset_top = 223.0
-offset_right = 613.08
-offset_bottom = 257.0
+offset_left = 463.0
+offset_top = 235.0
+offset_right = 620.08
+offset_bottom = 269.0
 text = "Challenges"
 
 [node name="btn_leaderboard" parent="." instance=ExtResource("3_kwsdd")]
 layout_mode = 0
-offset_left = 456.0
-offset_top = 263.0
-offset_right = 613.08
-offset_bottom = 297.0
+offset_left = 463.0
+offset_top = 275.0
+offset_right = 620.08
+offset_bottom = 309.0
 text = "Leaderboard"
+
+[node name="btn_debug_unlock_challenges" parent="." instance=ExtResource("3_kwsdd")]
+layout_mode = 0
+offset_left = 396.0
+offset_top = 8.0
+offset_right = 635.0
+offset_bottom = 42.0
+text = "Unlock All Challenges (Debug)"
 
 [node name="btn_exit" parent="." instance=ExtResource("3_kwsdd")]
 layout_mode = 0
-offset_left = 533.585
-offset_top = 305.0
-offset_right = 613.5857
-offset_bottom = 339.0
+offset_left = 540.585
+offset_top = 317.0
+offset_right = 620.5857
+offset_bottom = 351.0
 text = "Exit"
 
 [node name="Fade" type="ColorRect" parent="."]
@@ -119,11 +167,12 @@ libraries = {
 
 [node name="ProfileLabel" type="Label" parent="."]
 layout_mode = 0
-offset_left = 8.0
-offset_top = 316.0
-offset_right = 216.0
-offset_bottom = 339.0
-theme_override_fonts/font = ExtResource("5_0eg15")
+offset_left = 15.0
+offset_top = 328.0
+offset_right = 223.0
+offset_bottom = 351.0
+theme_override_fonts/font = SubResource("FontVariation_cxswi")
+theme_override_font_sizes/font_size = 14
 text = "Profile: "
 vertical_alignment = 1
 
@@ -139,35 +188,38 @@ scale = Vector2(0.51, 0.51)
 
 [node name="SFX" type="Label" parent="AudioControls"]
 layout_mode = 0
-offset_right = 72.0
-offset_bottom = 21.0
+offset_left = 13.725491
+offset_top = 23.529413
+offset_right = 85.725494
+offset_bottom = 44.52941
 theme_override_fonts/font = ExtResource("5_0eg15")
 text = "Master"
 
 [node name="MasterSlider" type="HSlider" parent="AudioControls"]
 layout_mode = 0
-offset_left = 72.549
-offset_top = 1.092
-offset_right = 272.549
-offset_bottom = 21.092
+offset_left = 86.27449
+offset_top = 24.621414
+offset_right = 286.27448
+offset_bottom = 44.621414
 max_value = 1.0
 step = 0.01
 value = 1.0
 
 [node name="MusicLabel" type="Label" parent="AudioControls"]
 layout_mode = 0
-offset_top = 22.0
-offset_right = 72.0
-offset_bottom = 40.0
+offset_left = 13.725491
+offset_top = 45.52941
+offset_right = 85.725494
+offset_bottom = 66.52941
 theme_override_fonts/font = ExtResource("5_0eg15")
 text = "Music"
 
 [node name="MusicSlider" type="HSlider" parent="AudioControls"]
 layout_mode = 0
-offset_left = 72.549
-offset_top = 23.07
-offset_right = 272.549
-offset_bottom = 45.069992
+offset_left = 86.27449
+offset_top = 46.59941
+offset_right = 286.27448
+offset_bottom = 68.5994
 max_value = 1.0
 step = 0.01
 value = 1.0

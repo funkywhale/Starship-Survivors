@@ -23,6 +23,7 @@ collision_layer = 4
 collision_mask = 5
 motion_mode = 1
 script = ExtResource("1_1bh7b")
+experience = 2
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(4, 4)

@@ -1,0 +1,59 @@
+[gd_scene load_steps=4 format=3 uid="uid://boeuffoebk7k2"]
+
+[ext_resource type="Script" uid="uid://ocikl6hxgcu5" path="res://LoginScreen.gd" id="1_abcde"]
+[ext_resource type="PackedScene" uid="uid://b7c7gsdx2rkjm" path="res://Utility/basic_button.tscn" id="2_fghij"]
+[ext_resource type="Texture2D" uid="uid://bcj6p83xed2sp" path="res://Textures/titlecard.png" id="2_p8x2n"]
+
+[node name="LoginScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_abcde")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.1, 0.1, 0.15, 1)
+
+[node name="TextureRect" type="TextureRect" parent="Background"]
+layout_mode = 0
+offset_right = 641.0
+offset_bottom = 361.0
+texture = ExtResource("2_p8x2n")
+expand_mode = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 145.0
+offset_top = 235.0
+offset_right = 497.0
+offset_bottom = 343.0
+theme_override_constants/separation = 10
+
+[node name="ProfileNameInput" type="LineEdit" parent="VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Enter Profile Name"
+max_length = 20
+
+[node name="ContinueButton" parent="VBoxContainer" instance=ExtResource("2_fghij")]
+layout_mode = 2
+text = "Continue"
+
+[node name="StatusLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="SkipButton" parent="." instance=ExtResource("2_fghij")]
+layout_mode = 0
+offset_left = 554.0
+offset_top = 319.0
+offset_right = 634.0
+offset_bottom = 357.0
+text = "Skip"
