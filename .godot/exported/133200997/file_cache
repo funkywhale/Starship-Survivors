@@ -1,5 +1,5 @@
 res://Audio/Music/title_music_player.tscn::cd956d83b81b1e16a15805dc0df7637c::1764327442::res://.godot/exported/133200997/export-85b8bc6e7293c878d040fd7a1a74e0ee-title_music_player.scn
-res://Enemy/enemy_battleship.tscn::69836abba67b564fc94017af51297fa7::1764385117::res://.godot/exported/133200997/export-cd0d56276b0a3a8fc3df7413898949d6-enemy_battleship.scn
+res://Enemy/enemy_battleship.tscn::c2f4801b09748401f59126477a63519a::1764504222::res://.godot/exported/133200997/export-cd0d56276b0a3a8fc3df7413898949d6-enemy_battleship.scn
 res://Enemy/enemy_boss.tscn::0d90d648468f1f854efb1431835f33d4::1764244600::res://.godot/exported/133200997/export-d382ff4a14d60756fc8696e8a18d3f61-enemy_boss.scn
 res://Enemy/enemy_drone.tscn::c46bb5b3ca2d7462efffed1141b4b6de::1764379865::res://.godot/exported/133200997/export-e927f24e0b2d18b4db00ffed350ae37c-enemy_drone.scn
 res://Enemy/enemy_drone_strong.tscn::f9c75e87e367bea3259e4d366dea5ae5::1764386899::res://.godot/exported/133200997/export-b57d51b94ff6533ef3b398163ca924b2-enemy_drone_strong.scn
@@ -33,7 +33,7 @@ res://Objects/rock_large2.tscn::db824c745d67fb649ceeddf4c25d55ca::1764159149::re
 res://Objects/rock_medium2.tscn::891693a8a7d41dc582c93cf11ee6782b::1764159149::res://.godot/exported/133200997/export-7f90d7202b2f034157b728b308f31790-rock_medium2.scn
 res://Objects/rock_small2.tscn::fcd021306b80ad501e6d4c73082124fe::1764159149::res://.godot/exported/133200997/export-31e68d6cee62c3e33bfe07ef7d80fc6d-rock_small2.scn
 res://Player/Attack/plasma_trail.tscn::146e82262ad32f93dd5252f5a151d49e::1764318878::res://.godot/exported/133200997/export-616d1f15e1ce385bcb2995169563660f-plasma_trail.scn
-res://Objects/grab.tscn::9eff127a32517f33aae6f0a6d125bfe8::1764207336::res://.godot/exported/133200997/export-b9a238f3846af63abf2518f1e3ebbc3d-grab.scn
+res://Objects/grab.tscn::45a004ca29b15bc82e7586560e1f2d76::1764508044::res://.godot/exported/133200997/export-b9a238f3846af63abf2518f1e3ebbc3d-grab.scn
 res://default_bus_layout.tres::4bc4587ff2d289ea5d25a3766a69d96a::1764315606::res://.godot/exported/133200997/export-19246414aa9fb561ced4b8dce477acec-default_bus_layout.res
 res://GUI/challenges_screen.tscn::dc68acdfd55763d7dcfa8c5850da88b7::1764333729::res://.godot/exported/133200997/export-422a7fe0b8d555d2987d8d82ef811c6d-challenges_screen.scn
 res://GUI/challenge_notification.tscn::47d410bdb5414fc544fbff588dd11c94::1764333664::res://.godot/exported/133200997/export-280d4424a61fcef07e96ccf5f287b62e-challenge_notification.scn
