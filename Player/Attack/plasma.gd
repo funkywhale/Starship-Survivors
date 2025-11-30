@@ -79,7 +79,8 @@ func cleanup_and_remove() -> void:
 		)
 		get_tree().root.add_child(cleanup_timer)
 		cleanup_timer.start()
-	queue_free()
+	# Use base cleanup so the "remove_from_array" signal is emitted consistently
+	_standard_cleanup()
 
 func _on_body_entered(body: Node2D) -> void:
 	var is_rock := false
@@ -107,5 +108,4 @@ func _on_trail_spawn_timer_timeout() -> void:
 		if world:
 			world.call_deferred("add_child", trail)
 		else:
-
 			get_tree().root.call_deferred("add_child", trail)

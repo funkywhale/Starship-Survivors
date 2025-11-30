@@ -1,5 +1,6 @@
-res://Enemy/enemy_battleship.tscn
-res://Objects/grab.tscn
-res://Objects/grab.gd
+res://Objects/shield.tscn
+res://Player/player.tscn
 res://Enemy/enemy.gd
+res://Player/player.gd
+res://Objects/shield.gd
 res://export_presets.cfg

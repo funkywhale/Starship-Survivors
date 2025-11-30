@@ -29,6 +29,7 @@ var side_check_fraction: float = 0.7
 var death_anim: PackedScene = preload("res://Enemy/explosion.tscn")
 var exp_gem: PackedScene = preload("res://Objects/experience_orb.tscn")
 var grab_collectible: PackedScene = preload("res://Objects/grab.tscn")
+var shield_collectible: PackedScene = preload("res://Objects/shield.tscn")
 
 signal remove_from_array(object)
 
@@ -158,10 +159,15 @@ func death() -> void:
 	enemy_death.global_position = global_position
 	get_parent().call_deferred("add_child", enemy_death)
 	
-	if randf() < 0.005:
-		var new_grab = grab_collectible.instantiate()
-		new_grab.global_position = global_position
-		loot_base.call_deferred("add_child", new_grab)
+	if randf() < 0.01:
+		if randf() < 0.5:
+			var new_grab = grab_collectible.instantiate()
+			new_grab.global_position = global_position
+			loot_base.call_deferred("add_child", new_grab)
+		else:
+			var new_shield = shield_collectible.instantiate()
+			new_shield.global_position = global_position
+			loot_base.call_deferred("add_child", new_shield)
 	else:
 		var new_gem = exp_gem.instantiate()
 		new_gem.global_position = global_position

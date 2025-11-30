@@ -17,7 +17,7 @@ res://Player/Attack/pulse_laser.tscn::41f622275c764c1e8ca3c2a23a5075fb::17642446
 res://Player/Attack/rocket.tscn::021d1a3a7a74199fe6bdead2907ca0a6::1764244600::res://.godot/exported/133200997/export-b01c8b115de1f3a0be813a4c1fd7d046-rocket.scn
 res://Player/Attack/scatter_shot.tscn::7dc124d65cceedeefa01e86352ecc60c::1764244600::res://.godot/exported/133200997/export-2d10217599e21821ca39fe477217079a-scatter_shot.scn
 res://Player/GUI/item_container.tscn::122ef00a6f19281a28d795b9a926cbec::1764151114::res://.godot/exported/133200997/export-05edbfa53f42d3499031f0b1b250ce32-item_container.scn
-res://Player/player.tscn::b14dd56a40a46e2e5c6a0045def74411::1764393078::res://.godot/exported/133200997/export-d267b47f7e81a3258979164d56d0d9c2-player.scn
+res://Player/player.tscn::f1f59b9048def405ff4fcd27ce9ddb82::1764513498::res://.godot/exported/133200997/export-d267b47f7e81a3258979164d56d0d9c2-player.scn
 res://SkinsMenu/skins_menu.tscn::731f072869cbd247a7e63a19e409a393::1764336961::res://.godot/exported/133200997/export-de2f540595bb88b8fec133d976fcb061-skins_menu.scn
 res://TitleScreen/menu.tscn::a149b91ef850579fe6f518b54d73527a::1764392187::res://.godot/exported/133200997/export-2fcc99cb4d261fcd27c44064a8e599c4-menu.scn
 res://Utility/basic_button.tscn::dd6964006aa253c39f8fd7bc950a71cf::1764318626::res://.godot/exported/133200997/export-f20e3aa69651915552de52fb9f7d007d-basic_button.scn
@@ -33,7 +33,8 @@ res://Objects/rock_large2.tscn::db824c745d67fb649ceeddf4c25d55ca::1764159149::re
 res://Objects/rock_medium2.tscn::891693a8a7d41dc582c93cf11ee6782b::1764159149::res://.godot/exported/133200997/export-7f90d7202b2f034157b728b308f31790-rock_medium2.scn
 res://Objects/rock_small2.tscn::fcd021306b80ad501e6d4c73082124fe::1764159149::res://.godot/exported/133200997/export-31e68d6cee62c3e33bfe07ef7d80fc6d-rock_small2.scn
 res://Player/Attack/plasma_trail.tscn::146e82262ad32f93dd5252f5a151d49e::1764318878::res://.godot/exported/133200997/export-616d1f15e1ce385bcb2995169563660f-plasma_trail.scn
-res://Objects/grab.tscn::45a004ca29b15bc82e7586560e1f2d76::1764508044::res://.godot/exported/133200997/export-b9a238f3846af63abf2518f1e3ebbc3d-grab.scn
+res://Objects/grab.tscn::30592b1700def0dbd77c611dd221885c::1764510673::res://.godot/exported/133200997/export-b9a238f3846af63abf2518f1e3ebbc3d-grab.scn
 res://default_bus_layout.tres::4bc4587ff2d289ea5d25a3766a69d96a::1764315606::res://.godot/exported/133200997/export-19246414aa9fb561ced4b8dce477acec-default_bus_layout.res
 res://GUI/challenges_screen.tscn::dc68acdfd55763d7dcfa8c5850da88b7::1764333729::res://.godot/exported/133200997/export-422a7fe0b8d555d2987d8d82ef811c6d-challenges_screen.scn
 res://GUI/challenge_notification.tscn::47d410bdb5414fc544fbff588dd11c94::1764333664::res://.godot/exported/133200997/export-280d4424a61fcef07e96ccf5f287b62e-challenge_notification.scn
+res://Objects/shield.tscn::ff275fd3a7a01011e1dfcb7208f9b9c2::1764512891::res://.godot/exported/133200997/export-3a7f31f5bf6c1506dea8b1e27bf49a92-shield.scn

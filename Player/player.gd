@@ -6,7 +6,7 @@ var maxhp: float = 80.0
 var last_movement: Vector2 = Vector2.UP
 var time: int = 0
 
-var max_speed: float = 40.0
+var max_speed: float = 50.0
 var accel: float = 220.0
 var decel: float = 320.0
 var damping: float = 180.0
@@ -130,8 +130,17 @@ const MAX_PROJECTILES: int = 200
 @onready var sndVictory = get_node("%snd_victory")
 @onready var sndLose = get_node("%snd_lose")
 
-# Dash cooldown bar
 @onready var dashCooldownBar = get_node("%DashCooldownBar")
+
+@onready var shieldCooldownBar = get_node_or_null("%ShieldCooldownBar")
+var shield_active: bool = false
+var shield_time_left: float = 0.0
+var shield_duration: float = 12.0
+var shield_effect_texture: Texture2D = preload("res://Textures/Items/Gems/shield_effect.png")
+var shield_visual: Sprite2D = null
+var _shield_anim_running: bool = false
+var shield_frame_interval: float = 0.06
+var shield_base_scale: Vector2 = Vector2.ONE
 
 
 var difficulty_manager: Node = null
@@ -163,7 +172,21 @@ func _ready() -> void:
 	if difficulty_manager and difficulty_manager.has_signal("kill_recorded"):
 		difficulty_manager.connect("kill_recorded", Callable(self, "_on_difficulty_kill_recorded"))
 	dashCooldownBar.visible = false
+	if shieldCooldownBar:
+		shieldCooldownBar.visible = false
 	update_kill_count()
+	if shieldCooldownBar == null and dashCooldownBar:
+		var gui = get_node("GUILayer/GUI")
+		if gui:
+			var clone = dashCooldownBar.duplicate()
+			clone.name = "ShieldCooldownBar"
+			clone.modulate = Color(0.3, 0.55, 1.0, 1.0)
+			if dashCooldownBar.has_method("get_position"):
+				clone.rect_position = dashCooldownBar.rect_position + Vector2(0, -10)
+			clone.visible = false
+			gui.add_child(clone)
+			shieldCooldownBar = get_node_or_null("%ShieldCooldownBar")
+
 	start_camera_intro()
 
 	challenge_manager = get_node("/root/challenge_manager")
@@ -202,6 +225,8 @@ func _apply_skin() -> void:
 func _physics_process(_delta: float) -> void:
 	if intro_playing:
 		dashCooldownBar.visible = false
+		if shieldCooldownBar:
+			shieldCooldownBar.visible = false
 	else:
 		movement(_delta)
 		if dash_cooldown_left > 0.0:
@@ -209,6 +234,18 @@ func _physics_process(_delta: float) -> void:
 			dashCooldownBar.value = int(100.0 * (1.0 - dash_cooldown_left / dash_cooldown))
 		else:
 			dashCooldownBar.visible = false
+
+		# Shield timer and UI (shield is paused when the tree is paused)
+		if shield_active:
+			shield_time_left = max(shield_time_left - _delta, 0.0)
+			if shieldCooldownBar:
+				shieldCooldownBar.visible = true
+				shieldCooldownBar.value = int(100.0 * (shield_time_left / shield_duration))
+			if shield_time_left <= 0.0:
+				deactivate_shield()
+		else:
+			if shieldCooldownBar:
+				shieldCooldownBar.visible = false
 
 	_process_magnetize_effect(_delta)
 
@@ -344,14 +381,18 @@ func attack() -> void:
 			ionLaserAttackTimer.start()
 
 func take_enemy_damage(damage: int) -> void:
+	if shield_active:
+		_spawn_shield_visual(0.2)
+		return
+
 	var actual_damage = max(damage - armor, 1)
-	
+
 	if not difficulty_manager:
 		difficulty_manager = get_tree().get_first_node_in_group("difficulty_manager")
-	
+
 	if difficulty_manager:
 		difficulty_manager.record_damage(actual_damage)
-	
+
 	hp -= actual_damage
 	healthBar.max_value = maxhp
 	healthBar.value = hp
@@ -360,6 +401,10 @@ func take_enemy_damage(damage: int) -> void:
 		death()
 
 func _on_hurt_box_hurt(damage: float, _angle: Vector2, _knockback: float) -> void:
+	if shield_active:
+		_spawn_shield_visual(0.2)
+		return
+
 	var actual_damage = clamp(damage - armor, 1.0, 999.0)
 
 	if not difficulty_manager:
@@ -405,6 +450,8 @@ func _on_pulse_laser_attack_timer_timeout():
 		pulselaser_attack.level = pulselaser_level
 		pulselaser_attack.add_to_group("attack")
 		add_child(pulselaser_attack)
+		if pulselaser_attack.has_signal("remove_from_array"):
+			pulselaser_attack.connect("remove_from_array", Callable(self, "_on_projectile_removed"))
 		active_projectile_count += 1
 		pulselaser_ammo -= 1
 		if pulselaser_ammo > 0:
@@ -434,6 +481,8 @@ func _on_rocket_attack_timer_timeout():
 		rocket_attack.level = rocket_level
 		rocket_attack.add_to_group("attack")
 		add_child(rocket_attack)
+		if rocket_attack.has_signal("remove_from_array"):
+			rocket_attack.connect("remove_from_array", Callable(self, "_on_projectile_removed"))
 		active_projectile_count += 1
 		rocket_ammo -= 1
 		if rocket_ammo > 0:
@@ -478,6 +527,8 @@ func _on_plasma_timer_timeout():
 		plasma_attack.play_sound = (i == 0)
 		plasma_attack.add_to_group("attack")
 		plasmaBase.add_child(plasma_attack)
+		if plasma_attack.has_signal("remove_from_array"):
+			plasma_attack.connect("remove_from_array", Callable(self, "_on_projectile_removed"))
 		active_projectile_count += 1
 		plasma_ammo -= 1
 	
@@ -518,6 +569,8 @@ func _on_ion_laser_attack_timer_timeout():
 		laser.level = ionlaser_level
 		laser.add_to_group("attack")
 		get_parent().add_child(laser)
+		if laser.has_signal("remove_from_array"):
+			laser.connect("remove_from_array", Callable(self, "_on_projectile_removed"))
 		active_projectile_count += 1
 		ionlaser_ammo -= 1
 		if ionlaser_ammo > 0:
@@ -623,6 +676,8 @@ func fire_scatter_shot() -> void:
 		
 		pellet.setup(direction, pellet_speed, pellet_damage, pellet_hp)
 		add_child(pellet)
+		if pellet.has_signal("remove_from_array"):
+			pellet.connect("remove_from_array", Callable(self, "_on_projectile_removed"))
 		active_projectile_count += 1
 
 
@@ -663,35 +718,18 @@ func _cleanup_enemy_arrays() -> void:
 	if targeted_enemies.size() > 15:
 		targeted_enemies.clear()
 
-func _cleanup_projectiles() -> void:
-	var valid_count = 0
-	var projectiles_to_remove: Array = []
+func _on_projectile_removed(_projectile) -> void:
+	active_projectile_count = max(0, active_projectile_count - 1)
 
+func _cleanup_projectiles() -> void:
 	var attacks = get_tree().get_nodes_in_group("attack")
+	var valid_attacks: Array = []
 	for a in attacks:
 		if is_instance_valid(a):
-			valid_count += 1
-		else:
-			projectiles_to_remove.append(a)
-
-	for proj in projectiles_to_remove:
-		if is_instance_valid(proj):
-			proj.queue_free()
-			valid_count -= 1
-
-	active_projectile_count = max(0, valid_count)
+			valid_attacks.append(a)
 
 
-	if active_projectile_count > MAX_PROJECTILES * 0.9:
-		var to_remove = int((active_projectile_count - MAX_PROJECTILES * 0.8) * 1.5)
-		var removed = 0
-		for a in attacks:
-			if removed >= to_remove:
-				break
-			if is_instance_valid(a):
-				a.queue_free()
-				removed += 1
-				active_projectile_count = max(0, active_projectile_count - 1)
+	active_projectile_count = valid_attacks.size()
 
 func _on_enemy_detection_area_body_entered(body):
 	if not enemy_close.has(body):
@@ -757,6 +795,85 @@ func trigger_grab_magnetize() -> void:
 
 			if "ACCELERATION" in item:
 				item.set("ACCELERATION", 200.0)
+
+
+func activate_shield() -> void:
+	shield_active = true
+	shield_time_left = shield_duration
+	if shieldCooldownBar:
+		shieldCooldownBar.visible = true
+		shieldCooldownBar.value = int(100.0 * (shield_time_left / shield_duration))
+	if shield_visual == null or not is_instance_valid(shield_visual):
+		shield_visual = Sprite2D.new()
+		shield_visual.texture = shield_effect_texture
+		shield_visual.hframes = 4
+		shield_visual.vframes = 1
+		shield_visual.centered = true
+		shield_visual.position = Vector2.ZERO
+		shield_visual.z_index = sprite.z_index + 5 if sprite else 50
+		# store base scale and apply it so refresh/pop tweens always use the same base
+		shield_base_scale = sprite.scale if sprite else Vector2.ONE
+		shield_visual.scale = shield_base_scale
+		add_child(shield_visual)
+		call_deferred("_start_shield_visual_loop")
+	else:
+		shield_visual.frame = 0
+
+
+func deactivate_shield() -> void:
+	shield_active = false
+	shield_time_left = 0.0
+	if shieldCooldownBar:
+		shieldCooldownBar.visible = false
+	if shield_visual and is_instance_valid(shield_visual):
+		shield_visual.queue_free()
+	shield_visual = null
+	_shield_anim_running = false
+
+
+func _spawn_shield_visual(duration: float = 0.5) -> void:
+	if shield_visual and is_instance_valid(shield_visual):
+		var tween = shield_visual.create_tween()
+		tween.tween_property(shield_visual, "scale", shield_base_scale * 1.15, 0.06).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		tween.tween_property(shield_visual, "scale", shield_base_scale, 0.12).set_delay(0.06)
+		return
+
+	if not shield_effect_texture:
+		return
+	var s = Sprite2D.new()
+	s.texture = shield_effect_texture
+	s.hframes = 4
+	s.vframes = 1
+	s.centered = true
+	s.position = Vector2.ZERO
+	s.z_index = sprite.z_index + 5 if sprite else 50
+	s.scale = sprite.scale if sprite else Vector2.ONE
+	add_child(s)
+	var frames = max(1, s.hframes)
+	var step = max(0.01, duration / float(frames))
+	for i in range(frames):
+		s.frame = i
+		await get_tree().create_timer(step).timeout
+	s.queue_free()
+
+func _start_shield_visual_loop() -> void:
+	if _shield_anim_running:
+		return
+	if not shield_visual or not is_instance_valid(shield_visual):
+		_shield_anim_running = false
+		return
+	_shield_anim_running = true
+	var s = shield_visual
+	s.frame = 0
+	while shield_active and is_instance_valid(s):
+		s.frame = (s.frame + 1) % max(1, s.hframes)
+		await get_tree().create_timer(shield_frame_interval).timeout
+	# cleanup
+	if is_instance_valid(s):
+		s.queue_free()
+	if shield_visual == s:
+		shield_visual = null
+	_shield_anim_running = false
 
 
 func _process_magnetize_effect(_delta: float) -> void:
