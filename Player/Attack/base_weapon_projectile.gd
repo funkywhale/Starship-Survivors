@@ -10,9 +10,43 @@ var knockback_amount: int = 50
 var attack_size: float = 1.0
 var is_critical: bool = false
 
+# Lifetime-based cleanup to avoid projectile accumulation
+var lifetime: float = 10.0
+var _age: float = 0.0
+
+@export var screen_cleanup_margin: float = 4096.0
+
 @onready var player = get_tree().get_first_node_in_group("player")
 
 signal remove_from_array(object)
+
+@export var ignore_screen_exit: bool = true
+
+func _ready() -> void:
+	set_process(true)
+	if not ignore_screen_exit:
+		var vn = VisibleOnScreenNotifier2D.new()
+		vn.name = "VisibilityNotifier"
+		vn.margin = screen_cleanup_margin
+		if not vn.is_connected("screen_exited", Callable(self, "_on_screen_exited")):
+			vn.connect("screen_exited", Callable(self, "_on_screen_exited"))
+		add_child(vn)
+	else:
+		print("BaseWeaponProjectile: ignoring screen-exit cleanup for", self)
+
+func _process(delta: float) -> void:
+	_age += delta
+	if lifetime > 0.0 and _age >= lifetime:
+		_standard_cleanup()
+
+func _on_screen_exited() -> void:
+	var cam = null
+	if get_viewport() and get_viewport().has_method("get_camera_2d"):
+		cam = get_viewport().get_camera_2d()
+	print("[Projectile] screen_exited ->", self, "pos=", global_position, "age=", _age, "lifetime=", lifetime, "parent=", get_parent(), "camera=", cam)
+	if ignore_screen_exit:
+		return
+	_standard_cleanup()
 
 func _get_applied_modifiers() -> Dictionary:
 	return {

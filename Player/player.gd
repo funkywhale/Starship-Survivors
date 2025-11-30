@@ -102,9 +102,7 @@ var scattershot_timer: float = 0.0
 var enemy_close: Array = []
 var targeted_enemies: Array = []
 
-# Attack/Projectile tracking for cleanup
-var active_projectile_count: int = 0
-const MAX_PROJECTILES: int = 200
+# Attack/Projectile tracking for cleanup (cap removed)
 
 @onready var sprite = $Sprite2D
 @onready var skin_manager = get_node("/root/SkinManager")
@@ -250,7 +248,7 @@ func _physics_process(_delta: float) -> void:
 	_process_magnetize_effect(_delta)
 
 	var cleanup_frequency = 60
-	if enemy_close.size() > 30 or active_projectile_count > 150:
+	if enemy_close.size() > 30:
 		cleanup_frequency = 15
 	
 	if Engine.get_frames_drawn() % cleanup_frequency == 0:
@@ -429,7 +427,7 @@ func _on_pulse_laser_timer_timeout():
 
 
 func _on_pulse_laser_attack_timer_timeout():
-	if pulselaser_ammo > 0 and active_projectile_count < MAX_PROJECTILES:
+	if pulselaser_ammo > 0:
 		var pulselaser_attack = pulseLaser.instantiate()
 		var use_different_targets = (pulselaser_baseammo + additional_attacks) > 1
 		var target_pos: Vector2
@@ -452,7 +450,6 @@ func _on_pulse_laser_attack_timer_timeout():
 		add_child(pulselaser_attack)
 		if pulselaser_attack.has_signal("remove_from_array"):
 			pulselaser_attack.connect("remove_from_array", Callable(self, "_on_projectile_removed"))
-		active_projectile_count += 1
 		pulselaser_ammo -= 1
 		if pulselaser_ammo > 0:
 			pulseLaserAttackTimer.start()
@@ -466,7 +463,7 @@ func _on_rocket_timer_timeout():
 	rocketAttackTimer.start()
 
 func _on_rocket_attack_timer_timeout():
-	if rocket_ammo > 0 and active_projectile_count < MAX_PROJECTILES:
+	if rocket_ammo > 0:
 		var rocket_attack = rocket.instantiate()
 		var rocket_direction: float = sprite.rotation
 		var forward: Vector2 = Vector2.UP.rotated(rocket_direction)
@@ -483,7 +480,6 @@ func _on_rocket_attack_timer_timeout():
 		add_child(rocket_attack)
 		if rocket_attack.has_signal("remove_from_array"):
 			rocket_attack.connect("remove_from_array", Callable(self, "_on_projectile_removed"))
-		active_projectile_count += 1
 		rocket_ammo -= 1
 		if rocket_ammo > 0:
 			rocketAttackTimer.start()
@@ -492,7 +488,7 @@ func _on_rocket_attack_timer_timeout():
 
 func _on_plasma_timer_timeout():
 	plasma_ammo = plasma_baseammo + additional_attacks
-	var shots_to_fire = min(plasma_ammo, MAX_PROJECTILES - active_projectile_count)
+	var shots_to_fire = plasma_ammo
 	
 
 	var use_different_targets = (plasma_baseammo + additional_attacks) > 1
@@ -500,9 +496,6 @@ func _on_plasma_timer_timeout():
 		targeted_enemies.clear()
 	
 	for i in range(shots_to_fire):
-		if active_projectile_count >= MAX_PROJECTILES:
-			break
-		
 		var target_pos: Vector2
 		
 
@@ -526,10 +519,12 @@ func _on_plasma_timer_timeout():
 		plasma_attack.level = plasma_level
 		plasma_attack.play_sound = (i == 0)
 		plasma_attack.add_to_group("attack")
+		# Prevent plasma projectiles from being removed when they temporarily exit the viewport
+		if plasma_attack.has_method("set"):
+			plasma_attack.set("ignore_screen_exit", true)
 		plasmaBase.add_child(plasma_attack)
 		if plasma_attack.has_signal("remove_from_array"):
 			plasma_attack.connect("remove_from_array", Callable(self, "_on_projectile_removed"))
-		active_projectile_count += 1
 		plasma_ammo -= 1
 	
 
@@ -548,7 +543,7 @@ func _on_ion_laser_timer_timeout():
 	ionLaserAttackTimer.start()
 
 func _on_ion_laser_attack_timer_timeout():
-	if ionlaser_ammo > 0 and active_projectile_count < MAX_PROJECTILES:
+	if ionlaser_ammo > 0:
 		var laser = ionLaser.instantiate()
 		var use_different_targets = (ionlaser_baseammo + additional_attacks) > 1
 		var target_pos: Vector2
@@ -571,7 +566,6 @@ func _on_ion_laser_attack_timer_timeout():
 		get_parent().add_child(laser)
 		if laser.has_signal("remove_from_array"):
 			laser.connect("remove_from_array", Callable(self, "_on_projectile_removed"))
-		active_projectile_count += 1
 		ionlaser_ammo -= 1
 		if ionlaser_ammo > 0:
 			ionLaserAttackTimer.start()
@@ -657,9 +651,6 @@ func fire_scatter_shot() -> void:
 		sound_player.play()
 	
 	for i in range(pellet_count):
-		if active_projectile_count >= MAX_PROJECTILES:
-			break
-		
 		var angle_offset = 0.0
 		if pellet_count > 1:
 			angle_offset = cone_angle * ((float(i) / float(pellet_count - 1)) - 0.5)
@@ -678,7 +669,6 @@ func fire_scatter_shot() -> void:
 		add_child(pellet)
 		if pellet.has_signal("remove_from_array"):
 			pellet.connect("remove_from_array", Callable(self, "_on_projectile_removed"))
-		active_projectile_count += 1
 
 
 func _set_player_frame(frame_index: int) -> void:
@@ -719,17 +709,10 @@ func _cleanup_enemy_arrays() -> void:
 		targeted_enemies.clear()
 
 func _on_projectile_removed(_projectile) -> void:
-	active_projectile_count = max(0, active_projectile_count - 1)
+	pass
 
 func _cleanup_projectiles() -> void:
-	var attacks = get_tree().get_nodes_in_group("attack")
-	var valid_attacks: Array = []
-	for a in attacks:
-		if is_instance_valid(a):
-			valid_attacks.append(a)
-
-
-	active_projectile_count = valid_attacks.size()
+	return
 
 func _on_enemy_detection_area_body_entered(body):
 	if not enemy_close.has(body):

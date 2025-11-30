@@ -61,13 +61,28 @@ func _on_timer_timeout() -> void:
 	cleanup_and_remove()
 
 func cleanup_and_remove() -> void:
-	if particles:
+	if particles and is_instance_valid(particles):
 		particles.emitting = false
 		particles.one_shot = true
 
 		var final_position = particles.global_position
-		particles.reparent(get_tree().root)
-		particles.global_position = final_position
+		var world = get_tree().current_scene
+
+		if particles.has_method("set"):
+			particles.set("local_coords", false)
+
+		if world:
+			var prev_parent = particles.get_parent()
+			if prev_parent and prev_parent != world:
+				prev_parent.remove_child(particles)
+			world.call_deferred("add_child", particles)
+			particles.call_deferred("set", "global_position", final_position)
+		else:
+			var prev_parent = particles.get_parent()
+			if prev_parent and prev_parent != get_tree().root:
+				prev_parent.remove_child(particles)
+			get_tree().root.call_deferred("add_child", particles)
+			particles.call_deferred("set", "global_position", final_position)
 
 		var cleanup_timer = Timer.new()
 		cleanup_timer.wait_time = particles.lifetime + particles.preprocess
@@ -77,9 +92,11 @@ func cleanup_and_remove() -> void:
 				particles.queue_free()
 			cleanup_timer.queue_free()
 		)
-		get_tree().root.add_child(cleanup_timer)
-		cleanup_timer.start()
-	# Use base cleanup so the "remove_from_array" signal is emitted consistently
+		if world:
+			world.call_deferred("add_child", cleanup_timer)
+		else:
+			get_tree().root.call_deferred("add_child", cleanup_timer)
+		cleanup_timer.call_deferred("start")
 	_standard_cleanup()
 
 func _on_body_entered(body: Node2D) -> void:

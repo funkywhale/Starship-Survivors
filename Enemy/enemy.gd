@@ -159,7 +159,7 @@ func death() -> void:
 	enemy_death.global_position = global_position
 	get_parent().call_deferred("add_child", enemy_death)
 	
-	if randf() < 0.01:
+	if randf() < 0.005:
 		if randf() < 0.5:
 			var new_grab = grab_collectible.instantiate()
 			new_grab.global_position = global_position
