@@ -11,7 +11,7 @@ res://Objects/rock_large.tscn::34ad6e16b5d925c88c2100ffb21878ce::1763954959::res
 res://Objects/rock_medium.tscn::ff57fc304493ab17f35957b3f47726a3::1763954370::res://.godot/exported/133200997/export-8cc59b39e82eb19c4976f4582be18bfe-rock_medium.scn
 res://Objects/rock_small.tscn::1baee2092fb6da5bba542a259fcfb59b::1764033234::res://.godot/exported/133200997/export-6f63e3dc59cf453d62d1cf6d6b3e6d26-rock_small.scn
 res://Player/Attack/explosion_area.tscn::3e14c8748baae2437f68d203257a2d0e::1764242593::res://.godot/exported/133200997/export-d523c4ea17c72d6a03c15053f9c3e399-explosion_area.scn
-res://Player/Attack/ion_laser_beam.tscn::b898f0697b3a413f1aa6ce1aaa826c10::1764244600::res://.godot/exported/133200997/export-6fd001179592c6d5c129e4f28bef534d-ion_laser_beam.scn
+res://Player/Attack/ion_laser_beam.tscn::28dc7d6ef4a41d4dd6e0a77bbab87e3e::1764584008::res://.godot/exported/133200997/export-6fd001179592c6d5c129e4f28bef534d-ion_laser_beam.scn
 res://Player/Attack/plasma.tscn::e820f2288cdbee9c72dbd8246fb1fc10::1764244600::res://.godot/exported/133200997/export-6e9e0c93c6467d3687815ebd7d80ba03-plasma.scn
 res://Player/Attack/pulse_laser.tscn::41f622275c764c1e8ca3c2a23a5075fb::1764244600::res://.godot/exported/133200997/export-6aebfd4d47250050721e2dc95acc3ede-pulse_laser.scn
 res://Player/Attack/rocket.tscn::021d1a3a7a74199fe6bdead2907ca0a6::1764244600::res://.godot/exported/133200997/export-b01c8b115de1f3a0be813a4c1fd7d046-rocket.scn
@@ -27,14 +27,14 @@ res://Utility/hit_box.tscn::d3ceedfbe905cc39d8141f7dd1140929::1717904380::res://
 res://Utility/hurt_box.tscn::d2cfe249dc2ada2529560ab038ea880d::1758955372::res://.godot/exported/133200997/export-a60fe6600d20ea02ad9949a92024b18d-hurt_box.scn
 res://Utility/item_option.tscn::97a1137a63328e6d90459231283df1af::1764334197::res://.godot/exported/133200997/export-4cd66e9d2ef6bda90c064d5e204f02d5-item_option.scn
 res://Utility/upgrade_db.tscn::8b3d42047cac59a9fd9f926416959154::1764155918::res://.godot/exported/133200997/export-9b6981a41d3fab107a2d9e7cf0c27c8d-upgrade_db.scn
-res://World/world.tscn::c76a009bd0768c1923090bf82519064d::1764384880::res://.godot/exported/133200997/export-89647171d5d7bdb8a088d65cc9aa3a3a-world.scn
+res://World/world.tscn::a6244b5164e9d57bef7deeb183faecf1::1764583811::res://.godot/exported/133200997/export-89647171d5d7bdb8a088d65cc9aa3a3a-world.scn
 res://LoginScreen.tscn::a131c44e981d408401d966a2803f150f::1764380839::res://.godot/exported/133200997/export-aef34a00c7d74a6c6c98ecd0040d3a2a-LoginScreen.scn
 res://Objects/rock_large2.tscn::db824c745d67fb649ceeddf4c25d55ca::1764159149::res://.godot/exported/133200997/export-465e593955c3afae8ddf4fcf5486214e-rock_large2.scn
 res://Objects/rock_medium2.tscn::891693a8a7d41dc582c93cf11ee6782b::1764159149::res://.godot/exported/133200997/export-7f90d7202b2f034157b728b308f31790-rock_medium2.scn
 res://Objects/rock_small2.tscn::fcd021306b80ad501e6d4c73082124fe::1764159149::res://.godot/exported/133200997/export-31e68d6cee62c3e33bfe07ef7d80fc6d-rock_small2.scn
-res://Player/Attack/plasma_trail.tscn::146e82262ad32f93dd5252f5a151d49e::1764539722::res://.godot/exported/133200997/export-616d1f15e1ce385bcb2995169563660f-plasma_trail.scn
+res://Player/Attack/plasma_trail.tscn::146e82262ad32f93dd5252f5a151d49e::1764582501::res://.godot/exported/133200997/export-616d1f15e1ce385bcb2995169563660f-plasma_trail.scn
 res://Objects/grab.tscn::30592b1700def0dbd77c611dd221885c::1764510673::res://.godot/exported/133200997/export-b9a238f3846af63abf2518f1e3ebbc3d-grab.scn
 res://default_bus_layout.tres::4bc4587ff2d289ea5d25a3766a69d96a::1764315606::res://.godot/exported/133200997/export-19246414aa9fb561ced4b8dce477acec-default_bus_layout.res
 res://GUI/challenges_screen.tscn::dc68acdfd55763d7dcfa8c5850da88b7::1764333729::res://.godot/exported/133200997/export-422a7fe0b8d555d2987d8d82ef811c6d-challenges_screen.scn
 res://GUI/challenge_notification.tscn::47d410bdb5414fc544fbff588dd11c94::1764333664::res://.godot/exported/133200997/export-280d4424a61fcef07e96ccf5f287b62e-challenge_notification.scn
-res://Objects/shield.tscn::ff275fd3a7a01011e1dfcb7208f9b9c2::1764512891::res://.godot/exported/133200997/export-3a7f31f5bf6c1506dea8b1e27bf49a92-shield.scn
+res://Objects/shield.tscn::ff275fd3a7a01011e1dfcb7208f9b9c2::1764583947::res://.godot/exported/133200997/export-3a7f31f5bf6c1506dea8b1e27bf49a92-shield.scn

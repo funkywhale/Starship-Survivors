@@ -10,7 +10,6 @@ extends Node2D
 func _ready() -> void:
 	pause_menu.visible = false
 
-	# Ensure Pause audio controls are hidden initially (in case of editor changes)
 	if has_node("PauseMenu/PauseAudioControls"):
 		var pac := get_node("PauseMenu/PauseAudioControls")
 		pac.visible = false
@@ -24,7 +23,6 @@ func _ready() -> void:
 	main_menu_button.pressed.connect(_on_main_menu_pressed)
 	quit_button.pressed.connect(_on_quit_pressed)
 
-	# Wire pause audio sliders safely (use get_node_or_null so missing nodes don't crash)
 	var settings := get_node_or_null("/root/Settings")
 	var master_node := get_node_or_null("PauseMenu/PauseAudioControls/PauseAudioControls#MasterSlider")
 	if master_node:
@@ -61,7 +59,6 @@ func _toggle_pause() -> void:
 	var new_state := not get_tree().paused
 	get_tree().paused = new_state
 	pause_menu.visible = new_state
-	# Toggle PauseAudioControls visibility explicitly as well
 	if has_node("PauseMenu/PauseAudioControls"):
 		$PauseMenu/PauseAudioControls.visible = new_state
 		if new_state:

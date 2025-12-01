@@ -189,9 +189,9 @@ const WEAPONS = {
 			"+5 damage, +25% range, 8% faster cooldown",
 			"+10 damage, +50% range, 16% faster cooldown",
 			"+5 damage, +100% range, 24% faster cooldown",
-			"+5 damage, +125% range, 5% size, 32% faster cooldown",
+			"+5 damage, +1 ammo, +125% range, 5% size, 32% faster cooldown",
 			"+5 damage, +150% range, 40% faster cooldown",
-			"+10 damage, +175% range, 10% size, 48% faster cooldown",
+			"+10 damage, +1 ammo, +175% range, 10% size, 48% faster cooldown",
 			"+20 damage, +200% range, 20% size, 60% faster cooldown"
 		],
 		"prerequisites": [
@@ -214,13 +214,13 @@ const WEAPONS = {
 			# Level 4 - 
 			{"ammo": 1, "damage": 30, "max_length": 200.0, "attack_size": 1.0, "grow_speed": 300.0, "cooldown_modifier": - 0.6},
 			# Level 5 - 
-			{"ammo": 1, "damage": 35, "max_length": 225.0, "attack_size": 1.05, "grow_speed": 325.0, "cooldown_modifier": - 0.8},
+			{"ammo": 2, "damage": 35, "max_length": 225.0, "attack_size": 1.05, "grow_speed": 325.0, "cooldown_modifier": - 0.8},
 			# Level 6 - 
-			{"ammo": 1, "damage": 40, "max_length": 250.0, "attack_size": 1.05, "grow_speed": 350.0, "cooldown_modifier": - 1.0},
+			{"ammo": 2, "damage": 40, "max_length": 250.0, "attack_size": 1.05, "grow_speed": 350.0, "cooldown_modifier": - 1.0},
 			# Level 7 -
-			{"ammo": 1, "damage": 50, "max_length": 275.0, "attack_size": 1.1, "grow_speed": 375.0, "cooldown_modifier": - 1.2},
+			{"ammo": 2, "damage": 50, "max_length": 275.0, "attack_size": 1.1, "grow_speed": 375.0, "cooldown_modifier": - 1.2},
 			# Level 8 -
-			{"ammo": 1, "damage": 70, "max_length": 300.0, "attack_size": 1.2, "grow_speed": 400.0, "cooldown_modifier": - 1.5},
+			{"ammo": 2, "damage": 70, "max_length": 300.0, "attack_size": 1.2, "grow_speed": 400.0, "cooldown_modifier": - 1.5},
 		]
 	}
 }

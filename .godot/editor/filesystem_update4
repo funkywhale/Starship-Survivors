@@ -1,7 +1,8 @@
-res://Player/player.tscn
-res://Player/Attack/base_weapon_projectile.gd
-res://Player/player.gd
-res://Enemy/enemy.gd
 res://Player/Attack/plasma_trail.tscn
-res://Player/Attack/plasma.gd
+res://Utility/weapon_registry.gd
+res://World/world.tscn
+res://World/world.gd
 res://export_presets.cfg
+res://Objects/shield.tscn
+res://Player/Attack/ion_laser_beam.tscn
+res://Player/Attack/ion_laser_beam.gd

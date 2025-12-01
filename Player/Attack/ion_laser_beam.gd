@@ -27,7 +27,6 @@ signal remove_from_array(object)
 func _ready() -> void:
 	add_to_group("attack")
 	
-	# Check for critical strike
 	if player and player.has_method("roll_critical"):
 		is_critical = player.roll_critical()
 	
@@ -74,7 +73,6 @@ func _update_from_level() -> void:
 	if is_critical:
 		damage *= 2
 	
-	# Adjust widths if already initialized
 	if beam_line:
 		beam_line.width = 3.0 * attack_size
 	if glow_line:
@@ -82,7 +80,6 @@ func _update_from_level() -> void:
 
 func _physics_process(delta: float) -> void:
 	lifetime += delta
-	# Extend toward target length
 	var target_len = max_length
 	var current_len = min(target_len, target_position.x + grow_speed * delta)
 	target_position.x = current_len
@@ -90,32 +87,25 @@ func _physics_process(delta: float) -> void:
 	var end_point = Vector2.RIGHT * current_len
 	if is_colliding():
 		end_point = to_local(get_collision_point())
-	# Update line points
 	beam_line.set_point_position(0, Vector2.RIGHT * 0)
 	beam_line.set_point_position(1, end_point)
 	glow_line.set_point_position(0, Vector2.RIGHT * 0)
 	glow_line.set_point_position(1, end_point)
-	# Resize hit area collision shape to cover beam span
 	if hit_shape and hit_shape.shape is RectangleShape2D:
 		var rect := hit_shape.shape as RectangleShape2D
 		rect.size = Vector2(max(end_point.x, 1.0), max(beam_line.width * 2.0, 2.0))
 		hit_area.position = Vector2.RIGHT * (end_point.x * 0.5)
 		hit_area.rotation = global_rotation
-	# Pulse effect
 	var pulse = 1.0 + 0.10 * sin(lifetime * 16.0)
 	beam_line.width = (3.0 * attack_size) * pulse
 	glow_line.width = (8.0 * attack_size) * pulse
 
-	# Shape query damage (multi-hit across beam span) - reduce frequency for performance
-	if int(lifetime * 30.0) % 4 == 0: # Every 4th frame instead of every other
+	if int(lifetime * 30.0) % 4 == 0:
 		_apply_shape_query_damage(end_point.x)
-	# Sustain then disappear
 	if lifetime >= sustain_time and not disappearing:
 		_start_disappear()
-	# Damage application (continuous hit scan)
-	elif is_colliding(): # still apply impact damage at tip once
+	elif is_colliding():
 		_var_damage_application()
-	# Apply damage to enemies newly entering beam via area_entered (handled by signal)
 
 func _start_disappear() -> void:
 	disappearing = true
@@ -160,17 +150,14 @@ func _on_hit_area_area_entered(area: Area2D) -> void:
 			hit_enemies.append(enemy)
 
 func _apply_shape_query_damage(current_len: float) -> void:
-	# Build rectangle covering beam; center point half-way along global direction
 	if current_len <= 2.0:
 		return
 	var shape := RectangleShape2D.new()
 	shape.size = Vector2(current_len, max(beam_line.width * 2.0, 2.0))
 	var params := PhysicsShapeQueryParameters2D.new()
 	params.shape = shape
-	# Transform2D takes (rotation, position); position is global center of rectangle
 	var dir := Vector2.RIGHT.rotated(global_rotation)
 	params.transform = Transform2D(global_rotation, global_position + dir * (current_len * 0.5))
-	# Enemy root bodies use layer 4; query that
 	params.collision_mask = 4
 	params.exclude = []
 	var results = get_world_2d().direct_space_state.intersect_shape(params, 16)
@@ -178,12 +165,10 @@ func _apply_shape_query_damage(current_len: float) -> void:
 		var collider = res.get("collider")
 		if collider == null:
 			continue
-		# collider is likely the enemy body; find its HurtBox child
 		var hurt_box = null
 		if collider.has_node("HurtBox"):
 			hurt_box = collider.get_node("HurtBox")
 		elif collider.get_parent() and collider.get_parent().has_node("HurtBox"):
-			# In case we hit a child of the enemy body
 			hurt_box = collider.get_parent().get_node("HurtBox")
 		if hurt_box and hurt_box.has_signal("hurt"):
 			var enemy = hurt_box.get_parent()
@@ -194,5 +179,4 @@ func _apply_shape_query_damage(current_len: float) -> void:
 				hit_enemies.append(enemy)
 
 func enemy_hit(_charge: int = 1) -> void:
-	# Ion laser persists; ignore.
 	pass
